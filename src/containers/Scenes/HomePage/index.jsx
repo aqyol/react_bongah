@@ -1,4 +1,5 @@
 import React from 'react';
+import ListProperty from './components/ListProperty';
 
 
 const HomePage = () => (
@@ -7,7 +8,7 @@ const HomePage = () => (
       <h1>Header</h1>
     </div>
     <div className="bodyWrapper">
-      <h2>List Property</h2>
+      <ListProperty />
     </div>
     <div className="footerWrapper">
       <h3>Footer</h3>

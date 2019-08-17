@@ -14,10 +14,12 @@
 //@import './component/topbar';
 //@import './component/load';
 //@import './component/form';
+@import './component/singleHouse';
 
 //pages...
 //@import 'containers/account';
 @import 'containers/home_page';
+@import 'containers/list_property';
 
 //objects...
 @import 'objects/bootstrap.min';
