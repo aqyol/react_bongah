@@ -17,6 +17,7 @@
 @import './component/singleHouse';
 @import './component/header';
 @import './component/slide_show';
+@import './component/menu_bar';
 
 //pages...
 //@import 'containers/account';
@@ -24,5 +25,5 @@
 @import 'containers/list_property';
 
 //objects...
-//@import 'objects/bootstrap.min';
+@import 'objects/bootstrap.min';
 
