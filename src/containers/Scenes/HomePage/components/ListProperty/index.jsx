@@ -56,7 +56,6 @@ const ListProperty = () => (
     <div className="row listPropertyContent">
       {arr.map((value, index) => (
         <div className="col-xs-12 col-sm-12 col-md-4 col-lg-4" key={index.toString()}>
-          <h1>{houseData[value].name}</h1>
           <SingleHouse data={houseData[value]} />
         </div>
       ))}
