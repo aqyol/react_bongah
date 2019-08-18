@@ -8,7 +8,7 @@ const Header = () => (
       <SlideShow />
     </div>
     <div className="menuBarWrapper">
-      <MenuBar isLogin isPersist />
+      <MenuBar isLogin={false} isPersist />
     </div>
   </div>
 );

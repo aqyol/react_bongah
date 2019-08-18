@@ -2,6 +2,7 @@ import React, { PureComponent } from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { FaHome, FaList } from 'react-icons/fa';
+import UserMenu from '../../../../../../../shared/components/UserMenu';
 
 class MenuBar extends PureComponent {
   static propTypes = {
@@ -37,7 +38,7 @@ class MenuBar extends PureComponent {
       return (
         <li className="userMenuLi">
           <div className="userMenuWrapper">
-            <span>UserMenu</span>
+            <UserMenu />
           </div>
         </li>
       );
