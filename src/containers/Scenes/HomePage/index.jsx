@@ -1,6 +1,7 @@
 import React from 'react';
 import ListProperty from './components/ListProperty';
 import Header from './components/Header';
+import Footer from './components/Footer';
 
 
 const HomePage = () => (
@@ -12,7 +13,7 @@ const HomePage = () => (
       <ListProperty />
     </div>
     <div className="footerWrapper">
-      <h3>Footer</h3>
+      <Footer />
     </div>
   </div>
 );
