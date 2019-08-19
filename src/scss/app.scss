@@ -1,5 +1,8 @@
 @import 'settings/variable';  //themes' colors
 
+//objects...
+@import 'objects/bootstrap.min';
+
 //base...
 @import 'generic/normalize.scss';
 @import 'generic/box-sizing.scss';
@@ -33,7 +36,3 @@
 @import 'containers/home_page';
 @import 'containers/list_property';
 @import 'containers/main_root';
-
-//objects...
-@import 'objects/bootstrap.min';
-
