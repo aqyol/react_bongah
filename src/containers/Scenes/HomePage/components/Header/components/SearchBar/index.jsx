@@ -86,7 +86,7 @@ class SearchBar extends PureComponent {
             <div className="checkbox custom-checkbox">
               <label htmlFor="forRent">
                 <input id="forRent" name="forRent" type="checkbox" />
-                <FaCheck />
+                <span><FaCheck /></span>
                 For rent
               </label>
             </div>
@@ -95,7 +95,7 @@ class SearchBar extends PureComponent {
             <div className="checkbox custom-checkbox">
               <label htmlFor="forSale">
                 <input id="forSale" name="forSale" type="checkbox" />
-                <FaCheck />
+                <span><FaCheck /></span>
                 For sale
               </label>
             </div>
