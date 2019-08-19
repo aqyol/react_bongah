@@ -19,11 +19,13 @@
 @import './component/slide_show';
 @import './component/menu_bar';
 @import './component/user_menu';
+@import './component/caption';
 
 //pages...
 //@import 'containers/account';
 @import 'containers/home_page';
 @import 'containers/list_property';
+@import 'containers/main_root';
 
 //objects...
 @import 'objects/bootstrap.min';

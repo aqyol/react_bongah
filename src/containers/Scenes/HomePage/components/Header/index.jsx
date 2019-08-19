@@ -1,6 +1,7 @@
 import React from 'react';
 import SlideShow from './components/SlideShow';
 import MenuBar from './components/MenuBar';
+import Caption from './components/Caption';
 
 const Header = () => (
   <div className="header">
@@ -10,6 +11,7 @@ const Header = () => (
     <div className="menuBarWrapper">
       <MenuBar isLogin={false} isPersist />
     </div>
+    <Caption isPresist />
   </div>
 );
 
