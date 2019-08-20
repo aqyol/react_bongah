@@ -7,6 +7,7 @@ import LogIn from '../LogIn/index';
 import ExamplePageOne from '../Example/index';
 import ExamplePageTwo from '../ExampleTwo/index';
 import HomePage from '../Scenes/HomePage';
+import SearchPage from '../Scenes/SearchPage';
 
 const Pages = () => (
   <Switch>
@@ -29,6 +30,7 @@ const Router = () => (
     <main>
       <Switch>
         <Route exact path="/home" component={HomePage} />
+        <Route exact path="/search" component={SearchPage} />
         <Route exact path="/" component={LogIn} />
         <Route exact path="/log_in" component={LogIn} />
         <Route path="/" component={wrappedRoutes} />
