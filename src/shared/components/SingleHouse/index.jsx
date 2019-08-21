@@ -25,6 +25,7 @@ const SingleHouse = ({ data }) => (
         <li><span className="icon-frame" /> {data.square} Sq Ft</li>
       </ul>
     </a>
+    <a className="btn btn-green buttonBuy" href="/order/buy/undefined">Buy</a>
   </div>
 );
 

@@ -9,6 +9,7 @@ import ExamplePageTwo from '../ExampleTwo/index';
 import HomePage from '../Scenes/HomePage';
 import SearchPage from '../Scenes/SearchPage';
 import NewPropertyPage from '../Scenes/AddNewPropertyPage';
+import MyhousePage from '../Scenes/MyHouse';
 
 const Pages = () => (
   <Switch>
@@ -33,6 +34,7 @@ const Router = () => (
         <Route exact path="/home" component={HomePage} />
         <Route exact path="/search" component={SearchPage} />
         <Route exact path="/newproperty/:action" component={NewPropertyPage} />
+        <Route exact path="/property/:id?" component={MyhousePage} />
         <Route exact path="/" component={LogIn} />
         <Route exact path="/log_in" component={LogIn} />
         <Route path="/" component={wrappedRoutes} />
