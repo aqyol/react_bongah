@@ -6,7 +6,7 @@ import {
   FaPlusCircle,
   FaAngleLeft,
   FaAngleDown,
-  FaArrowRight,
+  FaCircleNotch,
   FaHome,
   FaComments,
   FaUser,
@@ -49,17 +49,17 @@ class LeftSide extends PureComponent {
               <ul className="colors secondUl">
                 <li>
                   <Link to="/newproperty/sell">
-                    Sell<span className="icon-right"><FaArrowRight /></span>
+                    Sell<span className="icon-right"><FaCircleNotch /></span>
                   </Link>
                 </li>
                 <li>
                   <Link to="/newproperty/rent">
-                    Rent<span className="icon-right"><FaArrowRight /></span>
+                    Rent<span className="icon-right"><FaCircleNotch /></span>
                   </Link>
                 </li>
                 <li>
                   <Link to="/newproperty/renovation">
-                    Renovation<span className="icon-right"><FaArrowRight /></span>
+                    Renovation<span className="icon-right"><FaCircleNotch /></span>
                   </Link>
                 </li>
               </ul>
@@ -74,17 +74,17 @@ class LeftSide extends PureComponent {
               <ul className="colors secondUl">
                 <li>
                   <Link to="/property/mylisting">
-                    My listing<span className="icon-right"><FaArrowRight /></span>
+                    My listing<span className="icon-right"><FaCircleNotch /></span>
                   </Link>
                 </li>
                 <li>
                   <Link to="/property/mywishlist">
-                    My wishlist<span className="icon-right"><FaArrowRight /></span>
+                    My wishlist<span className="icon-right"><FaCircleNotch /></span>
                   </Link>
                 </li>
                 <li>
                   <Link to="/property/myviewing">
-                    My viewing<span className="icon-right"><FaArrowRight /></span>
+                    My viewing<span className="icon-right"><FaCircleNotch /></span>
                   </Link>
                 </li>
               </ul>
@@ -99,12 +99,12 @@ class LeftSide extends PureComponent {
               <ul className="colors secondUl">
                 <li>
                   <Link to="/agent/myagents">
-                    My Agents<span className="icon-right"><FaArrowRight /></span>
+                    My Agents<span className="icon-right"><FaCircleNotch /></span>
                   </Link>
                 </li>
                 <li>
                   <Link to="/agent/search">
-                    Find Agents<span className="icon-right"><FaArrowRight /></span>
+                    Find Agents<span className="icon-right"><FaCircleNotch /></span>
                   </Link>
                 </li>
               </ul>
@@ -119,22 +119,22 @@ class LeftSide extends PureComponent {
               <ul className="colors secondUl">
                 <li>
                   <Link to="/advice/buying">
-                    Buying<span className="icon-right"><FaArrowRight /></span>
+                    Buying<span className="icon-right"><FaCircleNotch /></span>
                   </Link>
                 </li>
                 <li>
                   <Link to="/advice/selling">
-                    Selling<span className="icon-right"><FaArrowRight /></span>
+                    Selling<span className="icon-right"><FaCircleNotch /></span>
                   </Link>
                 </li>
                 <li>
                   <Link to="/advice/design">
-                    Design<span className="icon-right"><FaArrowRight /></span>
+                    Design<span className="icon-right"><FaCircleNotch /></span>
                   </Link>
                 </li>
                 <li>
                   <Link to="/advice/renovations">
-                    Renovations<span className="icon-right"><FaArrowRight /></span>
+                    Renovations<span className="icon-right"><FaCircleNotch /></span>
                   </Link>
                 </li>
               </ul>
