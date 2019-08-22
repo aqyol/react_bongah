@@ -64,7 +64,7 @@ class UserMenu extends PureComponent {
             src="http://mariusn.com/themes/reales/images/avatar-1.png"
           />
           <div className="userTop pull-left">
-            <span className="headerUserName">John Smith</span>
+            <span className="headerUserName">علی کریمی</span>
             <FaAngleDown />
           </div>
           <div className="clearfix" />
@@ -76,21 +76,21 @@ class UserMenu extends PureComponent {
               src="http://mariusn.com/themes/reales/images/avatar-1.png"
               alt="avatar"
             />
-            <div className="mobAvatarName">John Smith</div>
+            <div className="mobAvatarName">علی کریمی</div>
           </div>
           <ul>
-            <li><Link to="/wallet"><span className="walletIcon fa" />Wallet</Link></li>
-            <li><a href="#1"><IoIosSettings />Settings</a></li>
-            <li><Link to="/myprofile"><IoIosPerson />Profile</Link></li>
+            <li><Link to="/wallet"><span className="walletIcon fa" />کیف پول</Link></li>
+            <li><a href="#1"><IoIosSettings />تنظیمات</a></li>
+            <li><Link to="/myprofile"><IoIosPerson />پروفایل</Link></li>
             <li>
               <a href="#1">
                 <FaSignOutAlt />
-                Notifications
+                پیام ها
                 <span className="badge pull-right bg-red">5</span>
               </a>
             </li>
             <li className="divider" />
-            <li><a href="#1" onClick={this.logout}><FaSignOutAlt />Logout</a></li>
+            <li><a href="#1" onClick={this.logout}><FaSignOutAlt />خروج</a></li>
           </ul>
         </div>
       </div>

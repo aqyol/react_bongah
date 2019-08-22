@@ -7,11 +7,11 @@ const Caption = props => (
     {props.isPresist
     && (
       <div className="homeCaption">
-        <div className="homeTitle">Now its easy to find your future home</div>
+        <div className="homeTitle">خرید و اجاره خانه، آسانتر از همیشه</div>
         <div className="homeSubtitle">
-          With Famireales - Real Estate HTML Template
+          اولین سایت بنگاهی با قابلیت قول نامه در کشور
         </div>
-        <Link className="btn btn-black" to="/search">Learn More</Link>
+        <Link className="btn btn-black" to="/search">اطلاعات بیشتر</Link>
       </div>
     )
     }

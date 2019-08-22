@@ -32,14 +32,14 @@ class SearchBar extends PureComponent {
       return (null);
     }
     const listBed = [
-      'Bedrooms',
+      'اتاق خواب',
       '1',
       '2',
       '3',
       '4',
     ];
     const listBath = [
-      'Bathrooms',
+      'حمام',
       '1',
       '2',
       '3',
@@ -53,33 +53,32 @@ class SearchBar extends PureComponent {
               type="text"
               className="form-control"
               id="city"
-              placeholder="City"
+              placeholder="شهر مورد نظر را وارد کنید"
             />
           </div>
           <div className={`form-group${this.state.isAdvance ? ' adv' : ' hidden-xs'}`}>
             <SelectComponent switchTop listItem={listBed}>
-              Bedrooms
+              اتاق خواب
             </SelectComponent>
           </div>
           <div className={`form-group${this.state.isAdvance ? ' adv' : ' hidden-xs'}`}>
             <SelectComponent switchTop listItem={listBath}>
-              Bathrooms
+              حمام
             </SelectComponent>
           </div>
           <div className={`form-group${this.state.isAdvance ? ' adv' : ' hidden-xs'}`}>
             <div className="input-group">
-              <div className="input-group-addon">$</div>
+              <div className="input-group-addon">قیمت</div>
               <input
                 className="form-control price"
                 type="number"
-                placeholder="From"
+                placeholder="از"
               />
             </div>
           </div>
           <div className={`form-group${this.state.isAdvance ? ' adv' : ' hidden-xs'}`}>
             <div className="input-group">
-              <div className="input-group-addon">$</div>
-              <input className="form-control price" type="number" placeholder="To" />
+              <input className="form-control price" type="number" placeholder="تا" />
             </div>
           </div>
           <div className={`form-group${this.state.isAdvance ? ' adv' : ' hidden-xs'}`}>
@@ -87,7 +86,7 @@ class SearchBar extends PureComponent {
               <label htmlFor="forRent">
                 <input id="forRent" name="forRent" type="checkbox" />
                 <span><FaCheck /></span>
-                For rent
+                رهن و اجاره
               </label>
             </div>
           </div>
@@ -96,18 +95,18 @@ class SearchBar extends PureComponent {
               <label htmlFor="forSale">
                 <input id="forSale" name="forSale" type="checkbox" />
                 <span><FaCheck /></span>
-                For sale
+                فروش
               </label>
             </div>
           </div>
           <div className="form-group">
-            <Link to="/search" className="btn btn-green isThemeBtn">Search</Link>
+            <Link to="/search" className="btn btn-green isThemeBtn">جستجو</Link>
             <a
               href="#1"
               className={`btn btn-o btn-white pull-right visible-xs${this.state.isAdvance ? ' advBtnActive' : ''}`}
               onClick={this.toggleAdvSearch}
             >
-              Advance Search
+              جستجوی پسشرفته
               {this.state.isAdvance
                 && <FaAngleDown />
               }

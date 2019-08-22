@@ -51,14 +51,14 @@ class MenuBar extends PureComponent {
       (
         <li key="0">
           <a href="#1" onClick={() => this.updateFormStatus('register')}>
-            Sign Up
+            ثبت نام
           </a>
         </li>
       ),
       (
         <li key="1">
           <a href="#1" onClick={() => this.updateFormStatus('login')}>
-            Sign In
+            ورود
           </a>
         </li>
       ),
@@ -71,13 +71,10 @@ class MenuBar extends PureComponent {
     }
     return (
       <div className="menuBar">
-        <div className="langSelectorWrapper">
-          <span>Language selector</span>
-        </div>
         <a href="/">
-          <div className="homeLogo osLight">
+          <div className="homeLogo">
             <FaHome />
-            <span>House</span>
+            <span>املاکیست</span>
           </div>
         </a>
         <a
@@ -90,28 +87,25 @@ class MenuBar extends PureComponent {
         <div className={`homeNav${(this.state.isHandlerActive ? ' active' : '')}`}>
           <ul>
             <li className="moreOption">
-              <Link to="/search?type=sale">Buy</Link>
+              <Link to="/search?type=rent">کمیسیون</Link>
             </li>
             <li className="moreOption">
-              <Link to="/search?type=rent">Rent</Link>
+              <Link to="/agent/search">مشارکت</Link>
             </li>
             <li className="moreOption">
-              <Link to="/agent/search">Renovation</Link>
+              <Link to="/agent/search">پیش فروش</Link>
             </li>
             <li className="moreOption">
-              <Link to="/agent/search">Commercial</Link>
+              <Link to="/projects">رهن و اجاره</Link>
             </li>
             <li className="moreOption">
-              <Link to="/projects">Project</Link>
-            </li>
-            <li className="moreOption">
-              <Link to="/agent/search">Find agent</Link>
+              <Link to="/agent/search">خرید</Link>
             </li>
             {this.loginField()}
             <li>
               <Link to="/newproperty/sell">
                 <div className="btn btn-green">
-                  List a Property
+                  افزودن آگهی جدید
                 </div>
               </Link>
             </li>
