@@ -14,6 +14,7 @@ import AgentPage from '../Scenes/AgentPage';
 import NewsPage from '../Scenes/NewsPage';
 import AdvicePage from '../Scenes/AdvicePage';
 import PageInfo from '../Scenes/MyInfoPage';
+import WalletPage from '../Scenes/WalletPage';
 
 const Pages = () => (
   <Switch>
@@ -43,6 +44,7 @@ const Router = () => (
         <Route exact path="/advice/:type" component={AdvicePage} />
         <Route exact path="/projects" component={NewsPage} />
         <Route exact path="/myprofile" component={PageInfo} />
+        <Route exact path="/wallet/:action?" component={WalletPage} />
         <Route exact path="/" component={LogIn} />
         <Route exact path="/log_in" component={LogIn} />
         <Route path="/" component={wrappedRoutes} />
