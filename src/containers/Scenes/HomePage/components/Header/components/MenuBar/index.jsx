@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { FaHome, FaList } from 'react-icons/fa';
 import UserMenu from '../../../../../../../shared/components/UserMenu';
+import RLForm from '../../../../../../../shared/components/RegisterLoginForm';
 
 class MenuBar extends PureComponent {
   static propTypes = {
@@ -29,7 +30,10 @@ class MenuBar extends PureComponent {
       this.setState({
         rlFormStatus: status,
       });
-      console.log(this.state.rlFormStatus);
+    } else {
+      this.setState({
+        rlFormStatus: false,
+      });
     }
   };
 
@@ -113,6 +117,12 @@ class MenuBar extends PureComponent {
             </li>
           </ul>
         </div>
+        <RLForm
+          type={this.state.rlFormStatus}
+          openRegisterForm={() => this.updateFormStatus('register')}
+          openLoginForm={() => this.updateFormStatus('login')}
+          close={() => this.updateFormStatus()}
+        />
       </div>
     );
   }
