@@ -5,34 +5,29 @@ import Subscribe from './components/Subscribe';
 
 
 const listCompany = [
-  'About',
-  'Jobs',
-  'Press',
-  'Blog',
-  'Help',
-  'Policies',
-  'Terms & Privacy',
+  'درباره ما',
+  'مجله',
+  'قوانین و مقررات',
+  'حریم شخصی',
+  'دفاتر ما',
 ];
 const listDiscover = [
-  'Become a Member',
-  'Properties List',
-  'Sign in',
-  'Widgets',
-  'Components',
-  'Tables',
-  'Lists',
+  'عضویت بنگاه',
+  'لیست خدمات',
+  'ورود',
+  'عضویت',
 ];
 
 const Footer = () => (
   <div className="footerContainer">
     <div className="row">
-      <ListComp list={listCompany}>Company</ListComp>
-      <ListComp list={listDiscover}>Discover</ListComp>
-      <GetInTouch>Get in Touch</GetInTouch>
-      <Subscribe>Subscribe to Our Newsletter</Subscribe>
+      <Subscribe>از جدیدترین آگهی های ما مطلع شوید</Subscribe>
+      <GetInTouch>ارتباط با ما</GetInTouch>
+      <ListComp list={listDiscover}>خدمات</ListComp>
+      <ListComp list={listCompany}>املاکیست</ListComp>
     </div>
     <div className="footerCopyRight">
-      FamiCare Company<br /> © Copy right FamiCare technology Co
+      تمامی حقوق استفاده از مطالب و محتوا مربوط به شرکت آق یول می باشد.
     </div>
   </div>
 );

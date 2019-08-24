@@ -7,10 +7,10 @@ const Subscribe = props => (
     <div className="subCompTitle osLight">{props.children}</div>
     <form>
       <div className="form-group">
-        <input type="email" className="form-control" placeholder="Email Address" />
+        <input type="email" className="form-control" placeholder="آدرس ایمیل" />
       </div>
       <div className="form-group">
-        <a href="#1" className="btn btn-green btn-block isThemeBtn">Subscribe</a>
+        <a href="#1" className="btn btn-green btn-block isThemeBtn">اطلاع بده</a>
       </div>
     </form>
   </div>

@@ -16,9 +16,7 @@ const GetInTouch = props => (
     <ul className="mainList">
       <li className="footer-phone"><span className="fa fa-phone" /> 0962 573 550</li>
       <li className="footer-address osLight">
-        <p>15 Doan Nhu Hai ,</p>
-        <p>District 4 ,</p>
-        <p>Ho Chi Minh</p>
+        <p>تهران، خیابان ولیعصر، خیابان ارمغان شرقی، پلاک ۱۸ جنوبی</p>
       </li>
       <li>
         <a href="#1" className="btn btn-sm btn-icon btn-round btn-o btn-white">
