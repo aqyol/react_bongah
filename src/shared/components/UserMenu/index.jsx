@@ -5,6 +5,7 @@ import {
   FaAngleDown,
   FaRegCreditCard,
   FaRegEnvelope,
+  FaRegUser,
 } from 'react-icons/fa';
 import { IoIosSettings, IoIosPerson } from 'react-icons/io';
 // import PropTypes from 'prop-types';
@@ -60,7 +61,7 @@ class UserMenu extends PureComponent {
         role="presentation"
       >
         <a href="#1" className="userHandler dropdown-toggle" data-toggle="dropdown">
-          <FaSignOutAlt /><span className="counter">5</span>
+          <FaRegUser /><span className="counter">5</span>
         </a>
         <a href="#1" className="headerUser dropdown-toggle" data-toggle="dropdown">
           <img
