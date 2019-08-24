@@ -5,10 +5,9 @@ import AddNewPropertyForm from '../AddNewPropertyForm';
 const SellPropertyPage = () => (
   <div className="sellPropertyPage">
     <div className="dashboardTitle">
-      <h3>Sell Property</h3>
+      <h3>آگهی فروش</h3>
       <h5>
-        We&apos;d love to find out more about you. It&apos;ll help us make
-        sure our website and apps tick the right boxes.
+        در این قسمت میتوانید اطلاعات مربوط به ملک خود را ثبت کنید.
       </h5>
     </div>
     <div className="dashboardBody">

@@ -10,8 +10,8 @@ class App extends Component {
   constructor() {
     super();
     this.state = {
-      loading: true,
-      loaded: false,
+      loading: false,
+      loaded: true,
     };
   }
 

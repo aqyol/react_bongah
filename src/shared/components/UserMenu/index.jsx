@@ -1,6 +1,11 @@
 import React, { PureComponent } from 'react';
 import { Link } from 'react-router-dom';
-import { FaSignOutAlt, FaAngleDown } from 'react-icons/fa';
+import {
+  FaSignOutAlt,
+  FaAngleDown,
+  FaRegCreditCard,
+  FaRegEnvelope,
+} from 'react-icons/fa';
 import { IoIosSettings, IoIosPerson } from 'react-icons/io';
 // import PropTypes from 'prop-types';
 
@@ -69,7 +74,7 @@ class UserMenu extends PureComponent {
           </div>
           <div className="clearfix" />
         </a>
-        <div className="dropdown-menu pull-right userMenu" role="menu">
+        <div className="dropdown-menu pull-left userMenu" role="menu">
           <div className="mobAvatar">
             <img
               className="avatar mobAvatarImg"
@@ -79,18 +84,41 @@ class UserMenu extends PureComponent {
             <div className="mobAvatarName">علی کریمی</div>
           </div>
           <ul>
-            <li><Link to="/wallet"><span className="walletIcon fa" />کیف پول</Link></li>
-            <li><a href="#1"><IoIosSettings />تنظیمات</a></li>
-            <li><Link to="/myprofile"><IoIosPerson />پروفایل</Link></li>
             <li>
-              <a href="#1">
-                <FaSignOutAlt />
-                پیام ها
-                <span className="badge pull-right bg-red">5</span>
-              </a>
+              <Link to="/wallet">
+                <span className="walletIcon fa pull-right">
+                  <FaRegCreditCard />
+                </span>کیف پول
+              </Link>
+            </li>
+            <li>
+              <Link to="#1">
+                <span className="walletIcon fa pull-right">
+                  <IoIosSettings />
+                </span>تنظیمات
+              </Link>
+            </li>
+            <li>
+              <Link to="/myprofile">
+                <span className="walletIcon fa pull-right">
+                  <IoIosPerson />
+                </span>پروفایل
+              </Link>
+            </li>
+            <li>
+              <Link to="#1">
+                <span className="walletIcon fa pull-right">
+                  <FaRegEnvelope />
+                </span>پیام ها
+                <span className="badge pull-left bg-red">5</span>
+              </Link>
             </li>
             <li className="divider" />
-            <li><a href="#1" onClick={this.logout}><FaSignOutAlt />خروج</a></li>
+            <li>
+              <a href="#1" onClick={this.logout}>
+                <span className="pull-right"><FaSignOutAlt /></span>خروج
+              </a>
+            </li>
           </ul>
         </div>
       </div>

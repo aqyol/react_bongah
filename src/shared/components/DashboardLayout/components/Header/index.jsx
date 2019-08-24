@@ -16,10 +16,10 @@ const Header = props => (
       </Link>
     </div>
     <a href="#1" className="navHandler" onClick={() => props.clickToggle()}><FaBars /></a>
-    <SearchForm />
     <div className="userMenuWrapper">
       <UserMenu />
     </div>
+    <SearchForm />
     <NotifyMenu />
     <div className="clearfix" />
   </div>

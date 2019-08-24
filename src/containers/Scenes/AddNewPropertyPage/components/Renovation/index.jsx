@@ -5,10 +5,9 @@ import AddNewPropertyForm from '../AddNewPropertyForm';
 const RenovationPage = () => (
   <div className="renovationPage">
     <div className="dashboardTitle">
-      <h3>Renovation Property</h3>
+      <h3>آگهی مشارکت</h3>
       <h5>
-        We&apos;d love to find out more about you. It&apos;ll help us make
-        sure our website and apps tick the right boxes.
+        در این قسمت میتوانید اطلاعات مربوط به ملک خود را ثبت کنید.
       </h5>
     </div>
     <div className="dashboardBody">
