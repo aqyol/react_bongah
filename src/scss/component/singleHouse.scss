@@ -1,4 +1,5 @@
 .singleHouse {
+  direction: rtl;
   overflow: hidden;
   position: relative;
 }
@@ -249,7 +250,7 @@ a.card ul.cardFeat li span, div.card ul.cardFeat li span {
   position: absolute;
   bottom: 55px;
   opacity: 0;
-  right: 0px;
+  left: 0px;
   visibility: hidden;
   -webkit-transition: opacity 0.2s linear;
   -o-transition: opacity 0.2s linear;

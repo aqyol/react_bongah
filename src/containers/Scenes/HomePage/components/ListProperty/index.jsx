@@ -2,43 +2,43 @@ import React from 'react';
 import SingleHouse from '../../../../../shared/components/SingleHouse';
 
 const houseData = [{
-  name: 'Modern Residence in New York',
-  address: ' 39 Remsen St, Brooklyn, NY 11201, USA',
-  beds: 3,
-  toilets: 2,
+  name: 'خانه آپارتمانی در نارمک',
+  address: 'خیابان آزادی، کوچه ۳۹، پلاک ۲۳۱، واحد ۵',
+  beds: 2,
+  toilets: 1,
   square: 20,
   img: 'http://mariusn.com/themes/reales/images/prop/1-1.png',
 }, {
-  name: 'Hauntingly Beautiful Estate',
-  address: ' 169 Warren St, Brooklyn, NY 11201, USA',
+  name: 'خانه آپارتمانی در نارمک',
+  address: 'خیابان آزادی، کوچه ۳۹، پلاک ۲۳۱، واحد ۵',
   beds: 3,
   toilets: 2,
   square: 20,
   img: 'http://mariusn.com/themes/reales/images/prop/2-1.png',
 }, {
-  name: 'Modern Residence in New York',
-  address: ' 39 Remsen St, Brooklyn, NY 11201, USA',
+  name: 'خانه آپارتمانی در نارمک',
+  address: 'خیابان آزادی، کوچه ۳۹، پلاک ۲۳۱، واحد ۵',
   beds: 3,
   toilets: 2,
   square: 20,
   img: 'http://mariusn.com/themes/reales/images/prop/1-1.png',
 }, {
-  name: 'Hauntingly Beautiful Estate',
-  address: ' 169 Warren St, Brooklyn, NY 11201, USA',
+  name: 'خانه آپارتمانی در نارمک',
+  address: 'خیابان آزادی، کوچه ۳۹، پلاک ۲۳۱، واحد ۵',
   beds: 3,
   toilets: 2,
   square: 20,
   img: 'http://mariusn.com/themes/reales/images/prop/2-1.png',
 }, {
-  name: 'Modern Residence in New York',
-  address: ' 39 Remsen St, Brooklyn, NY 11201, USA',
+  name: 'خانه آپارتمانی در نارمک',
+  address: 'خیابان آزادی، کوچه ۳۹، پلاک ۲۳۱، واحد ۵',
   beds: 3,
   toilets: 2,
   square: 20,
   img: 'http://mariusn.com/themes/reales/images/prop/1-1.png',
 }, {
-  name: 'Hauntingly Beautiful Estate',
-  address: ' 169 Warren St, Brooklyn, NY 11201, USA',
+  name: 'خانه آپارتمانی در نارمک',
+  address: 'خیابان آزادی، کوچه ۳۹، پلاک ۲۳۱، واحد ۵',
   beds: 3,
   toilets: 2,
   square: 20,
@@ -50,8 +50,7 @@ const arr = [0, 1, 2, 3, 4, 5];
 const ListProperty = () => (
   <div className="listProperty">
     <div className="row listPropertyHeader">
-      <h3>Recently Listed Properties</h3>
-      <h5>Fusce risus metus, placerat in consectetur eu, porttitor a est sed sed dolor lorem cras adipiscing</h5>
+      <h3>آخرین آگهی های افزوده شده</h3>
     </div>
     <div className="row listPropertyContent">
       {arr.map((value, index) => (

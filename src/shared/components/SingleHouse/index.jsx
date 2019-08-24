@@ -1,5 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import {
+  FaBed,
+  FaParking,
+  FaVectorSquare,
+  FaRegEye,
+  FaRegHeart,
+} from 'react-icons/fa';
 
 const SingleHouse = ({ data }) => (
   <div className="singleHouse">
@@ -7,9 +14,9 @@ const SingleHouse = ({ data }) => (
       <div className="figure">
         <img src={data.img} alt="image1" />
         <div className="figCaption">
-          <div>$1,550,000</div>
-          <span className="icon-eye"> 200</span>
-          <span className="icon-heart"> 54</span>
+          <div>1,550,000 تومان</div>
+          <span className="icon-eye"><FaRegEye /> 200</span>
+          <span className="icon-heart"><FaRegHeart /> 54</span>
           <span className="icon-bubble"> 13</span>
         </div>
         <div className="figView"><span className="icon-eye" /></div>
@@ -20,12 +27,12 @@ const SingleHouse = ({ data }) => (
         {data.address}
       </div>
       <ul className="cardFeat">
-        <li><span className="fa fa-moon-o" /> {data.beds}</li>
-        <li><span className="icon-drop" /> {data.toilets}</li>
-        <li><span className="icon-frame" /> {data.square} Sq Ft</li>
+        <li><span className="fa fa-moon-o"><FaBed /></span> {data.beds}</li>
+        <li><span className="icon-drop"><FaParking /></span> {data.toilets}</li>
+        <li><span className="icon-frame"><FaVectorSquare /></span> {data.square} مترمربع</li>
       </ul>
     </a>
-    <a className="btn btn-green buttonBuy" href="/order/buy/undefined">Buy</a>
+    <a className="btn btn-green buttonBuy" href="/order/buy/undefined">خرید</a>
   </div>
 );
 
