@@ -7,61 +7,61 @@ import RadioButton from '../RadioButton';
 
 
 const types = [
-  'For Sale',
-  'For Rent',
+  'فروش',
+  'رهن و اجاره',
 ];
 
 const AddNewPropertyForm = () => (
   <div className="newPropertyForm">
     <div className="row form-group">
       <div className="title col-xs-12 col-sm-6 col-md-6">
-        <h4>Title</h4>
+        <h4>عنوان</h4>
         <input type="text" name="" id="" className="form-control" />
       </div>
       <div className="Price col-xs-12 col-sm-6 col-md-6">
-        <h4>Price</h4>
+        <h4>قیمت</h4>
         <div className="input-group">
-          <span className="input-group-addon">$</span>
+          <span className="input-group-addon">تومان</span>
           <input type="text" name="" id="" className="form-control" />
         </div>
       </div>
     </div>
     <div className="row form-group">
       <div className="discription col-xs-12 col-sm-12 col-md-12">
-        <h4>Description</h4>
+        <h4>توضیحات</h4>
         <textarea className="description form-control" />
       </div>
     </div>
     <div className="row form-group">
       <div className="address col-xs-12 col-sm-12 col-md-12">
-        <h4>Address</h4>
+        <h4>آدرس</h4>
         <InputMap />
       </div>
     </div>
     <div className="row form-group">
       <div className="bedrooms col-xs-12 col-sm-6 col-md-3">
-        <h4>Bedrooms</h4>
+        <h4>اتاق خواب</h4>
         <input type="text" name="" id="" className="form-control" />
       </div>
       <div className="bathrooms col-xs-12 col-sm-6 col-md-3">
-        <h4>Bathrooms</h4>
+        <h4>حمام</h4>
         <input type="text" name="" id="" className="form-control" />
       </div>
       <div className="area col-xs-12 col-sm-6 col-md-3">
-        <h4>Area</h4>
+        <h4>متراژ</h4>
         <div className="input-group">
           <input type="text" name="" id="" className="form-control" />
-          <span className="input-group-addon">Sq Ft</span>
+          <span className="input-group-addon">متر مربع</span>
         </div>
       </div>
       <div className="type col-xs-12 col-sm-6 col-md-3">
-        <h4>Type</h4>
+        <h4>نوع</h4>
         <SelectComponent switchTop listItem={types} />
       </div>
     </div>
     <div className="row form-group">
       <div className="imageGallery col-xs-12 col-sm-12 col-md-12">
-        <h4>Image Gallery</h4>
+        <h4>آلبوم عکس</h4>
         <div className="file-input file-input-new">
           <input type="hidden" value="" />
           <div className="file-preview">
@@ -72,7 +72,7 @@ const AddNewPropertyForm = () => (
           </div>
           <div className="btn btn-o btn-default btn-file">
             <FaFolderOpen />
-            &nbsp;Browse Images
+            &nbsp;بارگذاری عکس
             <input type="file" className="file" multiple />
           </div>
         </div>
@@ -80,46 +80,46 @@ const AddNewPropertyForm = () => (
     </div>
     <div className="row form-group">
       <div className="amenities col-xs-12 col-sm-12 col-md-12">
-        <h4>Amenities</h4>
+        <h4>امکانات</h4>
         <div className="col-xs-12 col-sm-4 col-md-3">
-          <CheckBox>Garage</CheckBox>
+          <CheckBox>پارکینگ</CheckBox>
         </div>
         <div className="col-xs-12 col-sm-4 col-md-3">
-          <CheckBox>Outdoor Pool</CheckBox>
+          <CheckBox>استخر روباز</CheckBox>
         </div>
         <div className="col-xs-12 col-sm-4 col-md-3">
-          <CheckBox>Garden</CheckBox>
+          <CheckBox>باغچه</CheckBox>
         </div>
         <div className="col-xs-12 col-sm-4 col-md-3">
-          <CheckBox>Security System</CheckBox>
+          <CheckBox>سیستم امنیتی</CheckBox>
         </div>
         <div className="col-xs-12 col-sm-4 col-md-3">
-          <CheckBox>Internet</CheckBox>
+          <CheckBox>اینترنت</CheckBox>
         </div>
         <div className="col-xs-12 col-sm-4 col-md-3">
-          <CheckBox>Telephone</CheckBox>
+          <CheckBox>تلفن</CheckBox>
         </div>
         <div className="col-xs-12 col-sm-4 col-md-3">
-          <CheckBox>Air Conditioning  </CheckBox>
+          <CheckBox>تهویه هوا</CheckBox>
         </div>
         <div className="col-xs-12 col-sm-4 col-md-3">
-          <CheckBox>Heating</CheckBox>
+          <CheckBox>سیستم گرمایش</CheckBox>
         </div>
       </div>
     </div>
     <div className="row form-group">
       <div className="agent col-xs-12 col-sm-12 col-md-12">
-        <h4>Agents</h4>
+        <h4>بنگاه</h4>
         <div className="agentItems col-xs-6 col-sm-6 col-md-6">
-          <RadioButton>No Agent</RadioButton>
+          <RadioButton>بدون بنگاه</RadioButton>
         </div>
         <div className="agentItems col-xs-6 col-sm-6 col-md-6">
-          <RadioButton>Find Agent</RadioButton>
+          <RadioButton>یافتن بنگاه</RadioButton>
         </div>
       </div>
     </div>
     <div className="row form-group rowBtn">
-      <input type="submit" className="btn btn-green btn-lg" value="Add Property" />
+      <input type="submit" className="btn btn-green btn-lg" value="افزودن آگهی" />
     </div>
   </div>
 );
