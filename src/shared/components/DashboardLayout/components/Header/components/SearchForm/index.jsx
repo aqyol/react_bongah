@@ -4,7 +4,7 @@ import { FaSearch } from 'react-icons/fa';
 const SearchForm = () => (
   <div className="search">
     <FaSearch />
-    <input type="text" placeholder="Search for houses, apartments..." />
+    <input type="text" placeholder="عبارت خود را برای جستجو وارد کنید" />
   </div>
 );
 

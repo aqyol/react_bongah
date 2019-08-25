@@ -64,6 +64,10 @@ a.navHandler {
 .search {
   float: left;
   padding-left: 10px;
+  border: 2px solid #0EAAA6;
+  margin-top: 5px;
+  padding-bottom: 10px;
+  border-radius: 30px;
 }
 
 .searchIcon {
@@ -81,7 +85,7 @@ a.navHandler {
 }
 
 .icon-magnifier {
-  font-family: 'Simple-Line-Icons';
+  font-family: "B Yekan";
   speak: none;
   font-style: normal;
   font-weight: normal;
@@ -96,9 +100,10 @@ a.navHandler {
   color: #3a3a3a;
   border: 0 none;
   font-size: 13px;
-  margin: 19px 0 0 5px;
+  margin: 15px 7px 0px 10px;
   width: 210px;
   -webkit-appearance: none;
+  direction: rtl;
 }
 
 .headerNotifyWraper {
