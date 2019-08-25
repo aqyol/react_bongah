@@ -6,7 +6,7 @@ const SearchPage = () => (
   <div className="searchPage">
     <Dashboard>
       <div className="dashboardTitle">
-        <h3>Filter your result</h3>
+        <h3>ملک مورد نظر خود را جستجو کنید</h3>
       </div>
       <div className="searchFormWrapper">
         <SearchForm />

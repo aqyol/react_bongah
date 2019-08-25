@@ -11,32 +11,32 @@ import SearchMap from '../SearchMap';
 
 
 const houseData = [{
-  name: 'Modern Residence in New York',
-  address: ' 39 Remsen St, Brooklyn, NY 11201, USA',
+  name: 'خانه ویلایی',
+  address: ' تهران، آزادی',
   beds: 3,
   toilets: 2,
-  square: 20,
+  square: 120,
   img: 'http://mariusn.com/themes/reales/images/prop/1-1.png',
 }, {
-  name: 'Hauntingly Beautiful Estate',
-  address: ' 169 Warren St, Brooklyn, NY 11201, USA',
+  name: 'خانه آپارتمانی ',
+  address: 'تهران، ونک',
   beds: 3,
   toilets: 2,
-  square: 20,
+  square: 120,
   img: 'http://mariusn.com/themes/reales/images/prop/2-1.png',
 }, {
-  name: 'Modern Residence in New York',
-  address: ' 39 Remsen St, Brooklyn, NY 11201, USA',
+  name: 'آپارتمان مسکونی',
+  address: ' شیراز، شریعتی',
   beds: 3,
   toilets: 2,
-  square: 20,
+  square: 200,
   img: 'http://mariusn.com/themes/reales/images/prop/1-1.png',
 }, {
-  name: 'Hauntingly Beautiful Estate',
-  address: ' 169 Warren St, Brooklyn, NY 11201, USA',
+  name: 'آپارتمان اداری',
+  address: 'تبریز، آبرسان',
   beds: 3,
   toilets: 2,
-  square: 20,
+  square: 220,
   img: 'http://mariusn.com/themes/reales/images/prop/2-1.png',
 }];
 
@@ -45,7 +45,10 @@ class SearchForm extends PureComponent {
     super();
     this.state = {
       resultTab: 'list',
+      beds: 1,
+      baths: 1,
     };
+    this.handleChangeValue = this.handleChangeValue.bind(this);
   }
 
   changeResultTab = (tab) => {
@@ -76,17 +79,15 @@ class SearchForm extends PureComponent {
     </div>
   );
 
-  resultList = () => (
-    <div className="resultsList">
-      <div className="row">
-        {houseData.map((data, index) => (
-          <div className="col-xs-12 col-sm-12 col-md-6 col-lg-6" key={index.toString()}>
-            <SingleHouse data={data} />
-          </div>
-        ))}
-      </div>
-    </div>
-  );
+  handleChangeValue(name, increase) {
+    this.setState((prevState) => {
+      const { [name]: prevValue } = prevState;
+      const newValue = (increase) ? prevValue + 1 : prevValue - 1;
+      return {
+        [name]: (newValue >= 0 ? newValue : 0),
+      };
+    });
+  }
 
   render() {
     return (
@@ -94,9 +95,9 @@ class SearchForm extends PureComponent {
         <div className="filterBox">
           <div className="row form-group">
             <div className="col-xs-12 col-sm-8 col-md-6 yearOfBirth">
-              <h4>Prototype Type</h4>
+              <h4>نوع ملک</h4>
               <div className="selectItem">
-                <SelectComponent switchTop listItem={['All', 'Rent', 'Sale']} />
+                <SelectComponent switchTop={false} listItem={['همه', 'اجاره', 'فروش', 'مشارکت', 'پیش فروش']} />
               </div>
             </div>
           </div>
@@ -105,15 +106,23 @@ class SearchForm extends PureComponent {
               <div className="formField">
                 <label htmlFor="beds">
                   <div id="beds" className="volume">
-                    <a href="#1" className="btn btn-gray btn-round-left">
+                    <a
+                      href="#1"
+                      className="btn btn-gray btn-round-left"
+                      onClick={() => this.handleChangeValue('beds', 0)}
+                    >
                       <FaAngleLeft />
                     </a>
-                    <input type="text" className="form-control" readOnly value="1" />
-                    <a href="#1" className="btn btn-gray btn-round-right">
+                    <input type="text" className="form-control" readOnly value={this.state.beds} />
+                    <a
+                      href="#1"
+                      className="btn btn-gray btn-round-right"
+                      onClick={() => this.handleChangeValue('beds', 1)}
+                    >
                       <FaAngleRight />
                     </a>
                   </div>
-                  Bedrooms
+                  اتاق خواب
                 </label>
 
               </div>
@@ -122,11 +131,28 @@ class SearchForm extends PureComponent {
               <div className="formField">
                 <label htmlFor="baths">
                   <div id="baths" className="volume">
-                    <a href="#1" className="btn btn-gray btn-round-left"><FaAngleLeft /></a>
-                    <input type="text" className="form-control" readOnly value="1" />
-                    <a href="#1" className="btn btn-gray btn-round-right"><FaAngleRight /></a>
+                    <a
+                      href="#1"
+                      className="btn btn-gray btn-round-left"
+                      onClick={() => this.handleChangeValue('baths', 0)}
+                    >
+                      <FaAngleLeft />
+                    </a>
+                    <input
+                      type="text"
+                      className="form-control"
+                      readOnly
+                      value={this.state.baths}
+                    />
+                    <a
+                      href="#1"
+                      className="btn btn-gray btn-round-right"
+                      onClick={() => this.handleChangeValue('baths', 1)}
+                    >
+                      <FaAngleRight />
+                    </a>
                   </div>
-                  Bathrooms
+                  حمام
                 </label>
               </div>
             </div>
@@ -138,12 +164,12 @@ class SearchForm extends PureComponent {
               <li
                 className={this.state.resultTab === 'list' ? 'active' : ''}
               >
-                <a href="#1" onClick={() => { this.changeResultTab('list'); }}><FaThList /> Listing view</a>
+                <a href="#1" onClick={() => { this.changeResultTab('list'); }}><FaThList /> نمایش لیست </a>
               </li>
               <li
                 className={this.state.resultTab === 'map' ? 'active' : ''}
               >
-                <a href="#1" onClick={() => { this.changeResultTab('map'); }}><FaMap /> Map view</a>
+                <a href="#1" onClick={() => { this.changeResultTab('map'); }}><FaMap /> نمایش روی نقشه </a>
               </li>
             </ul>
           </div>
