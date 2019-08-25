@@ -24,7 +24,7 @@
   height: auto;
   border-radius: 0;
   padding: 10px;
-  float: left;
+  float: right;
 }
 
 .agentInfoContainer .avatar > img {
@@ -36,9 +36,10 @@
 }
 
 .agentInfoContainer .info {
-  float: left;
+  float: right;
   padding: 18px 0;
   max-width: 70%;
+  text-align: right;
 }
 
 .agentInfoContainer .info .name {
@@ -63,7 +64,7 @@
   position: absolute;
   z-index: 7;
   top: 24px;
-  right: 10px;
+  left: 10px;
 }
 
 .agentInfoContainer .ops > a{

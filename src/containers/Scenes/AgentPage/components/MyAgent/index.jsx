@@ -6,21 +6,21 @@ class MyAgent extends PureComponent {
   agentList = [
     {
       avatar: 'http://mariusn.com/themes/reales/images/avatar-3.png',
-      name: 'Rust Cohle',
-      title: 'Administrator',
-      address: 'Los Angeles, CA, USA',
+      name: 'رضا رضایی',
+      title: 'مدیر بنگاه',
+      address: 'تهران - شریعتی',
     },
     {
       avatar: 'http://mariusn.com/themes/reales/images/avatar-4.png',
-      name: 'Rust Cohle',
-      title: 'Administrator',
-      address: 'Los Angeles, CA, USA',
+      name: 'حسین حسینی',
+      title: 'مدیر بنگاه',
+      address: 'تهران - ونک',
     },
     {
       avatar: 'http://mariusn.com/themes/reales/images/avatar-2.png',
-      name: 'Rust Cohle',
-      title: 'Administrator',
-      address: 'Los Angeles, CA, USA',
+      name: 'محمد محمدی',
+      title: 'مدیر بنگاه',
+      address: 'تهران - اما خمینی',
     },
   ];
 
@@ -42,7 +42,7 @@ class MyAgent extends PureComponent {
   }
 
   resultAgencies = () => (
-    <h2>Agencies</h2>
+    <h2>بنگاه ها</h2>
   );
 
   resultAgents = () => (
@@ -59,10 +59,9 @@ class MyAgent extends PureComponent {
     return (
       <div>
         <div className="dashboardTitle">
-          <h3>My Agent</h3>
+          <h3>بنگاه های من</h3>
           <h5>
-            Wed love to find out more about you. Itll help us make
-            sure our website and apps tick the right boxes.
+            در این قسمت می توانید بنگاه های مورد علاقه خود را مشاهده کنید
           </h5>
         </div>
         <div className="searchAgentForm">
@@ -71,12 +70,12 @@ class MyAgent extends PureComponent {
               <li
                 className={this.state.resultTab === 'agents' ? 'active' : ''}
               >
-                <a href="#1" onClick={() => this.changeResultTab('agents')}><FaMap /> Agents</a>
+                <a href="#1" onClick={() => this.changeResultTab('agents')}><FaMap /> ایجنت ها</a>
               </li>
               <li
                 className={this.state.resultTab === 'agencies' ? 'active' : ''}
               >
-                <a href="#1" onClick={() => this.changeResultTab('agencies')}><FaThList /> Agencies</a>
+                <a href="#1" onClick={() => this.changeResultTab('agencies')}><FaThList /> بنگاه ها</a>
               </li>
             </ul>
           </div>
