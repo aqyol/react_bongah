@@ -26,9 +26,6 @@ const BigItem = props => (
 );
 
 BigItem.propTypes = {
-  linkImage: PropTypes.string.isRequired,
-  title: PropTypes.string.isRequired,
-  address: PropTypes.string.isRequired,
   data: PropTypes.objectOf(PropTypes.object).isRequired,
 };
 
