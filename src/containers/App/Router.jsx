@@ -15,6 +15,7 @@ import NewsPage from '../Scenes/NewsPage';
 import AdvicePage from '../Scenes/AdvicePage';
 import PageInfo from '../Scenes/MyInfoPage';
 import WalletPage from '../Scenes/WalletPage';
+import Commission from '../Scenes/CommissionPage';
 
 const Pages = () => (
   <Switch>
@@ -45,7 +46,8 @@ const Router = () => (
         <Route exact path="/projects" component={NewsPage} />
         <Route exact path="/myprofile" component={PageInfo} />
         <Route exact path="/wallet/:action?" component={WalletPage} />
-        <Route exact path="/" component={LogIn} />
+        <Route exact path="/commission" component={Commission} />
+        <Route exact path="/" component={HomePage} />
         <Route exact path="/log_in" component={LogIn} />
         <Route path="/" component={wrappedRoutes} />
       </Switch>

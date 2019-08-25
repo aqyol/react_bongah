@@ -87,19 +87,19 @@ class MenuBar extends PureComponent {
         <div className={`homeNav${(this.state.isHandlerActive ? ' active' : '')}`}>
           <ul>
             <li className="moreOption">
-              <Link to="/search?type=rent">کمیسیون</Link>
+              <Link to="/commission">کمیسیون</Link>
             </li>
             <li className="moreOption">
-              <Link to="/agent/search">مشارکت</Link>
+              <Link to="/search?type=partnership">مشارکت</Link>
             </li>
             <li className="moreOption">
-              <Link to="/agent/search">پیش فروش</Link>
+              <Link to="/search?type=preSell">پیش فروش</Link>
             </li>
             <li className="moreOption">
-              <Link to="/projects">رهن و اجاره</Link>
+              <Link to="/search?type=rent">رهن و اجاره</Link>
             </li>
             <li className="moreOption">
-              <Link to="/agent/search">خرید</Link>
+              <Link to="/search?type=sell">خرید</Link>
             </li>
             {this.loginField()}
             <li>
