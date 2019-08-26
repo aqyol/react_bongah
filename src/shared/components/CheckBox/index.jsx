@@ -6,7 +6,13 @@ import { FaCheck } from 'react-icons/fa';
 const CheckBox = props => (
   <div className="checkbox custom-checkbox">
     <label htmlFor={props.children}>
-      <input id={props.children} type="checkbox" value="on" />
+      <input
+        name={props.name}
+        value={props.value}
+        id={props.children}
+        type="checkbox"
+        onChange={(e) => { props.onChange(e); }}
+      />
       <span className="fa fa-check"><FaCheck /></span>
       {props.children}
     </label>
@@ -15,6 +21,9 @@ const CheckBox = props => (
 
 CheckBox.propTypes = {
   children: PropTypes.string.isRequired,
+  name: PropTypes.string.isRequired,
+  value: PropTypes.bool.isRequired,
+  onChange: PropTypes.func.isRequired,
 };
 
 export default CheckBox;

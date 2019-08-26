@@ -12,7 +12,6 @@ const Header = props => (
     <div className="logo">
       <Link to="/home">
         <span className="fa fa-home marker"><FaHome /></span>
-        <span className="logoText">reales</span>
       </Link>
     </div>
     <a href="#1" className="navHandler" onClick={() => props.clickToggle()}><FaBars /></a>

@@ -2809,6 +2809,10 @@ tbody.collapse.in {
   position: relative;
   display: table;
   border-collapse: separate;
+
+  input {
+    text-align: center;
+  }
 }
 
 .input-group[class*="col-"] {
