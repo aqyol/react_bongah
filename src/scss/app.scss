@@ -66,6 +66,8 @@
 @import './component/register_form';
 @import './component/register_login_form';
 @import './component/commission';
+@import './component/promise_list';
+@import './component/edit_promise';
 @import './../../node_modules/react-web-tabs/dist/react-web-tabs.css';
 
 //pages...
@@ -73,3 +75,4 @@
 @import 'containers/home_page';
 @import 'containers/list_property';
 @import 'containers/main_root';
+@import 'containers/promise';

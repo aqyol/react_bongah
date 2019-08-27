@@ -16,6 +16,7 @@ import AdvicePage from '../Scenes/AdvicePage';
 import PageInfo from '../Scenes/MyInfoPage';
 import WalletPage from '../Scenes/WalletPage';
 import Commission from '../Scenes/CommissionPage';
+import Promise from '../Scenes/PromisePage';
 
 const Pages = () => (
   <Switch>
@@ -47,6 +48,7 @@ const Router = () => (
         <Route exact path="/myprofile" component={PageInfo} />
         <Route exact path="/wallet/:action?" component={WalletPage} />
         <Route exact path="/commission" component={Commission} />
+        <Route exact path="/promise" component={Promise} />
         <Route exact path="/" component={HomePage} />
         <Route exact path="/log_in" component={LogIn} />
         <Route path="/" component={wrappedRoutes} />
