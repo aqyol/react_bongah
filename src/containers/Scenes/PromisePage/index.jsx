@@ -1,4 +1,5 @@
 import React, { PureComponent } from 'react';
+import { Link } from 'react-router-dom';
 import Dashboard from '../../../shared/components/DashboardLayout';
 import PromiseList from './components/PromiseList';
 
@@ -88,7 +89,7 @@ class Promise extends PureComponent {
       <Dashboard>
         <div className="promise-container">
           <div className="promise-page">
-            <button type="button" className="btn btn-success">ایجاد قول نامه</button>
+            <Link to="promise/edit" className="btn btn-success link-new">ایجاد قول نامه</Link>
             {this.state.isLoading
             && (
               <div className={`load${this.state.isLoading ? '' : ' loaded'}`}>

@@ -90,6 +90,9 @@ class MenuBar extends PureComponent {
               <Link to="/commission">کمیسیون</Link>
             </li>
             <li className="moreOption">
+              <Link to="/promise">قول نامه</Link>
+            </li>
+            <li className="moreOption">
               <Link to="/search?type=partnership">مشارکت</Link>
             </li>
             <li className="moreOption">

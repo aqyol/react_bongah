@@ -9,10 +9,11 @@
   text-align: center;
   margin-top: 2%;
 
-  button {
-    width: 50%;
-    margin: auto;
-  }
+}
+
+.link-new {
+  width: 50%;
+  margin: auto;
 }
 
 @media screen and (max-width: 767px) {
@@ -21,12 +22,14 @@
     text-align: center;
     margin: auto;
 
-    button {
-      width: 50%;
-      margin: auto;
-      margin-top: 5px;
-    }
   }
+
+  .link-new {
+    width: 50%;
+    margin: auto;
+    margin-top: 5px;
+  }
+
 }
 
 

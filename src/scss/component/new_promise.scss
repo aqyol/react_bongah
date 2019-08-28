@@ -1,0 +1,42 @@
+.new-promise-container {
+  width: 80%;
+  margin: auto;
+  direction: rtl;
+  text-align: center;
+  margin-top: 10px;
+}
+
+.promise-title {
+  font-size: 2rem;
+  color: #0d908d;
+  text-align: center;
+}
+
+.englishText{
+  font-family: 'Roboto', sans-serif;
+  direction: ltr;
+}
+
+.promise-phone {
+  display: inline-flex;
+  padding: 3%;
+
+  span {
+    width: 30%;
+  }
+
+  div {
+    width: 70%;
+  }
+}
+
+.promise-date {
+  display: inline-flex;
+  padding: 5%;
+  width: 100%;
+
+  span {
+    padding-left: 5%;
+    padding-right: 5%;
+  }
+}

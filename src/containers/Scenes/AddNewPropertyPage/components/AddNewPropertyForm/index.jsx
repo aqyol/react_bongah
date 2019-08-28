@@ -56,7 +56,7 @@ const AddNewPropertyForm = () => (
       </div>
       <div className="type col-xs-12 col-sm-6 col-md-3">
         <h4>نوع</h4>
-        <SelectComponent switchTop listItem={types} />
+        <SelectComponent switchTop={false} listItem={types} />
       </div>
     </div>
     <div className="row form-group">
