@@ -76,9 +76,14 @@ const adsList = [
 
 
 class NewPromise extends PureComponent {
+  static propTypes = {
+    id: PropTypes.number.isRequired,
+  };
+
   constructor(props) {
     super(props);
     this.state = {
+      id: null,
       toggleUserInfo: false,
       toggleAdsInfo: false,
       type: 0,
@@ -107,6 +112,19 @@ class NewPromise extends PureComponent {
     this.handleInputMelkChange = this.handleInputMelkChange.bind(this);
     this.toggleUserInfoForm = this.toggleUserInfoForm.bind(this);
     this.handleCreatePromise = this.handleCreatePromise.bind(this);
+    this.getPromiseInfo = this.getPromiseInfo.bind(this);
+  }
+
+  componentDidMount() {
+    if (this.state.id !== undefined) {
+      this.getPromiseInfo();
+    }
+  }
+
+  getPromiseInfo() {
+    console.group('get promise info => id');
+    console.log(this.props.id);
+    console.groupEnd();
   }
 
   handleTypeSelect(index, name) {

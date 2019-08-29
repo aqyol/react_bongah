@@ -49,9 +49,9 @@ class EditPromise extends PureComponent {
             </div>
           )
           }
-          {this.state.id === null
+          {!this.state.isLoading
             && (
-              <NewPromise />
+              <NewPromise id={this.state.id} />
             )
           }
         </div>
