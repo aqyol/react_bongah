@@ -107,7 +107,7 @@ class MenuBar extends PureComponent {
             {this.loginField()}
             <li>
               <Link to="/newproperty/sell">
-                <div className="btn btn-green">
+                <div className="btn btn-success">
                   افزودن آگهی جدید
                 </div>
               </Link>
