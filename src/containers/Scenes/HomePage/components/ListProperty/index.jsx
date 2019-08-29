@@ -1,4 +1,15 @@
 import React from 'react';
+import {
+  Col,
+  Row,
+  // Form,
+  // Button,
+  // FormGroup,
+  // Input,
+  // Nav,
+  // NavItem,
+  // NavLink,
+} from 'reactstrap';
 import SingleHouse from '../../../../../shared/components/SingleHouse';
 
 const houseData = [{
@@ -49,8 +60,14 @@ const arr = [0, 1, 2, 3, 4, 5];
 
 const ListProperty = () => (
   <div className="listProperty">
-    <div className="row listPropertyHeader">
-      <h3>آخرین آگهی های افزوده شده</h3>
+    <div className="listPropertyHeader">
+      <Row>
+        <Col />
+        <Col>
+          <h3>آخرین آگهی های افزوده شده</h3>
+        </Col>
+        <Col />
+      </Row>
     </div>
     <div className="row listPropertyContent">
       {arr.map((value, index) => (
