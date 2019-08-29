@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import { hot } from 'react-hot-loader';
 import { BrowserRouter } from 'react-router-dom';
 import '../../scss/app.scss';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import Router from './Router';
 import ScrollToTop from './ScrollToTop';
 
