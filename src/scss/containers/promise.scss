@@ -1,0 +1,35 @@
+.promise-container {
+  align-items: center;
+  direction: rtl;
+}
+
+.promise-page {
+  width: 80%;
+  margin: auto;
+  text-align: center;
+  margin-top: 2%;
+
+}
+
+.link-new {
+  width: 50%;
+  margin: auto;
+}
+
+@media screen and (max-width: 767px) {
+  .promise-page {
+    width: 95%;
+    text-align: center;
+    margin: auto;
+
+  }
+
+  .link-new {
+    width: 50%;
+    margin: auto;
+    margin-top: 5px;
+  }
+
+}
+
+

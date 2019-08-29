@@ -5,13 +5,14 @@ class SelectComponent extends PureComponent {
   static propTypes = {
     listItem: PropTypes.objectOf(PropTypes.object).isRequired,
     switchTop: PropTypes.bool.isRequired,
+    onChange: PropTypes.func.isRequired,
+    value: PropTypes.number.isRequired,
   }
 
   constructor(props) {
     super(props);
     this.state = {
       showList: false,
-      itemSelected: 0,
     };
   }
 
@@ -41,9 +42,8 @@ class SelectComponent extends PureComponent {
   };
 
   doSelect = (index) => {
-    this.setState({
-      itemSelected: index,
-    });
+    const { onChange } = this.props;
+    onChange(index);
     this.showToggle();
   };
 
@@ -61,7 +61,7 @@ class SelectComponent extends PureComponent {
           onClick={this.showToggle}
           role="presentation"
         >
-          <span className="dropdown-label">{this.props.listItem[this.state.itemSelected]}</span>
+          <span className="dropdown-label">{this.props.listItem[this.props.value]}</span>
           <span className="caret" />
         </div>
         <ul className={`dropdown-menu dropdown-select${this.props.switchTop ? ' switchTop' : ''}`}>
