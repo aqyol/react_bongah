@@ -32,11 +32,16 @@
 
 .promise-date {
   display: inline-flex;
-  padding: 5%;
+  padding: 2%;
   width: 100%;
 
   span {
-    padding-left: 5%;
-    padding-right: 5%;
+    width: 30%;
+    padding-left: 2%;
+    padding-right: 2%;
   }
+}
+
+.promise-btn {
+  width: 100%;
 }
