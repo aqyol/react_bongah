@@ -11,6 +11,7 @@ import {
   Collapse,
   CustomInput,
 } from 'reactstrap';
+import CedarMaps from '@cedarstudios/react-cedarmaps';
 import renderSelectField from '../../../../../shared/components/form/Select';
 import SelectComponent from '../../../../../shared/components/SelectComponent';
 import CheckBox from '../../../../../shared/components/CheckBox';
@@ -971,6 +972,7 @@ class AddNewPropertyForm extends PureComponent {
       toggleMoreInfo: false,
       toggleTools: false,
       toggleOthers: false,
+      toggleMap: false,
       moreInfo: {
         rooms: '',
         floors: '',
@@ -1023,6 +1025,10 @@ class AddNewPropertyForm extends PureComponent {
         unitType: '',
         sanadType: '',
       },
+      location: {
+        lat: 51.34379364705882,
+        lng: 35.74109568627451,
+      },
     };
     this.handleTypeSelect = this.handleTypeSelect.bind(this);
     this.toggleCollapse = this.toggleCollapse.bind(this);
@@ -1030,6 +1036,7 @@ class AddNewPropertyForm extends PureComponent {
     this.handleToggleChange = this.handleToggleChange.bind(this);
     this.handleSelectType = this.handleSelectType.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
+    this.handleMapClick = this.handleMapClick.bind(this);
   }
 
   handleTypeSelect(index, name) {
@@ -1116,6 +1123,15 @@ class AddNewPropertyForm extends PureComponent {
       return {
         tools: newInfo,
       };
+    });
+  }
+
+  handleMapClick(map, data) {
+    this.setState({
+      location: {
+        lat: data.lngLat.lng,
+        lng: data.lngLat.lat,
+      },
     });
   }
 
@@ -1215,6 +1231,8 @@ class AddNewPropertyForm extends PureComponent {
         </FormGroup>
       </Col>
     ));
+
+    const { Marker, ZoomControl, ScaleControl } = CedarMaps.getReactMapboxGl();
 
     return (
       <div className="newPropertyForm">
@@ -1402,6 +1420,14 @@ class AddNewPropertyForm extends PureComponent {
             </Row>
           </Collapse>
           <Row form>
+            <Col sm={12} md={12} lg={12}>
+              <FormGroup>
+                <Label for="exampleFile">File</Label>
+                <Input type="file" name="file" id="exampleFile" />
+              </FormGroup>
+            </Col>
+          </Row>
+          <Row form>
             <Col md={6} sm={12} xs={12} lg={6}>
               <FormGroup>
                 <Label for="address">آدرس</Label>
@@ -1415,6 +1441,41 @@ class AddNewPropertyForm extends PureComponent {
               </FormGroup>
             </Col>
           </Row>
+          <Row>
+            <Col xs={12} md={4} sm={6}>
+              <Button
+                outline
+                color="primary"
+                onClick={(e) => { this.toggleCollapse(e, 'toggleMap'); }}
+                style={{ marginBottom: '1rem', width: '100%' }}
+              >
+                انتخاب محل روی نقشه
+              </Button>
+            </Col>
+          </Row>
+          {this.state.toggleMap
+          && (
+            <div>
+              <CedarMaps
+                containerStyle={{
+                  height: '80vh',
+                  width: '100%',
+                }}
+                token="8d8be29d01ea833ea7bacdd1836567d67c678a70"
+                center={[this.state.location.lat, this.state.location.lng]}
+                preserveDrawingBuffer={false}
+                onClick={(map, data) => { this.handleMapClick(map, data); }}
+              >
+                <ZoomControl />
+                <ScaleControl />
+                <Marker
+                  coordinates={[this.state.location.lat, this.state.location.lng]}
+                >
+                  <img src="http://maps.google.com/mapfiles/ms/icons/blue-dot.png" alt="marker" />
+                </Marker>
+              </CedarMaps>
+            </div>
+          )}
         </Form>
         <div className="newPropertyForm">
           <div className="row form-group">
