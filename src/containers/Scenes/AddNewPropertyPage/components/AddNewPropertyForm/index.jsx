@@ -947,6 +947,12 @@ const selectOtherItems = [
   },
 ];
 
+const {
+  Marker,
+  ZoomControl,
+  ScaleControl,
+} = CedarMaps.getReactMapboxGl();
+
 class AddNewPropertyForm extends PureComponent {
   constructor() {
     super();
@@ -1221,8 +1227,6 @@ class AddNewPropertyForm extends PureComponent {
         </FormGroup>
       </Col>
     ));
-
-    const { Marker, ZoomControl, ScaleControl } = CedarMaps.getReactMapboxGl();
 
     return (
       <div className="newPropertyForm">
