@@ -11,6 +11,7 @@ import {
   CustomInput,
 } from 'reactstrap';
 import CedarMaps from '@cedarstudios/react-cedarmaps';
+import ImageUploader from 'react-images-upload';
 import renderSelectField from '../../../../../shared/components/form/Select';
 
 
@@ -965,6 +966,8 @@ class AddNewPropertyForm extends PureComponent {
       unitPrice: 0,
       deposit: 0,
       rent: 0,
+      images: '',
+      imagesData: '',
       toggleMoreInfo: false,
       toggleTools: false,
       toggleOthers: false,
@@ -1034,7 +1037,13 @@ class AddNewPropertyForm extends PureComponent {
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleMapClick = this.handleMapClick.bind(this);
     this.handleSave = this.handleSave.bind(this);
+    this.onDrop = this.onDrop.bind(this);
   }
+
+  onDrop(images, imagesData) {
+    this.setState({ images, imagesData });
+  }
+
 
   handleTypeSelect(index, name) {
     this.setState({ [name]: index });
@@ -1423,10 +1432,17 @@ class AddNewPropertyForm extends PureComponent {
           </Collapse>
           <Row form>
             <Col sm={12} md={12} lg={12}>
-              <FormGroup>
-                <Label for="exampleFile">File</Label>
-                <Input type="file" name="file" id="exampleFile" />
-              </FormGroup>
+              <ImageUploader
+                withIcon
+                buttonText="انتخاب عکس"
+                onChange={(images, pictures) => { this.onDrop(images, pictures); }}
+                imgExtension={['.jpg', '.gif', '.png', '.gif']}
+                maxFileSize={5242880}
+                withPreview
+                fileSizeError="حجم فایل انتخاب شده بیشتر از حد مجاز است"
+                fileTypeError="فایل انتخاب شده قابل پشتیبانی نیست"
+                label="حد مجاز برای حجم عکس ها ۵ مگابایت می باشد"
+              />
             </Col>
           </Row>
           <Row form>
