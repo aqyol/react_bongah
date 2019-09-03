@@ -10,6 +10,15 @@
   }
 }
 
+canvas {
+  position: unset !important;
+}
+
+.btn-save {
+  width: 100%;
+  margin-top: 5%;
+}
+
 .newPropertyForm .file-input {
   border: 1px solid #dfdfdf;
   padding: 10px;
