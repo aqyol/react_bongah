@@ -1033,6 +1033,7 @@ class AddNewPropertyForm extends PureComponent {
     this.handleSelectType = this.handleSelectType.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleMapClick = this.handleMapClick.bind(this);
+    this.handleSave = this.handleSave.bind(this);
   }
 
   handleTypeSelect(index, name) {
@@ -1129,6 +1130,13 @@ class AddNewPropertyForm extends PureComponent {
         lng: data.lngLat.lat,
       },
     });
+  }
+
+  handleSave(e) {
+    e.preventDefault();
+    console.group('save click');
+    console.log(this.state);
+    console.groupEnd();
   }
 
   render() {
@@ -1470,6 +1478,13 @@ class AddNewPropertyForm extends PureComponent {
               </CedarMaps>
             </div>
           )}
+          <Row>
+            <Col lg={4} md={4} sm={4} />
+            <Col lg={4} md={4} sm={4}>
+              <Button onClick={this.handleSave} className="btn-success btn-save">ذخیره</Button>
+            </Col>
+            <Col lg={4} md={4} sm={4} />
+          </Row>
         </Form>
       </div>
     );
