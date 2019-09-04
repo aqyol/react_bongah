@@ -29,21 +29,88 @@ const houseData = [
     toilets: 2,
     square: 120,
     img: 'http://mariusn.com/themes/reales/images/prop/1-1.png',
-  }, {
+  },
+  {
     name: 'خانه آپارتمانی ',
     address: 'تهران، ونک',
     beds: 3,
     toilets: 2,
     square: 120,
     img: 'http://mariusn.com/themes/reales/images/prop/2-1.png',
-  }, {
+  },
+  {
     name: 'آپارتمان مسکونی',
     address: ' شیراز، شریعتی',
     beds: 3,
     toilets: 2,
     square: 200,
     img: 'http://mariusn.com/themes/reales/images/prop/1-1.png',
-  }, {
+  },
+  {
+    name: 'آپارتمان اداری',
+    address: 'تبریز، آبرسان',
+    beds: 3,
+    toilets: 2,
+    square: 220,
+    img: 'http://mariusn.com/themes/reales/images/prop/2-1.png',
+  },
+  {
+    name: 'خانه ویلایی',
+    address: ' تهران، آزادی',
+    beds: 3,
+    toilets: 2,
+    square: 120,
+    img: 'http://mariusn.com/themes/reales/images/prop/1-1.png',
+  },
+  {
+    name: 'خانه آپارتمانی ',
+    address: 'تهران، ونک',
+    beds: 3,
+    toilets: 2,
+    square: 120,
+    img: 'http://mariusn.com/themes/reales/images/prop/2-1.png',
+  },
+  {
+    name: 'آپارتمان مسکونی',
+    address: ' شیراز، شریعتی',
+    beds: 3,
+    toilets: 2,
+    square: 200,
+    img: 'http://mariusn.com/themes/reales/images/prop/1-1.png',
+  },
+  {
+    name: 'آپارتمان اداری',
+    address: 'تبریز، آبرسان',
+    beds: 3,
+    toilets: 2,
+    square: 220,
+    img: 'http://mariusn.com/themes/reales/images/prop/2-1.png',
+  },
+  {
+    name: 'خانه ویلایی',
+    address: ' تهران، آزادی',
+    beds: 3,
+    toilets: 2,
+    square: 120,
+    img: 'http://mariusn.com/themes/reales/images/prop/1-1.png',
+  },
+  {
+    name: 'خانه آپارتمانی ',
+    address: 'تهران، ونک',
+    beds: 3,
+    toilets: 2,
+    square: 120,
+    img: 'http://mariusn.com/themes/reales/images/prop/2-1.png',
+  },
+  {
+    name: 'آپارتمان مسکونی',
+    address: ' شیراز، شریعتی',
+    beds: 3,
+    toilets: 2,
+    square: 200,
+    img: 'http://mariusn.com/themes/reales/images/prop/1-1.png',
+  },
+  {
     name: 'آپارتمان اداری',
     address: 'تبریز، آبرسان',
     beds: 3,
@@ -321,13 +388,13 @@ class SearchForm extends PureComponent {
 
   resultList = () => (
     <div className="resultsList">
-      <div className="row">
+      <Row>
         {houseData.map((data, index) => (
-          <div className="col-xs-12 col-sm-12 col-md-6 col-lg-6" key={index.toString()}>
+          <Col xs={12} sm={6} md={4} lg={4} key={index.toString()}>
             <SingleHouse data={data} />
-          </div>
+          </Col>
         ))}
-      </div>
+      </Row>
     </div>
   );
 
