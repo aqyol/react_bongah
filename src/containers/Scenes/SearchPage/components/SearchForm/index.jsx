@@ -12,7 +12,7 @@ import {
   FormGroup,
   // Label,
   // Input,
-  // Button,
+  Button,
   // Collapse,
   // CustomInput,
 } from 'reactstrap';
@@ -21,35 +21,37 @@ import SearchMap from '../SearchMap';
 import renderSelectField from '../../../../../shared/components/form/Select';
 
 
-const houseData = [{
-  name: 'خانه ویلایی',
-  address: ' تهران، آزادی',
-  beds: 3,
-  toilets: 2,
-  square: 120,
-  img: 'http://mariusn.com/themes/reales/images/prop/1-1.png',
-}, {
-  name: 'خانه آپارتمانی ',
-  address: 'تهران، ونک',
-  beds: 3,
-  toilets: 2,
-  square: 120,
-  img: 'http://mariusn.com/themes/reales/images/prop/2-1.png',
-}, {
-  name: 'آپارتمان مسکونی',
-  address: ' شیراز، شریعتی',
-  beds: 3,
-  toilets: 2,
-  square: 200,
-  img: 'http://mariusn.com/themes/reales/images/prop/1-1.png',
-}, {
-  name: 'آپارتمان اداری',
-  address: 'تبریز، آبرسان',
-  beds: 3,
-  toilets: 2,
-  square: 220,
-  img: 'http://mariusn.com/themes/reales/images/prop/2-1.png',
-}];
+const houseData = [
+  {
+    name: 'خانه ویلایی',
+    address: ' تهران، آزادی',
+    beds: 3,
+    toilets: 2,
+    square: 120,
+    img: 'http://mariusn.com/themes/reales/images/prop/1-1.png',
+  }, {
+    name: 'خانه آپارتمانی ',
+    address: 'تهران، ونک',
+    beds: 3,
+    toilets: 2,
+    square: 120,
+    img: 'http://mariusn.com/themes/reales/images/prop/2-1.png',
+  }, {
+    name: 'آپارتمان مسکونی',
+    address: ' شیراز، شریعتی',
+    beds: 3,
+    toilets: 2,
+    square: 200,
+    img: 'http://mariusn.com/themes/reales/images/prop/1-1.png',
+  }, {
+    name: 'آپارتمان اداری',
+    address: 'تبریز، آبرسان',
+    beds: 3,
+    toilets: 2,
+    square: 220,
+    img: 'http://mariusn.com/themes/reales/images/prop/2-1.png',
+  },
+];
 
 const types = [
   {
@@ -229,6 +231,53 @@ const age = [
   },
 ];
 
+const zones = [
+  {
+    value: 0,
+    label: 'تهران',
+  },
+  {
+    value: 1,
+    label: 'شیراز',
+  },
+  {
+    value: 2,
+    label: 'مشهد',
+  },
+  {
+    value: 3,
+    label: 'تبریز',
+  },
+  {
+    value: 4,
+    label: 'اصفهان',
+  },
+  {
+    value: 5,
+    label: 'بندرعباس',
+  },
+  {
+    value: 6,
+    label: 'قم',
+  },
+  {
+    value: 7,
+    label: 'کرج',
+  },
+  {
+    value: 8,
+    label: 'یزد',
+  },
+  {
+    value: 9,
+    label: 'گنبد',
+  },
+  {
+    value: 10,
+    label: 'بندرترکمن',
+  },
+];
+
 class SearchForm extends PureComponent {
   constructor() {
     super();
@@ -239,6 +288,7 @@ class SearchForm extends PureComponent {
       area_to: '',
       age_from: '',
       age_to: '',
+      searchSelect: [],
       price: {
         min: 0,
         max: 38,
@@ -356,11 +406,40 @@ class SearchForm extends PureComponent {
     console.log(name);
   }
 
+  handleSearchSelect(searchSelect) {
+    if (searchSelect === null) {
+      this.setState({ searchSelect: [] });
+      return;
+    }
+    this.setState({ searchSelect });
+  }
+
   render() {
     return (
       <div className="searchForm">
         <Form>
-          <Row form>
+          <Row form className="search-input">
+            <Col lg={10} md={10} sm={9} xs={8}>
+              <FormGroup>
+                {renderSelectField({
+                  input: {
+                    onChange: (items) => { this.handleSearchSelect(items); },
+                    isMulti: true,
+                    name: 'searchSelect',
+                    value: zones[this.state.searchSelect],
+                  },
+                  placeholder: 'نام شهر، منطقه و .. خود را وارد کنید',
+                  options: zones,
+                  name: 'select',
+                  type: 'text',
+                })}
+              </FormGroup>
+            </Col>
+            <Col lg={2} md={2} sm={3} xs={4}>
+              <Button className="btn-success btn-search">تغییر جستجو</Button>
+            </Col>
+          </Row>
+          <Row form className="search-input">
             <Col lg={2} md={3} sm={4} xs={6}>
               <FormGroup>
                 {renderSelectField({
@@ -548,7 +627,7 @@ class SearchForm extends PureComponent {
             </Col>
           </Row>
         </Form>
-        <div className="searchForm">
+        <div>
           <div className="resultTable">
             <div className="resultTab">
               <ul>
