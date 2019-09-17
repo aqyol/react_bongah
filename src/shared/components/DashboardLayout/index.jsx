@@ -22,11 +22,6 @@ class Dashboard extends PureComponent {
     }));
   }
 
-  clickOutsideLeftSide = () => {
-    if (this.state.isExpand) {
-      this.toggleLeftSide();
-    }
-  }
 
   render() {
     return (
@@ -39,7 +34,6 @@ class Dashboard extends PureComponent {
           <div
             role="none"
             className={`contentWrapper${(this.state.isExpand ? ' smallSize' : '')}`}
-            onClick={this.clickOutsideLeftSide}
           >
             {this.props.children}
           </div>

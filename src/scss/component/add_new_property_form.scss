@@ -1,8 +1,22 @@
 .newPropertyForm {
-  max-width: 900px;
+  //max-width: 100%;
   margin: 0 auto;
   padding: 20px 30px;
   direction: rtl;
+  //float: right;
+
+  .container{
+    width: 100%;
+  }
+}
+
+canvas {
+  position: unset !important;
+}
+
+.btn-save {
+  width: 100%;
+  margin-top: 5%;
 }
 
 .newPropertyForm .file-input {

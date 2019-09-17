@@ -1,8 +1,17 @@
 import React, { PureComponent } from 'react';
-import { Link } from 'react-router-dom';
-import { FaAngleDown, FaAngleUp, FaCheck } from 'react-icons/fa';
 import PropTypes from 'prop-types';
-import SelectComponent from '../../../../../../../shared/components/SelectComponent';
+import {
+  Col,
+  Row,
+  Form,
+  Button,
+  FormGroup,
+  Input,
+  Nav,
+  NavItem,
+  NavLink,
+} from 'reactstrap';
+import classnames from 'classnames';
 
 
 class SearchBar extends PureComponent {
@@ -18,7 +27,12 @@ class SearchBar extends PureComponent {
     super(props);
     this.state = {
       isAdvance: false,
+      activeTab: '1',
+      searchItem: '',
     };
+    this.toggle = this.toggle.bind(this);
+    this.handleInputChange = this.handleInputChange.bind(this);
+    this.handleSearch = this.handleSearch.bind(this);
   }
 
   toggleAdvSearch = () => {
@@ -27,95 +41,77 @@ class SearchBar extends PureComponent {
     }));
   }
 
+  toggle(tab) {
+    if (this.state.activeTab !== tab) {
+      this.setState({
+        activeTab: tab,
+      });
+    }
+  }
+
+  handleInputChange(e) {
+    e.preventDefault();
+    const { name, value } = e.target;
+    this.setState({
+      [name]: value,
+    });
+    console.log(e.target.value);
+  }
+
+  handleSearch(e) {
+    e.preventDefault();
+    console.group('search click');
+    console.log(this.state.searchItem);
+    console.groupEnd();
+  }
+
   render() {
     if (!this.props.isPersist) {
       return (null);
     }
-    const listBed = [
-      'اتاق خواب',
-      '1',
-      '2',
-      '3',
-      '4',
-    ];
-    const listBath = [
-      'حمام',
-      '1',
-      '2',
-      '3',
-      '4',
-    ];
     return (
       <div className="search-panel">
-        <form className="form-inline">
-          <div className="form-group">
-            <input
-              type="text"
-              className="form-control"
-              id="city"
-              placeholder="شهر مورد نظر را وارد کنید"
-            />
-          </div>
-          <div className={`form-group${this.state.isAdvance ? ' adv' : ' hidden-xs'}`}>
-            <SelectComponent switchTop listItem={listBed}>
-              اتاق خواب
-            </SelectComponent>
-          </div>
-          <div className={`form-group${this.state.isAdvance ? ' adv' : ' hidden-xs'}`}>
-            <SelectComponent switchTop listItem={listBath}>
-              حمام
-            </SelectComponent>
-          </div>
-          <div className={`form-group${this.state.isAdvance ? ' adv' : ' hidden-xs'}`}>
-            <div className="input-group">
-              <div className="input-group-addon">قیمت</div>
-              <input
-                className="form-control price"
-                type="number"
-                placeholder="از"
-              />
-            </div>
-          </div>
-          <div className={`form-group${this.state.isAdvance ? ' adv' : ' hidden-xs'}`}>
-            <div className="input-group">
-              <input className="form-control price" type="number" placeholder="تا" />
-            </div>
-          </div>
-          <div className={`form-group${this.state.isAdvance ? ' adv' : ' hidden-xs'}`}>
-            <div className="checkbox custom-checkbox">
-              <label htmlFor="forRent">
-                <input id="forRent" name="forRent" type="checkbox" />
-                <span><FaCheck /></span>
-                رهن و اجاره
-              </label>
-            </div>
-          </div>
-          <div className={`form-group${!this.state.isAdvance ? ' hidden-xs' : ''}`}>
-            <div className="checkbox custom-checkbox">
-              <label htmlFor="forSale">
-                <input id="forSale" name="forSale" type="checkbox" />
-                <span><FaCheck /></span>
-                فروش
-              </label>
-            </div>
-          </div>
-          <div className="form-group">
-            <Link to="/search" className="btn btn-green isThemeBtn">جستجو</Link>
-            <a
-              href="#1"
-              className={`btn btn-o btn-white pull-right visible-xs${this.state.isAdvance ? ' advBtnActive' : ''}`}
-              onClick={this.toggleAdvSearch}
-            >
-              جستجوی پسشرفته
-              {this.state.isAdvance
-                && <FaAngleDown />
-              }
-              {!this.state.isAdvance
-              && <FaAngleUp />
-              }
-            </a>
-          </div>
-        </form>
+        <Form>
+          <Nav tabs style={{ border: 'none' }}>
+            <NavItem>
+              <NavLink
+                className={classnames({ active: this.state.activeTab === '1' })}
+                onClick={() => { this.toggle('1'); }}
+              >
+                خرید
+              </NavLink>
+            </NavItem>
+            <NavItem>
+              <NavLink
+                className={classnames({ active: this.state.activeTab === '2' })}
+                onClick={() => { this.toggle('2'); }}
+              >
+                اجاره
+              </NavLink>
+            </NavItem>
+          </Nav>
+          <Row form>
+            <Col md={6} sm={8} xs={12}>
+              <FormGroup>
+                <Input
+                  type="text"
+                  name="searchItem"
+                  id="searchItem"
+                  placeholder="شهر مورد نظر را وارد کنید"
+                  value={this.state.searchItem}
+                  onChange={(e) => { this.handleInputChange(e); }}
+                />
+              </FormGroup>
+            </Col>
+            <Col md={4} sm={4} xs={12}>
+              <FormGroup style={{ width: '80%', margin: 'auto' }}>
+                <Button style={{ width: '100%' }} onClick={(e) => { this.handleSearch(e); }} color="success">
+                  جستجو
+                </Button>
+              </FormGroup>
+            </Col>
+          </Row>
+        </Form>
       </div>
     );
   }

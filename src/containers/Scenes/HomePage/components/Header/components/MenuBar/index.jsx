@@ -90,6 +90,9 @@ class MenuBar extends PureComponent {
               <Link to="/commission">کمیسیون</Link>
             </li>
             <li className="moreOption">
+              <Link to="/promise">قول نامه</Link>
+            </li>
+            <li className="moreOption">
               <Link to="/search?type=partnership">مشارکت</Link>
             </li>
             <li className="moreOption">
@@ -104,7 +107,7 @@ class MenuBar extends PureComponent {
             {this.loginField()}
             <li>
               <Link to="/newproperty/sell">
-                <div className="btn btn-green">
+                <div className="btn btn-success">
                   افزودن آگهی جدید
                 </div>
               </Link>

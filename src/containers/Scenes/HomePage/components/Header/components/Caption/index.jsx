@@ -11,7 +11,7 @@ const Caption = props => (
         <div className="homeSubtitle">
           اولین سایت بنگاهی با قابلیت قول نامه در کشور
         </div>
-        <Link className="btn btn-black" to="/search">اطلاعات بیشتر</Link>
+        <Link className="btn btn-warning" to="/search">اطلاعات بیشتر</Link>
       </div>
     )
     }
