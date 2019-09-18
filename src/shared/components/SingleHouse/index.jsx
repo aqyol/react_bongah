@@ -42,11 +42,11 @@ const SingleHouse = ({ data }) => (
           </ul>
           <small className="text-muted">{data.beds} دقیقه پیش</small>
           <NavLink
-            href="/order/buy/undefined"
+            href={`/ads/detail/${data.beds}`}
             className="btn-success"
             style={{ width: '30%', float: 'left', textAlign: 'center' }}
           >
-            خرید
+            مشاهده
           </NavLink>
         </CardText>
       </CardBody>
