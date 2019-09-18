@@ -124,14 +124,21 @@ const types = [
   {
     value: '0',
     label: 'فروش',
-  }, {
+  },
+  {
     value: '1',
     label: 'رهن و اجاره',
-  }, {
+  },
+  {
     value: '2',
-    label: 'پیش فروش',
-  }, {
+    label: 'سوئیت',
+  },
+  {
     value: '3',
+    label: 'پیش فروش',
+  },
+  {
+    value: '4',
     label: 'مشارکت',
   },
 ];
@@ -368,12 +375,17 @@ class SearchForm extends PureComponent {
         min: 0,
         max: 28,
       },
+      dailyRent: {
+        min: 0,
+        max: 28,
+      },
       type: 0,
     };
     this.handleRangeChange = this.handleRangeChange.bind(this);
     this.handlePriceLabel = this.handlePriceLabel.bind(this);
     this.handleTypeSelect = this.handleTypeSelect.bind(this);
     this.handleRentLabel = this.handleRentLabel.bind(this);
+    this.handleDailyRentLabel = this.handleDailyRentLabel.bind(this);
   }
 
   changeResultTab = (tab) => {
@@ -467,6 +479,22 @@ class SearchForm extends PureComponent {
     return value;
   }
 
+  handleDailyRentLabel(value, type) {
+    // type have => min, value, value, max
+    if (type === 'min' || type === 'max') {
+      return '';
+    }
+    if (value > 0 && value <= 19) {
+      return (`هزار${value * 50}`);
+    }
+    if (value > 19 && value <= 28) {
+      return (`میلیون${1 + (value - 20) * 0.5}`);
+    }
+    console.log(this.state.price);
+    console.log(value);
+    return value;
+  }
+
   handleTypeSelect(index, name) {
     this.setState({ [name]: index });
     console.log(index);
@@ -523,7 +551,7 @@ class SearchForm extends PureComponent {
                 })}
               </FormGroup>
             </Col>
-            {this.state.type !== 1
+            {(this.state.type !== 1 && this.state.type !== 2)
             && (
               <Col lg={3} md={4} sm={6} xs={6} style={{ direction: 'ltr' }}>
                 <FormGroup>
@@ -573,6 +601,27 @@ class SearchForm extends PureComponent {
                         value={this.state.rent}
                         formatLabel={(value, type) => this.handleRentLabel(value, type)}
                         onChange={(value) => { this.handleRangeChange('rent', value); }}
+                      />
+                    </Col>
+                  </FormGroup>
+                </Col>
+              </>
+            )}
+            {this.state.type === 2
+            && (
+              <>
+                <Col lg={3} md={4} sm={6} xs={6} style={{ direction: 'ltr' }}>
+                  <FormGroup>
+                    <Col md={2} lg={2} sm={2} xs={2}>اجاره روزانه</Col>
+                    <Col md={10} lg={10} sm={10} xs={10}>
+                      <InputRange
+                        name="dailyRent"
+                        maxValue={28}
+                        minValue={0}
+                        step={1}
+                        value={this.state.dailyRent}
+                        formatLabel={(value, type) => this.handleDailyRentLabel(value, type)}
+                        onChange={(value) => { this.handleRangeChange('dailyRent', value); }}
                       />
                     </Col>
                   </FormGroup>
