@@ -1,0 +1,36 @@
+.ads-detail-container {
+  direction: rtl;
+  float: right;
+  margin: 2%;
+}
+
+.ads-detail-height {
+  height: 100%  ;
+}
+
+.span-info {
+  padding: 2%;
+  margin-right: 5px;
+  color: red;
+}
+
+.ads-inline {
+  display: inline-flex;
+}
+
+.ads-price-card {
+  background-color: #d38b24;
+  border-radius: 5px;
+}
+
+.btn-ads {
+  width: 100%;
+}
+
+.ads-map {
+  height: 30%;
+}
+canvas {
+  position: unset !important;
+  height: 50%;
+}

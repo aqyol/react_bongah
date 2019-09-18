@@ -18,6 +18,7 @@ import WalletPage from '../Scenes/WalletPage';
 import Commission from '../Scenes/CommissionPage';
 import Promise from '../Scenes/PromisePage';
 import EditPromise from '../Scenes/EditPromise';
+import AdsDetail from '../Scenes/AdsDetail';
 
 const Pages = () => (
   <Switch>
@@ -52,6 +53,7 @@ const Router = () => (
         <Route exact path="/promise" component={Promise} />
         <Route exact path="/promise/edit/:id" component={EditPromise} />
         <Route exact path="/promise/edit" component={EditPromise} />
+        <Route exact path="/ads/detail/:id" component={AdsDetail} />
         <Route exact path="/" component={HomePage} />
         <Route exact path="/log_in" component={LogIn} />
         <Route path="/" component={wrappedRoutes} />
