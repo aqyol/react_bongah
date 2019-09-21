@@ -5,6 +5,7 @@ import {
   Row,
   Container,
 } from 'reactstrap';
+import InfiniteScroll from 'react-infinite-scroller';
 import Dashboard from '../../../shared/components/DashboardLayout';
 import SingleHouse from '../../../shared/components/SingleHouse';
 import { getUserAdsList } from '../../util/APIUtils';
@@ -91,8 +92,10 @@ class MyHouse extends PureComponent {
     this.state = {
       houseList: [],
       isLoading: false,
+      hasMoreData: false,
     };
     this.getList = this.getList.bind(this);
+    this.loadMoreData = this.loadMoreData.bind(this);
   }
 
   componentDidMount() {
@@ -113,7 +116,11 @@ class MyHouse extends PureComponent {
     this.setState({ isLoading: true });
 
     setTimeout(() => {
-      this.setState({ isLoading: false });
+      this.setState({
+        isLoading: false,
+        houseList: houseData,
+        hasMoreData: true,
+      });
     }, 1000);
 
     // get server data
@@ -131,12 +138,24 @@ class MyHouse extends PureComponent {
       });
   }
 
+  loadMoreData() {
+    setTimeout(() => {
+      this.setState(prevState => ({
+        houseList: [...prevState.houseList, ...houseData],
+      }));
+    }, 1000);
+  }
+
   render() {
-    const list = houseData.map(data => (
-      <Col xs={12} sm={6} md={6} lg={4}>
-        <SingleHouse data={data} />
-      </Col>
-    ));
+    let list;
+    if (this.state.houseList !== undefined) {
+      list = this.state.houseList.map(data => (
+        <Col xs={12} sm={6} md={6} lg={4}>
+          <SingleHouse data={data} />
+        </Col>
+      ));
+    }
+
     return (
       <div>
         {this.state.isLoading && (
@@ -153,11 +172,20 @@ class MyHouse extends PureComponent {
             <div className="dashboardTitle">
               <h3>({this.props.match.params.id})</h3>
             </div>
-            <Container>
-              <Row>
-                {list}
-              </Row>
-            </Container>
+            <InfiniteScroll
+              pageStart={0}
+              loadMore={this.loadMoreData}
+              hasMore={this.state.hasMoreData}
+              loader={<div className="loader" key={0}>Loading ...</div>}
+              useWindow={false}
+            >
+              <Container>
+                <Row>
+                  {list}
+                </Row>
+              </Container>
+            </InfiniteScroll>
+
           </Dashboard>
         )}
       </div>
