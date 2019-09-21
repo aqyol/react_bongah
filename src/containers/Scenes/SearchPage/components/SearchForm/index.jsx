@@ -2,6 +2,7 @@ import React, { PureComponent } from 'react';
 import {
   FaMap,
   FaThList,
+  FaFilter,
 } from 'react-icons/fa';
 import InputRange from 'react-input-range';
 import 'react-input-range/lib/css/index.css';
@@ -15,7 +16,12 @@ import {
   Button,
   // Collapse,
   // CustomInput,
+  Modal,
+  ModalBody,
+  ModalFooter,
+  ModalHeader,
 } from 'reactstrap';
+// import { Fab, Action } from 'react-tiny-fab';
 import SingleHouse from '../../../../../shared/components/SingleHouse';
 import SearchMap from '../SearchMap';
 import renderSelectField from '../../../../../shared/components/form/Select';
@@ -124,14 +130,21 @@ const types = [
   {
     value: '0',
     label: 'فروش',
-  }, {
+  },
+  {
     value: '1',
     label: 'رهن و اجاره',
-  }, {
+  },
+  {
     value: '2',
-    label: 'پیش فروش',
-  }, {
+    label: 'سوئیت',
+  },
+  {
     value: '3',
+    label: 'پیش فروش',
+  },
+  {
+    value: '4',
     label: 'مشارکت',
   },
 ];
@@ -368,12 +381,19 @@ class SearchForm extends PureComponent {
         min: 0,
         max: 28,
       },
+      dailyRent: {
+        min: 0,
+        max: 28,
+      },
       type: 0,
+      openModal: false,
     };
     this.handleRangeChange = this.handleRangeChange.bind(this);
     this.handlePriceLabel = this.handlePriceLabel.bind(this);
     this.handleTypeSelect = this.handleTypeSelect.bind(this);
     this.handleRentLabel = this.handleRentLabel.bind(this);
+    this.handleDailyRentLabel = this.handleDailyRentLabel.bind(this);
+    this.handleFilter = this.handleFilter.bind(this);
   }
 
   changeResultTab = (tab) => {
@@ -390,7 +410,7 @@ class SearchForm extends PureComponent {
     <div className="resultsList">
       <Row>
         {houseData.map((data, index) => (
-          <Col xs={12} sm={6} md={4} lg={4} key={index.toString()}>
+          <Col xs={12} sm={6} md={6} lg={4} key={index.toString()}>
             <SingleHouse data={data} />
           </Col>
         ))}
@@ -467,6 +487,22 @@ class SearchForm extends PureComponent {
     return value;
   }
 
+  handleDailyRentLabel(value, type) {
+    // type have => min, value, value, max
+    if (type === 'min' || type === 'max') {
+      return '';
+    }
+    if (value > 0 && value <= 19) {
+      return (`هزار${value * 50}`);
+    }
+    if (value > 19 && value <= 28) {
+      return (`میلیون${1 + (value - 20) * 0.5}`);
+    }
+    console.log(this.state.price);
+    console.log(value);
+    return value;
+  }
+
   handleTypeSelect(index, name) {
     this.setState({ [name]: index });
     console.log(index);
@@ -481,237 +517,486 @@ class SearchForm extends PureComponent {
     this.setState({ searchSelect });
   }
 
+  handleFilter() {
+    this.setState(prevState => ({ openModal: !prevState.openModal }));
+  }
+
   render() {
     return (
-      <div className="searchForm">
-        <Form>
-          <Row form className="search-input">
-            <Col lg={10} md={10} sm={9} xs={8}>
-              <FormGroup>
-                {renderSelectField({
-                  input: {
-                    onChange: (items) => { this.handleSearchSelect(items); },
-                    isMulti: true,
-                    name: 'searchSelect',
-                    value: zones[this.state.searchSelect],
-                  },
-                  placeholder: 'نام شهر، منطقه و .. خود را وارد کنید',
-                  options: zones,
-                  name: 'select',
-                  type: 'text',
-                })}
-              </FormGroup>
-            </Col>
-            <Col lg={2} md={2} sm={3} xs={4}>
-              <Button className="btn-success btn-search">تغییر جستجو</Button>
-            </Col>
-          </Row>
-          <Row form className="search-input">
-            <Col lg={2} md={3} sm={4} xs={6}>
-              <FormGroup>
-                {renderSelectField({
-                  input: {
-                    onChange: (e) => { this.handleTypeSelect(Number(e.value), 'type'); },
-                    isMulti: false,
-                    name: 'type',
-                    value: types[this.state.type],
-                  },
-                  placeholder: 'نوع',
-                  options: types,
-                  name: 'select',
-                  type: 'text',
-                })}
-              </FormGroup>
-            </Col>
-            {this.state.type !== 1
-            && (
-              <Col lg={3} md={4} sm={6} xs={6} style={{ direction: 'ltr' }}>
-                <FormGroup>
-                  <Col md={2} lg={2} sm={2} xs={2}>قیمت</Col>
-                  <Col md={10} lg={10} sm={10} xs={10}>
-                    <InputRange
-                      name="price"
-                      maxValue={38}
-                      minValue={0}
-                      step={1}
-                      value={this.state.price}
-                      formatLabel={(value, type) => this.handlePriceLabel(value, type)}
-                      onChange={(value) => { this.handleRangeChange('price', value); }}
-                    />
+      <div>
+        <div>
+          <Modal fade={false} isOpen={this.state.openModal} toggle={this.handleFilter}>
+            <ModalHeader toggle={this.handleFilter}>فیلتر جستجو</ModalHeader>
+            <ModalBody>
+              <Row form className="search-input">
+                <Col lg={12} md={12} sm={12} xs={12}>
+                  <FormGroup>
+                    {renderSelectField({
+                      input: {
+                        onChange: (e) => { this.handleTypeSelect(Number(e.value), 'type'); },
+                        isMulti: false,
+                        name: 'type',
+                        value: types[this.state.type],
+                      },
+                      placeholder: 'نوع',
+                      options: types,
+                      name: 'select',
+                      type: 'text',
+                    })}
+                  </FormGroup>
+                </Col>
+                {(this.state.type !== 1 && this.state.type !== 2)
+                && (
+                  <Col lg={12} md={12} sm={12} xs={12} style={{ direction: 'ltr' }}>
+                    <FormGroup>
+                      <Col md={2} lg={2} sm={2} xs={2}>قیمت</Col>
+                      <Col md={10} lg={10} sm={10} xs={10}>
+                        <InputRange
+                          name="price"
+                          maxValue={38}
+                          minValue={0}
+                          step={1}
+                          value={this.state.price}
+                          formatLabel={(value, type) => this.handlePriceLabel(value, type)}
+                          onChange={(value) => { this.handleRangeChange('price', value); }}
+                        />
+                      </Col>
+                    </FormGroup>
                   </Col>
+                )}
+                {this.state.type === 1
+                && (
+                  <>
+                    <Col lg={12} md={12} sm={12} xs={12} style={{ direction: 'ltr' }}>
+                      <FormGroup>
+                        <Col md={2} lg={2} sm={2} xs={2}>رهن</Col>
+                        <Col md={10} lg={10} sm={10} xs={10}>
+                          <InputRange
+                            name="deposit"
+                            maxValue={38}
+                            minValue={0}
+                            step={1}
+                            value={this.state.deposit}
+                            formatLabel={(value, type) => this.handlePriceLabel(value, type)}
+                            onChange={(value) => { this.handleRangeChange('deposit', value); }}
+                          />
+                        </Col>
+                      </FormGroup>
+                    </Col>
+                    <Col lg={12} md={12} sm={12} xs={12} style={{ direction: 'ltr' }}>
+                      <FormGroup>
+                        <Col md={2} lg={2} sm={2} xs={2}>اجاره</Col>
+                        <Col md={10} lg={10} sm={10} xs={10}>
+                          <InputRange
+                            name="rent"
+                            maxValue={28}
+                            minValue={0}
+                            step={1}
+                            value={this.state.rent}
+                            formatLabel={(value, type) => this.handleRentLabel(value, type)}
+                            onChange={(value) => { this.handleRangeChange('rent', value); }}
+                          />
+                        </Col>
+                      </FormGroup>
+                    </Col>
+                  </>
+                )}
+                {this.state.type === 2
+                && (
+                  <>
+                    <Col lg={12} md={12} sm={12} xs={12} style={{ direction: 'ltr' }}>
+                      <FormGroup>
+                        <Col md={2} lg={2} sm={2} xs={2}>اجاره روزانه</Col>
+                        <Col md={10} lg={10} sm={10} xs={10}>
+                          <InputRange
+                            name="dailyRent"
+                            maxValue={28}
+                            minValue={0}
+                            step={1}
+                            value={this.state.dailyRent}
+                            formatLabel={(value, type) => this.handleDailyRentLabel(value, type)}
+                            onChange={(value) => { this.handleRangeChange('dailyRent', value); }}
+                          />
+                        </Col>
+                      </FormGroup>
+                    </Col>
+                  </>
+                )}
+                <Col lg={12} md={12} sm={12} xs={12}>
+                  <FormGroup>
+                    {renderSelectField({
+                      input: {
+                        onChange: (e) => { this.handleTypeSelect(Number(e.value), 'rooms'); },
+                        isMulti: false,
+                        name: 'rooms',
+                        value: nums[() => {
+                          const { rooms: value } = this.state;
+                          return {
+                            value,
+                          };
+                        }],
+                      },
+                      placeholder: 'تعداد اتاق',
+                      options: nums,
+                      name: 'select',
+                      type: 'text',
+                    })}
+                  </FormGroup>
+                </Col>
+                <Col lg={12} md={12} sm={12} xs={12}>
+                  <Row>
+                    <Col>
+                      <FormGroup>
+                        {renderSelectField({
+                          input: {
+                            onChange: (e) => { this.handleTypeSelect(Number(e.value), 'area_from'); },
+                            isMulti: false,
+                            name: 'area_from',
+                            value: area[() => {
+                              const { area_from: value } = this.state;
+                              return {
+                                value,
+                              };
+                            }],
+                          },
+                          placeholder: 'متراژ از',
+                          options: area,
+                          name: 'select',
+                          type: 'text',
+                        })}
+                      </FormGroup>
+                    </Col>
+                    <Col>
+                      <FormGroup>
+                        {renderSelectField({
+                          input: {
+                            onChange: (e) => { this.handleTypeSelect(Number(e.value), 'area_to'); },
+                            isMulti: false,
+                            name: 'area_to',
+                            value: area[() => {
+                              const { area_to: value } = this.state;
+                              return {
+                                value,
+                              };
+                            }],
+                          },
+                          placeholder: 'متراژ تا',
+                          options: area,
+                          name: 'select',
+                          type: 'text',
+                        })}
+                      </FormGroup>
+                    </Col>
+                  </Row>
+                </Col>
+                <Col lg={12} md={12} sm={12} xs={12}>
+                  <Row>
+                    <Col>
+                      <FormGroup>
+                        {renderSelectField({
+                          input: {
+                            onChange: (e) => { this.handleTypeSelect(Number(e.value), 'age_from'); },
+                            isMulti: false,
+                            name: 'age_from',
+                            value: age[() => {
+                              const { age_from: value } = this.state;
+                              return {
+                                value,
+                              };
+                            }],
+                          },
+                          placeholder: 'سن از',
+                          options: age,
+                          name: 'select',
+                          type: 'text',
+                        })}
+                      </FormGroup>
+                    </Col>
+                    <Col>
+                      <FormGroup>
+                        {renderSelectField({
+                          input: {
+                            onChange: (e) => { this.handleTypeSelect(Number(e.value), 'age_to'); },
+                            isMulti: false,
+                            name: 'age_to',
+                            value: age[() => {
+                              const { age_to: value } = this.state;
+                              return {
+                                value,
+                              };
+                            }],
+                          },
+                          placeholder: 'تا',
+                          options: age,
+                          name: 'select',
+                          type: 'text',
+                        })}
+                      </FormGroup>
+                    </Col>
+                  </Row>
+                </Col>
+              </Row>
+            </ModalBody>
+            <ModalFooter>
+              <Button color="primary" onClick={this.handleFilter}>نمایش نتیجه</Button>{' '}
+              <Button color="secondary" onClick={this.handleFilter}>بازگشت</Button>
+            </ModalFooter>
+          </Modal>
+        </div>
+        <div className="searchForm">
+          <Form>
+            <Row form className="search-input">
+              <Col lg={10} md={10} sm={9} xs={8}>
+                <FormGroup>
+                  {renderSelectField({
+                    input: {
+                      onChange: (items) => { this.handleSearchSelect(items); },
+                      isMulti: true,
+                      name: 'searchSelect',
+                      value: zones[this.state.searchSelect],
+                    },
+                    placeholder: 'نام شهر، منطقه و .. خود را وارد کنید',
+                    options: zones,
+                    name: 'select',
+                    type: 'text',
+                  })}
                 </FormGroup>
               </Col>
-            )}
-            {this.state.type === 1
-            && (
-              <>
-                <Col lg={3} md={4} sm={6} xs={6} style={{ direction: 'ltr' }}>
+              <Col lg={2} md={2} sm={3} xs={4}>
+                <Button className="btn-success btn-search">تغییر جستجو</Button>
+              </Col>
+            </Row>
+            <Row form className="search-input search-advanced">
+              <Col lg={2} md={3} sm={4} xs={12}>
+                <FormGroup>
+                  {renderSelectField({
+                    input: {
+                      onChange: (e) => { this.handleTypeSelect(Number(e.value), 'type'); },
+                      isMulti: false,
+                      name: 'type',
+                      value: types[this.state.type],
+                    },
+                    placeholder: 'نوع',
+                    options: types,
+                    name: 'select',
+                    type: 'text',
+                  })}
+                </FormGroup>
+              </Col>
+              {(this.state.type !== 1 && this.state.type !== 2)
+              && (
+                <Col lg={3} md={4} sm={6} xs={12} style={{ direction: 'ltr' }}>
                   <FormGroup>
-                    <Col md={2} lg={2} sm={2} xs={2}>رهن</Col>
+                    <Col md={2} lg={2} sm={2} xs={2}>قیمت</Col>
                     <Col md={10} lg={10} sm={10} xs={10}>
                       <InputRange
-                        name="deposit"
+                        name="price"
                         maxValue={38}
                         minValue={0}
                         step={1}
-                        value={this.state.deposit}
+                        value={this.state.price}
                         formatLabel={(value, type) => this.handlePriceLabel(value, type)}
-                        onChange={(value) => { this.handleRangeChange('deposit', value); }}
+                        onChange={(value) => { this.handleRangeChange('price', value); }}
                       />
                     </Col>
                   </FormGroup>
                 </Col>
-                <Col lg={3} md={4} sm={6} xs={6} style={{ direction: 'ltr' }}>
-                  <FormGroup>
-                    <Col md={2} lg={2} sm={2} xs={2}>اجاره</Col>
-                    <Col md={10} lg={10} sm={10} xs={10}>
-                      <InputRange
-                        name="rent"
-                        maxValue={28}
-                        minValue={0}
-                        step={1}
-                        value={this.state.rent}
-                        formatLabel={(value, type) => this.handleRentLabel(value, type)}
-                        onChange={(value) => { this.handleRangeChange('rent', value); }}
-                      />
-                    </Col>
-                  </FormGroup>
-                </Col>
-              </>
-            )}
-            <Col md={2} sm={3} xs={6}>
-              <FormGroup>
-                {renderSelectField({
-                  input: {
-                    onChange: (e) => { this.handleTypeSelect(Number(e.value), 'rooms'); },
-                    isMulti: false,
-                    name: 'rooms',
-                    value: nums[() => {
-                      const { rooms: value } = this.state;
-                      return {
-                        value,
-                      };
-                    }],
-                  },
-                  placeholder: 'تعداد اتاق',
-                  options: nums,
-                  name: 'select',
-                  type: 'text',
-                })}
-              </FormGroup>
-            </Col>
-            <Col md={4} xs={12} sm={6}>
-              <Row>
-                <Col>
-                  <FormGroup>
-                    {renderSelectField({
-                      input: {
-                        onChange: (e) => { this.handleTypeSelect(Number(e.value), 'area_from'); },
-                        isMulti: false,
-                        name: 'area_from',
-                        value: area[() => {
-                          const { area_from: value } = this.state;
-                          return {
-                            value,
-                          };
-                        }],
-                      },
-                      placeholder: 'متراژ از',
-                      options: area,
-                      name: 'select',
-                      type: 'text',
-                    })}
-                  </FormGroup>
-                </Col>
-                <Col>
-                  <FormGroup>
-                    {renderSelectField({
-                      input: {
-                        onChange: (e) => { this.handleTypeSelect(Number(e.value), 'area_to'); },
-                        isMulti: false,
-                        name: 'area_to',
-                        value: area[() => {
-                          const { area_to: value } = this.state;
-                          return {
-                            value,
-                          };
-                        }],
-                      },
-                      placeholder: 'متراژ تا',
-                      options: area,
-                      name: 'select',
-                      type: 'text',
-                    })}
-                  </FormGroup>
-                </Col>
-              </Row>
-            </Col>
-            <Col md={4} xs={12} sm={6}>
-              <Row>
-                <Col>
-                  <FormGroup>
-                    {renderSelectField({
-                      input: {
-                        onChange: (e) => { this.handleTypeSelect(Number(e.value), 'age_from'); },
-                        isMulti: false,
-                        name: 'age_from',
-                        value: age[() => {
-                          const { age_from: value } = this.state;
-                          return {
-                            value,
-                          };
-                        }],
-                      },
-                      placeholder: 'سن از',
-                      options: age,
-                      name: 'select',
-                      type: 'text',
-                    })}
-                  </FormGroup>
-                </Col>
-                <Col>
-                  <FormGroup>
-                    {renderSelectField({
-                      input: {
-                        onChange: (e) => { this.handleTypeSelect(Number(e.value), 'age_to'); },
-                        isMulti: false,
-                        name: 'age_to',
-                        value: age[() => {
-                          const { age_to: value } = this.state;
-                          return {
-                            value,
-                          };
-                        }],
-                      },
-                      placeholder: 'تا',
-                      options: age,
-                      name: 'select',
-                      type: 'text',
-                    })}
-                  </FormGroup>
-                </Col>
-              </Row>
-            </Col>
-          </Row>
-        </Form>
-        <div>
-          <div className="resultTable">
-            <div className="resultTab">
-              <ul>
-                <li
-                  className={this.state.resultTab === 'list' ? 'active' : ''}
-                >
-                  <a href="#1" onClick={() => { this.changeResultTab('list'); }}><FaThList /> نمایش لیست </a>
-                </li>
-                <li
-                  className={this.state.resultTab === 'map' ? 'active' : ''}
-                >
-                  <a href="#1" onClick={() => { this.changeResultTab('map'); }}><FaMap /> نمایش روی نقشه </a>
-                </li>
-              </ul>
-            </div>
-            <div className="resultBody">
-              {this.state.resultTab === 'list' ? this.resultList() : this.resultMap()}
+              )}
+              {this.state.type === 1
+              && (
+                <>
+                  <Col lg={3} md={4} sm={6} xs={12} style={{ direction: 'ltr' }}>
+                    <FormGroup>
+                      <Col md={2} lg={2} sm={2} xs={2}>رهن</Col>
+                      <Col md={10} lg={10} sm={10} xs={10}>
+                        <InputRange
+                          name="deposit"
+                          maxValue={38}
+                          minValue={0}
+                          step={1}
+                          value={this.state.deposit}
+                          formatLabel={(value, type) => this.handlePriceLabel(value, type)}
+                          onChange={(value) => { this.handleRangeChange('deposit', value); }}
+                        />
+                      </Col>
+                    </FormGroup>
+                  </Col>
+                  <Col lg={3} md={4} sm={6} xs={12} style={{ direction: 'ltr' }}>
+                    <FormGroup>
+                      <Col md={2} lg={2} sm={2} xs={2}>اجاره</Col>
+                      <Col md={10} lg={10} sm={10} xs={10}>
+                        <InputRange
+                          name="rent"
+                          maxValue={28}
+                          minValue={0}
+                          step={1}
+                          value={this.state.rent}
+                          formatLabel={(value, type) => this.handleRentLabel(value, type)}
+                          onChange={(value) => { this.handleRangeChange('rent', value); }}
+                        />
+                      </Col>
+                    </FormGroup>
+                  </Col>
+                </>
+              )}
+              {this.state.type === 2
+              && (
+                <>
+                  <Col lg={3} md={4} sm={6} xs={12} style={{ direction: 'ltr' }}>
+                    <FormGroup>
+                      <Col md={2} lg={2} sm={2} xs={2}>اجاره روزانه</Col>
+                      <Col md={10} lg={10} sm={10} xs={10}>
+                        <InputRange
+                          name="dailyRent"
+                          maxValue={28}
+                          minValue={0}
+                          step={1}
+                          value={this.state.dailyRent}
+                          formatLabel={(value, type) => this.handleDailyRentLabel(value, type)}
+                          onChange={(value) => { this.handleRangeChange('dailyRent', value); }}
+                        />
+                      </Col>
+                    </FormGroup>
+                  </Col>
+                </>
+              )}
+              <Col md={2} sm={4} xs={12}>
+                <FormGroup>
+                  {renderSelectField({
+                    input: {
+                      onChange: (e) => { this.handleTypeSelect(Number(e.value), 'rooms'); },
+                      isMulti: false,
+                      name: 'rooms',
+                      value: nums[() => {
+                        const { rooms: value } = this.state;
+                        return {
+                          value,
+                        };
+                      }],
+                    },
+                    placeholder: 'تعداد اتاق',
+                    options: nums,
+                    name: 'select',
+                    type: 'text',
+                  })}
+                </FormGroup>
+              </Col>
+              <Col md={4} xs={12} sm={6}>
+                <Row>
+                  <Col>
+                    <FormGroup>
+                      {renderSelectField({
+                        input: {
+                          onChange: (e) => { this.handleTypeSelect(Number(e.value), 'area_from'); },
+                          isMulti: false,
+                          name: 'area_from',
+                          value: area[() => {
+                            const { area_from: value } = this.state;
+                            return {
+                              value,
+                            };
+                          }],
+                        },
+                        placeholder: 'متراژ از',
+                        options: area,
+                        name: 'select',
+                        type: 'text',
+                      })}
+                    </FormGroup>
+                  </Col>
+                  <Col>
+                    <FormGroup>
+                      {renderSelectField({
+                        input: {
+                          onChange: (e) => { this.handleTypeSelect(Number(e.value), 'area_to'); },
+                          isMulti: false,
+                          name: 'area_to',
+                          value: area[() => {
+                            const { area_to: value } = this.state;
+                            return {
+                              value,
+                            };
+                          }],
+                        },
+                        placeholder: 'متراژ تا',
+                        options: area,
+                        name: 'select',
+                        type: 'text',
+                      })}
+                    </FormGroup>
+                  </Col>
+                </Row>
+              </Col>
+              <Col md={4} xs={12} sm={6}>
+                <Row>
+                  <Col>
+                    <FormGroup>
+                      {renderSelectField({
+                        input: {
+                          onChange: (e) => { this.handleTypeSelect(Number(e.value), 'age_from'); },
+                          isMulti: false,
+                          name: 'age_from',
+                          value: age[() => {
+                            const { age_from: value } = this.state;
+                            return {
+                              value,
+                            };
+                          }],
+                        },
+                        placeholder: 'سن از',
+                        options: age,
+                        name: 'select',
+                        type: 'text',
+                      })}
+                    </FormGroup>
+                  </Col>
+                  <Col>
+                    <FormGroup>
+                      {renderSelectField({
+                        input: {
+                          onChange: (e) => { this.handleTypeSelect(Number(e.value), 'age_to'); },
+                          isMulti: false,
+                          name: 'age_to',
+                          value: age[() => {
+                            const { age_to: value } = this.state;
+                            return {
+                              value,
+                            };
+                          }],
+                        },
+                        placeholder: 'تا',
+                        options: age,
+                        name: 'select',
+                        type: 'text',
+                      })}
+                    </FormGroup>
+                  </Col>
+                </Row>
+              </Col>
+            </Row>
+          </Form>
+          <div className="fab">
+            <FaFilter className="fab-icon" onClick={this.handleFilter} />
+          </div>
+          <div>
+            <div className="resultTable">
+              <div className="resultTab">
+                <ul>
+                  <li
+                    className={this.state.resultTab === 'list' ? 'active' : ''}
+                  >
+                    <a href="#1" onClick={() => { this.changeResultTab('list'); }}><FaThList /> نمایش لیست </a>
+                  </li>
+                  <li
+                    className={this.state.resultTab === 'map' ? 'active' : ''}
+                  >
+                    <a href="#1" onClick={() => { this.changeResultTab('map'); }}><FaMap /> نمایش روی نقشه </a>
+                  </li>
+                </ul>
+              </div>
+              <div className="resultBody">
+                {this.state.resultTab === 'list' ? this.resultList() : this.resultMap()}
+              </div>
             </div>
           </div>
         </div>
