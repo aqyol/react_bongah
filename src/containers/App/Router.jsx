@@ -43,7 +43,7 @@ const Router = () => (
         <Route exact path="/home" component={HomePage} />
         <Route exact path="/search" component={SearchPage} />
         <Route exact path="/newproperty/:action" component={NewPropertyPage} />
-        <Route exact path="/property/:id?" component={MyhousePage} />
+        <Route exact path="/property/:id" component={MyhousePage} />
         <Route exact path="/agent/:action" component={AgentPage} />
         <Route exact path="/advice/:type" component={AdvicePage} />
         <Route exact path="/projects" component={NewsPage} />

@@ -137,6 +137,13 @@ export function getAccountInfo(id) {
   });
 }
 
+export function getUserAdsList(type) {
+  return request({
+    url: `${API_BASE_URL}/ads/${type}/list`,
+    method: 'GET',
+  });
+}
+
 // export const showNotification = (notificationLU, title, message, color) => {
 //   notificationLU.notice({
 //     content: <BasicNotification
