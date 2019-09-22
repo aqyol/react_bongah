@@ -158,20 +158,20 @@ class MyHouse extends PureComponent {
 
     return (
       <div>
-        {this.state.isLoading && (
-          <div className={`load${this.state.isLoading ? '' : ' loaded'}`}>
-            <div className="load__icon-wrap">
-              <svg className="load__icon">
-                <path fill="#4ce1b6" d="M12,4V2A10,10 0 0,0 2,12H4A8,8 0 0,1 12,4Z" />
-              </svg>
-            </div>
+        <Dashboard>
+          <div className="dashboardTitle">
+            <h3>({this.props.match.params.id})</h3>
           </div>
-        )}
-        {!this.state.isLoading && (
-          <Dashboard>
-            <div className="dashboardTitle">
-              <h3>({this.props.match.params.id})</h3>
+          {this.state.isLoading && (
+            <div className={`load${this.state.isLoading ? '' : ' loaded'}`}>
+              <div className="load__icon-wrap">
+                <svg className="load__icon">
+                  <path fill="#4ce1b6" d="M12,4V2A10,10 0 0,0 2,12H4A8,8 0 0,1 12,4Z" />
+                </svg>
+              </div>
             </div>
+          )}
+          {!this.state.isLoading && (
             <InfiniteScroll
               pageStart={0}
               loadMore={this.loadMoreData}
@@ -185,9 +185,8 @@ class MyHouse extends PureComponent {
                 </Row>
               </Container>
             </InfiniteScroll>
-
-          </Dashboard>
-        )}
+          )}
+        </Dashboard>
       </div>
     );
   }
