@@ -19,35 +19,62 @@ const applicationTypes = [
   {
     value: '0',
     label: 'مسکونی',
-  }, {
+  },
+  {
     value: '1',
     label: 'اداری',
-  }, {
+  },
+  {
     value: '2',
     label: 'موقعیت اداری',
-  }, {
-    value: '3',
-    label: 'اقامتی،تفریحی',
   },
   {
     value: '3',
     label: 'انبار کالا',
   },
   {
-    value: '3',
+    value: '4',
     label: 'تفریحی',
   },
   {
-    value: '3',
+    value: '5',
     label: 'ورزشی',
   },
   {
-    value: '3',
+    value: '6',
     label: 'مطب',
   },
   {
-    value: '3',
+    value: '7',
     label: 'آموزشی',
+  },
+  {
+    value: '8',
+    label: 'سوئیت',
+  },
+  {
+    value: '9',
+    label: 'آپارتمان',
+  },
+  {
+    value: '10',
+    label: 'هتل آپارتمان',
+  },
+  {
+    value: '11',
+    label: 'سوئیت (اتاق) بوم گردی',
+  },
+  {
+    value: '12',
+    label: 'هتل',
+  },
+  {
+    value: '13',
+    label: 'ویلا',
+  },
+  {
+    value: '14',
+    label: 'باغ',
   },
 ];
 
@@ -62,7 +89,7 @@ const types = [
   },
   {
     value: '2',
-    label: 'سوئیت',
+    label: 'اقامتی، تفریحی',
   },
   {
     value: '3',
@@ -1273,7 +1300,7 @@ class AddNewPropertyForm extends PureComponent {
         }
         <Form>
           <Row form>
-            <Col md={4} sm={6} xs={12}>
+            <Col md={6} sm={6} xs={12}>
               <FormGroup>
                 {renderSelectField({
                   input: {
@@ -1289,7 +1316,7 @@ class AddNewPropertyForm extends PureComponent {
                 })}
               </FormGroup>
             </Col>
-            <Col md={4} sm={6} xs={12}>
+            <Col md={6} sm={6} xs={12}>
               <FormGroup>
                 {renderSelectField({
                   input: {

@@ -137,7 +137,7 @@ const types = [
   },
   {
     value: '2',
-    label: 'سوئیت',
+    label: 'اقامتی، تفریحی',
   },
   {
     value: '3',
@@ -547,7 +547,7 @@ class SearchForm extends PureComponent {
                 </Col>
                 {(this.state.type !== 1 && this.state.type !== 2)
                 && (
-                  <Col lg={12} md={12} sm={12} xs={12} style={{ direction: 'ltr' }}>
+                  <Col lg={12} md={12} sm={12} xs={12} style={{ direction: 'ltr' }} className="range-price">
                     <FormGroup>
                       <Col md={2} lg={2} sm={2} xs={2}>قیمت</Col>
                       <Col md={10} lg={10} sm={10} xs={10}>
@@ -567,7 +567,7 @@ class SearchForm extends PureComponent {
                 {this.state.type === 1
                 && (
                   <>
-                    <Col lg={12} md={12} sm={12} xs={12} style={{ direction: 'ltr' }}>
+                    <Col lg={12} md={12} sm={12} xs={12} style={{ direction: 'ltr' }} className="range-price">
                       <FormGroup>
                         <Col md={2} lg={2} sm={2} xs={2}>رهن</Col>
                         <Col md={10} lg={10} sm={10} xs={10}>
@@ -583,7 +583,7 @@ class SearchForm extends PureComponent {
                         </Col>
                       </FormGroup>
                     </Col>
-                    <Col lg={12} md={12} sm={12} xs={12} style={{ direction: 'ltr' }}>
+                    <Col lg={12} md={12} sm={12} xs={12} style={{ direction: 'ltr' }} className="range-price">
                       <FormGroup>
                         <Col md={2} lg={2} sm={2} xs={2}>اجاره</Col>
                         <Col md={10} lg={10} sm={10} xs={10}>
@@ -604,7 +604,7 @@ class SearchForm extends PureComponent {
                 {this.state.type === 2
                 && (
                   <>
-                    <Col lg={12} md={12} sm={12} xs={12} style={{ direction: 'ltr' }}>
+                    <Col lg={12} md={12} sm={12} xs={12} style={{ direction: 'ltr' }} className="range-price">
                       <FormGroup>
                         <Col md={2} lg={2} sm={2} xs={2}>اجاره روزانه</Col>
                         <Col md={10} lg={10} sm={10} xs={10}>
@@ -785,7 +785,7 @@ class SearchForm extends PureComponent {
               </Col>
               {(this.state.type !== 1 && this.state.type !== 2)
               && (
-                <Col lg={3} md={4} sm={6} xs={12} style={{ direction: 'ltr' }}>
+                <Col lg={3} md={4} sm={6} xs={12} style={{ direction: 'ltr' }} className="range-price">
                   <FormGroup>
                     <Col md={2} lg={2} sm={2} xs={2}>قیمت</Col>
                     <Col md={10} lg={10} sm={10} xs={10}>
@@ -805,7 +805,7 @@ class SearchForm extends PureComponent {
               {this.state.type === 1
               && (
                 <>
-                  <Col lg={3} md={4} sm={6} xs={12} style={{ direction: 'ltr' }}>
+                  <Col lg={3} md={4} sm={6} xs={12} style={{ direction: 'ltr' }} className="range-price">
                     <FormGroup>
                       <Col md={2} lg={2} sm={2} xs={2}>رهن</Col>
                       <Col md={10} lg={10} sm={10} xs={10}>
@@ -821,7 +821,7 @@ class SearchForm extends PureComponent {
                       </Col>
                     </FormGroup>
                   </Col>
-                  <Col lg={3} md={4} sm={6} xs={12} style={{ direction: 'ltr' }}>
+                  <Col lg={3} md={4} sm={6} xs={12} style={{ direction: 'ltr' }} className="range-price">
                     <FormGroup>
                       <Col md={2} lg={2} sm={2} xs={2}>اجاره</Col>
                       <Col md={10} lg={10} sm={10} xs={10}>
@@ -842,7 +842,7 @@ class SearchForm extends PureComponent {
               {this.state.type === 2
               && (
                 <>
-                  <Col lg={3} md={4} sm={6} xs={12} style={{ direction: 'ltr' }}>
+                  <Col lg={3} md={4} sm={6} xs={12} style={{ direction: 'ltr' }} className="range-price">
                     <FormGroup>
                       <Col md={2} lg={2} sm={2} xs={2}>اجاره روزانه</Col>
                       <Col md={10} lg={10} sm={10} xs={10}>
