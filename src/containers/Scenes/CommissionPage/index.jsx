@@ -138,6 +138,7 @@ class Commission extends PureComponent {
                             placeholder="قیمت به تومان"
                             name="price"
                             value={this.state.price}
+                            autoComplete="off"
                             onChange={this.handleInputChange}
                           />
                         </Col>
@@ -159,6 +160,7 @@ class Commission extends PureComponent {
                           placeholder="ودیعه به تومان"
                           name="deposit"
                           value={this.state.deposit}
+                          autoComplete="off"
                           onChange={this.handleInputChange}
                         />
                       </Col>
@@ -177,6 +179,7 @@ class Commission extends PureComponent {
                           placeholder="اجاره به تومان"
                           name="rent"
                           value={this.state.rent}
+                          autoComplete="off"
                           onChange={this.handleInputChange}
                         />
                       </Col>
