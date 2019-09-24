@@ -41,7 +41,7 @@ const Router = () => (
     <main>
       <Switch>
         <Route exact path="/home" component={HomePage} />
-        <Route exact path="/search" component={SearchPage} />
+        <Route path="/search" component={SearchPage} />
         <Route exact path="/newproperty/:action" component={NewPropertyPage} />
         <Route exact path="/property/:id" component={MyhousePage} />
         <Route exact path="/agent/:action" component={AgentPage} />

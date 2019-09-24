@@ -21,7 +21,7 @@ import {
   ModalFooter,
   ModalHeader,
 } from 'reactstrap';
-// import { Fab, Action } from 'react-tiny-fab';
+import { PropTypes } from 'prop-types';
 import SingleHouse from '../../../../../shared/components/SingleHouse';
 import SearchMap from '../SearchMap';
 import renderSelectField from '../../../../../shared/components/form/Select';
@@ -359,6 +359,11 @@ const zones = [
 ];
 
 class SearchForm extends PureComponent {
+  static propTypes = {
+    searchParams: PropTypes.objectOf(PropTypes.object).isRequired,
+    type: PropTypes.objectOf(PropTypes.object).isRequired,
+  };
+
   constructor() {
     super();
     this.state = {
@@ -394,6 +399,37 @@ class SearchForm extends PureComponent {
     this.handleRentLabel = this.handleRentLabel.bind(this);
     this.handleDailyRentLabel = this.handleDailyRentLabel.bind(this);
     this.handleFilter = this.handleFilter.bind(this);
+    this.handleSearch = this.handleSearch.bind(this);
+    this.saveAsRequest = this.saveAsRequest.bind(this);
+  }
+
+  componentDidMount() {
+    // search data from server using searchParams
+    let typeVal = 0;
+    switch (this.props.type) {
+      case 'sell':
+        typeVal = 0;
+        break;
+      case 'rent':
+        typeVal = 1;
+        break;
+      case 'preSell':
+        typeVal = 3;
+        break;
+      case 'partnership':
+        typeVal = 4;
+        break;
+      default:
+        break;
+    }
+    this.setState({
+      searchSelect: (this.props.searchParams !== undefined) ? this.props.searchParams : undefined,
+      type: typeVal,
+    });
+    this.handleSearch();
+    console.log(typeVal);
+    console.log('props');
+    console.log(this.props.type);
   }
 
   changeResultTab = (tab) => {
@@ -521,6 +557,15 @@ class SearchForm extends PureComponent {
     this.setState(prevState => ({ openModal: !prevState.openModal }));
   }
 
+  handleSearch() {
+    console.log('handle search');
+    console.log(this.state.searchSelect);
+  }
+
+  saveAsRequest() {
+    console.log(this.state.type);
+  }
+
   render() {
     return (
       <div>
@@ -528,7 +573,7 @@ class SearchForm extends PureComponent {
           <Modal fade={false} isOpen={this.state.openModal} toggle={this.handleFilter}>
             <ModalHeader toggle={this.handleFilter}>فیلتر جستجو</ModalHeader>
             <ModalBody>
-              <Row form className="search-input">
+              <Row className="search-input">
                 <Col lg={12} md={12} sm={12} xs={12}>
                   <FormGroup>
                     {renderSelectField({
@@ -763,7 +808,17 @@ class SearchForm extends PureComponent {
                 </FormGroup>
               </Col>
               <Col lg={2} md={2} sm={3} xs={4}>
-                <Button className="btn-success btn-search">تغییر جستجو</Button>
+                <Button onClick={() => { this.handleSearch(); }} className="btn-success btn-search">تغییر جستجو</Button>
+              </Col>
+            </Row>
+            <Row>
+              <Col>
+                <Button
+                  color="success"
+                  onClick={() => { this.saveAsRequest(); }}
+                >
+                  درصورت یافتن آگهی جدید به من اطلاعا بده
+                </Button>
               </Col>
             </Row>
             <Row form className="search-input search-advanced">
@@ -775,6 +830,7 @@ class SearchForm extends PureComponent {
                       isMulti: false,
                       name: 'type',
                       value: types[this.state.type],
+                      clearable: true,
                     },
                     placeholder: 'نوع',
                     options: types,

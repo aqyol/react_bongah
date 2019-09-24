@@ -1,10 +1,10 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 import {
   Col,
   Row,
   Form,
-  Button,
   FormGroup,
   Input,
   Nav,
@@ -105,9 +105,20 @@ class SearchBar extends PureComponent {
             </Col>
             <Col md={4} sm={4} xs={12}>
               <FormGroup style={{ width: '80%', margin: 'auto' }}>
-                <Button style={{ width: '100%' }} onClick={(e) => { this.handleSearch(e); }} color="success">
-                  جستجو
-                </Button>
+                <Link
+                  to={{
+                    pathname: '/search',
+                    state: {
+                      searchItem: this.state.searchItem,
+                      type: (this.state.activeTab === '1') ? 'sell' : 'rent',
+                    },
+                  }}
+                  style={{ width: '100%' }}
+                  className="btn btn-success"
+                  color="success"
+                >
+                  جستجو و درخواست
+                </Link>
               </FormGroup>
             </Col>
           </Row>
