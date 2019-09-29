@@ -10,6 +10,7 @@ import {
   FaHome,
   FaComments,
   FaUser,
+  FaBell,
 } from 'react-icons/fa';
 
 
@@ -66,6 +67,14 @@ class LeftSide extends PureComponent {
                   </Link>
                 </li>
               </ul>
+            </li>
+            <li className="hasSub hasSubActive">
+              <Link to="/request" onClick={this.toggleActive}>
+                <span className="navIcon icon-home"><FaBell /></span>
+                <span className="navLabel">درخواست ها</span>
+                <span className="closeIcon arrowRight"><FaAngleLeft /></span>
+                <span className="openIcon arrowRight"><FaAngleDown /></span>
+              </Link>
             </li>
             <li className="hasSub hasSubActive">
               <Link to="/property/mylisting" onClick={this.toggleActive}>

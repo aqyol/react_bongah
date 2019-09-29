@@ -791,7 +791,7 @@ class SearchForm extends PureComponent {
         <div className="searchForm">
           <Form>
             <Row form className="search-input">
-              <Col lg={10} md={10} sm={9} xs={8}>
+              <Col lg={8} md={8} sm={8} xs={8}>
                 <FormGroup>
                   {renderSelectField({
                     input: {
@@ -807,17 +807,16 @@ class SearchForm extends PureComponent {
                   })}
                 </FormGroup>
               </Col>
-              <Col lg={2} md={2} sm={3} xs={4}>
+              <Col lg={2} md={2} sm={2} xs={4}>
                 <Button onClick={() => { this.handleSearch(); }} className="btn-success btn-search">تغییر جستجو</Button>
               </Col>
-            </Row>
-            <Row>
-              <Col>
+              <Col lg={2} md={2} sm={2} xs={12}>
                 <Button
                   color="success"
                   onClick={() => { this.saveAsRequest(); }}
+                  className="volume"
                 >
-                  درصورت یافتن آگهی جدید به من اطلاعا بده
+                  درخواست
                 </Button>
               </Col>
             </Row>

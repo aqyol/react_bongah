@@ -7,6 +7,7 @@ class SelectField extends PureComponent {
     onChange: PropTypes.func.isRequired,
     name: PropTypes.string.isRequired,
     isMulti: PropTypes.bool.isRequired,
+    isClearable: PropTypes.bool,
     placeholder: PropTypes.string,
     options: PropTypes.arrayOf(PropTypes.shape({
       value: PropTypes.number,
@@ -21,6 +22,7 @@ class SelectField extends PureComponent {
   static defaultProps = {
     placeholder: '',
     options: [],
+    isClearable: false,
   };
 
   handleChange = (selectedOption) => {
@@ -30,7 +32,7 @@ class SelectField extends PureComponent {
 
   render() {
     const {
-      value, name, placeholder, options, isMulti,
+      value, name, placeholder, options, isMulti, isClearable,
     } = this.props;
 
     return (
@@ -40,10 +42,11 @@ class SelectField extends PureComponent {
         value={value}
         onChange={this.handleChange}
         options={options}
-        clearable={false}
+        clearable={isClearable}
         className="react-select"
         placeholder={placeholder}
         classNamePrefix="react-select"
+        isRtl
       />
     );
   }
