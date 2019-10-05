@@ -398,7 +398,7 @@ class Request extends PureComponent {
         {!this.state.isLoading
         && (
           <>
-            <Row className="request-direction request-select-row">
+            <Row className="request-direction request-select-row position-fixed">
               <Col md={6} sm={6} xs={12}>
                 {renderSelectField({
                   input: {

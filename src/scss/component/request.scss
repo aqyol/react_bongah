@@ -4,13 +4,24 @@
 
 .request-select-row {
   padding: 2%;
+  text-align: right;
+  width: 80%;
+  margin: auto;
+  z-index: 10;
 }
 
 .request-container {
   padding: 2%;
+  margin-top: 50px;
 }
 
 .request-select {
   padding: 2%;
   margin: 0;
+}
+
+@media screen and (max-width: 767px) {
+  .request-select-row {
+    width: 100%;
+  }
 }
