@@ -21,6 +21,7 @@ import {
   ModalFooter,
   ModalHeader,
 } from 'reactstrap';
+import AsyncSelect from 'react-select/async';
 import { PropTypes } from 'prop-types';
 import SingleHouse from '../../../../../shared/components/SingleHouse';
 import SearchMap from '../SearchMap';
@@ -404,6 +405,7 @@ class SearchForm extends PureComponent {
     this.handleCreateRequest = this.handleCreateRequest.bind(this);
     this.handleDismissRequestModal = this.handleDismissRequestModal.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
+    this.handleRoomNumSelect = this.handleRoomNumSelect.bind(this);
   }
 
   componentDidMount() {
@@ -466,22 +468,22 @@ class SearchForm extends PureComponent {
       return '';
     }
     if (value > 0 && value <= 9) {
-      return (`میلیون${value * 100}`);
+      return (`میلیون تومان${value * 100}`);
     }
     if (value >= 10 && value <= 22) {
-      return (`میلیارد${1 + (value - 10) * 0.25}`);
+      return (`میلیارد تومان${1 + (value - 10) * 0.25}`);
     }
     if (value >= 23 && value <= 30) {
-      return (`میلیارد${4 + (value - 22) * 0.5}`);
+      return (`میلیارد تومان${4 + (value - 22) * 0.5}`);
     }
     if (value >= 31 && value <= 32) {
-      return (`میلیارد${8 + (value - 30)}`);
+      return (`میلیارد تومان${8 + (value - 30)}`);
     }
     if (value >= 33 && value <= 34) {
-      return (`میلیارد${10 + (value - 32) * 5}`);
+      return (`میلیارد تومان${10 + (value - 32) * 5}`);
     }
     if (value >= 35 && value <= 38) {
-      return (`میلیارد${(value - 34) * 50}`);
+      return (`میلیارد تومان${(value - 34) * 50}`);
     }
 
     return value;
@@ -493,25 +495,25 @@ class SearchForm extends PureComponent {
       return '';
     }
     if (value > 0 && value <= 1) {
-      return (`هزار${value * 100}`);
+      return (`هزار تومان${value * 100}`);
     }
     if (value === 2) {
-      return (`هزار${500}`);
+      return (`هزار تومان${500}`);
     }
     if (value >= 3 && value <= 13) {
-      return (`میلیون${1 + (value - 3) * 0.5}`);
+      return (`میلیون تومان${1 + (value - 3) * 0.5}`);
     }
     if (value >= 14 && value <= 17) {
-      return (`میلیون${6 + (value - 13)}`);
+      return (`میلیون تومان${6 + (value - 13)}`);
     }
     if (value >= 18 && value <= 19) {
-      return (`میلیون${10 + (value - 17) * 2.5}`);
+      return (`میلیون تومان${10 + (value - 17) * 2.5}`);
     }
     if (value >= 20 && value <= 23) {
-      return (`میلیون${(value - 18) * 10}`);
+      return (`میلیون تومان${(value - 18) * 10}`);
     }
     if (value >= 24 && value <= 28) {
-      return (`میلیون${(value - 23) * 100}`);
+      return (`میلیون تومان${(value - 23) * 100}`);
     }
 
     return value;
@@ -523,13 +525,23 @@ class SearchForm extends PureComponent {
       return '';
     }
     if (value > 0 && value <= 19) {
-      return (`هزار${value * 50}`);
+      return (`هزار تومان${value * 50}`);
     }
     if (value > 19 && value <= 28) {
-      return (`میلیون${1 + (value - 20) * 0.5}`);
+      return (`میلیون تومان${1 + (value - 20) * 0.5}`);
     }
     return value;
   }
+
+  filterColors = inputValue => (
+    zones.filter(i => i.label.toLowerCase().includes(inputValue.toLowerCase())));
+
+  promiseOptions = inputValue => (
+    new Promise((resolve) => {
+      setTimeout(() => {
+        resolve(this.filterColors(inputValue));
+      }, 1000);
+    }));
 
   handleRangeChange(name, value) {
     this.setState({ [name]: { min: value.min, max: value.max } });
@@ -537,6 +549,14 @@ class SearchForm extends PureComponent {
 
   handleTypeSelect(index, name) {
     this.setState({ [name]: index });
+  }
+
+  handleRoomNumSelect(rooms) {
+    if (rooms === null) {
+      this.setState({ rooms: [] });
+      return;
+    }
+    this.setState({ rooms });
   }
 
   handleSearchSelect(searchSelect) {
@@ -692,8 +712,8 @@ class SearchForm extends PureComponent {
                   <FormGroup>
                     {renderSelectField({
                       input: {
-                        onChange: (e) => { this.handleTypeSelect(Number(e.value), 'rooms'); },
-                        isMulti: false,
+                        onChange: (e) => { this.handleRoomNumSelect(e); },
+                        isMulti: true,
                         name: 'rooms',
                         value: nums[() => {
                           const { rooms: value } = this.state;
@@ -809,7 +829,7 @@ class SearchForm extends PureComponent {
             </ModalFooter>
           </Modal>
           <Modal fade={false} isOpen={this.state.requestModal} toggle={this.handleDismissRequestModal}>
-            <ModalHeader toggle={this.handleDismissRequestModal}>فیلتر جستجو</ModalHeader>
+            <ModalHeader toggle={this.handleDismissRequestModal}>درخواست جدید</ModalHeader>
             {this.state.requestModalLoading
             && (
               <div className={`request-modal load${this.state.isLoading ? '' : ' loaded'}`}>
@@ -853,18 +873,13 @@ class SearchForm extends PureComponent {
             <Row form className="search-input">
               <Col lg={8} md={8} sm={8} xs={8}>
                 <FormGroup>
-                  {renderSelectField({
-                    input: {
-                      onChange: (items) => { this.handleSearchSelect(items); },
-                      isMulti: true,
-                      name: 'searchSelect',
-                      value: zones[this.state.searchSelect],
-                    },
-                    placeholder: 'نام شهر، منطقه و .. خود را وارد کنید',
-                    options: zones,
-                    name: 'select',
-                    type: 'text',
-                  })}
+                  <AsyncSelect
+                    isMulti
+                    cacheOptions
+                    defaultOptions
+                    placeholder="نام شهر، منطقه و .. خود را وارد کنید"
+                    loadOptions={this.promiseOptions}
+                  />
                 </FormGroup>
               </Col>
               <Col lg={2} md={2} sm={2} xs={4}>
@@ -975,12 +990,12 @@ class SearchForm extends PureComponent {
                   </Col>
                 </>
               )}
-              <Col md={2} sm={4} xs={12}>
+              <Col md={4} sm={4} xs={12}>
                 <FormGroup>
                   {renderSelectField({
                     input: {
-                      onChange: (e) => { this.handleTypeSelect(Number(e.value), 'rooms'); },
-                      isMulti: false,
+                      onChange: (e) => { this.handleRoomNumSelect(e); },
+                      isMulti: true,
                       name: 'rooms',
                       value: nums[() => {
                         const { rooms: value } = this.state;
