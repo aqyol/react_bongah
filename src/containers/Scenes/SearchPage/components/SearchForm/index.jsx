@@ -11,8 +11,8 @@ import {
   Col,
   Form,
   FormGroup,
-  // Label,
-  // Input,
+  Label,
+  Input,
   Button,
   // Collapse,
   // CustomInput,
@@ -392,15 +392,18 @@ class SearchForm extends PureComponent {
       },
       type: 0,
       openModal: false,
+      requestModal: false,
+      requestModalLoading: false,
+      requestTitle: '',
     };
     this.handleRangeChange = this.handleRangeChange.bind(this);
-    this.handlePriceLabel = this.handlePriceLabel.bind(this);
     this.handleTypeSelect = this.handleTypeSelect.bind(this);
-    this.handleRentLabel = this.handleRentLabel.bind(this);
-    this.handleDailyRentLabel = this.handleDailyRentLabel.bind(this);
     this.handleFilter = this.handleFilter.bind(this);
     this.handleSearch = this.handleSearch.bind(this);
     this.saveAsRequest = this.saveAsRequest.bind(this);
+    this.handleCreateRequest = this.handleCreateRequest.bind(this);
+    this.handleDismissRequestModal = this.handleDismissRequestModal.bind(this);
+    this.handleInputChange = this.handleInputChange.bind(this);
   }
 
   componentDidMount() {
@@ -427,9 +430,6 @@ class SearchForm extends PureComponent {
       type: typeVal,
     });
     this.handleSearch();
-    console.log(typeVal);
-    console.log('props');
-    console.log(this.props.type);
   }
 
   changeResultTab = (tab) => {
@@ -460,11 +460,7 @@ class SearchForm extends PureComponent {
     </div>
   );
 
-  handleRangeChange(name, value) {
-    this.setState({ [name]: { min: value.min, max: value.max } });
-  }
-
-  handlePriceLabel(value, type) {
+  handlePriceLabel = (value, type) => {
     // type have => min, value, value, max
     if (type === 'min' || type === 'max') {
       return '';
@@ -488,11 +484,10 @@ class SearchForm extends PureComponent {
       return (`میلیارد${(value - 34) * 50}`);
     }
 
-    console.log(this.state.price);
     return value;
   }
 
-  handleRentLabel(value, type) {
+  handleRentLabel = (value, type) => {
     // type have => min, value, value, max
     if (type === 'min' || type === 'max') {
       return '';
@@ -519,11 +514,10 @@ class SearchForm extends PureComponent {
       return (`میلیون${(value - 23) * 100}`);
     }
 
-    console.log(this.state.price);
     return value;
   }
 
-  handleDailyRentLabel(value, type) {
+  handleDailyRentLabel = (value, type) => {
     // type have => min, value, value, max
     if (type === 'min' || type === 'max') {
       return '';
@@ -534,15 +528,15 @@ class SearchForm extends PureComponent {
     if (value > 19 && value <= 28) {
       return (`میلیون${1 + (value - 20) * 0.5}`);
     }
-    console.log(this.state.price);
-    console.log(value);
     return value;
+  }
+
+  handleRangeChange(name, value) {
+    this.setState({ [name]: { min: value.min, max: value.max } });
   }
 
   handleTypeSelect(index, name) {
     this.setState({ [name]: index });
-    console.log(index);
-    console.log(name);
   }
 
   handleSearchSelect(searchSelect) {
@@ -563,7 +557,34 @@ class SearchForm extends PureComponent {
   }
 
   saveAsRequest() {
-    console.log(this.state.type);
+    this.setState({ requestModal: true });
+  }
+
+  handleCreateRequest() {
+    if (this.state.requestTitle.length <= 0) {
+      console.log('enter title for request');
+      return;
+    }
+    this.setState({ requestModalLoading: true });
+    setTimeout(() => {
+      this.setState({
+        requestModalLoading: false,
+        requestModal: false,
+      });
+    }, 1000);
+  }
+
+  handleDismissRequestModal() {
+    this.setState({
+      requestModalLoading: false,
+      requestModal: false,
+      requestTitle: '',
+    });
+  }
+
+  handleInputChange(e) {
+    const { name, value } = e.target;
+    this.setState({ [name]: value });
   }
 
   render() {
@@ -787,11 +808,50 @@ class SearchForm extends PureComponent {
               <Button color="secondary" onClick={this.handleFilter}>بازگشت</Button>
             </ModalFooter>
           </Modal>
+          <Modal fade={false} isOpen={this.state.requestModal} toggle={this.handleDismissRequestModal}>
+            <ModalHeader toggle={this.handleDismissRequestModal}>فیلتر جستجو</ModalHeader>
+            {this.state.requestModalLoading
+            && (
+              <div className={`request-modal load${this.state.isLoading ? '' : ' loaded'}`}>
+                <div className="load__icon-wrap">
+                  <svg className="load__icon">
+                    <path fill="#4ce1b6" d="M12,4V2A10,10 0 0,0 2,12H4A8,8 0 0,1 12,4Z" />
+                  </svg>
+                </div>
+              </div>
+            )
+            }
+            {!this.state.requestModalLoading
+            && (
+              <>
+                <ModalBody>
+                  <Row className="search-input">
+                    <Col lg={12} md={12} sm={12} xs={12}>
+                      <FormGroup>
+                        <Label>عنوان درخواست</Label>
+                        <Input
+                          name="requestTitle"
+                          type="text"
+                          value={this.state.requestTitle}
+                          onChange={this.handleInputChange}
+                          className="text-right"
+                        />
+                      </FormGroup>
+                    </Col>
+                  </Row>
+                </ModalBody>
+                <ModalFooter>
+                  <Button color="primary" onClick={this.handleCreateRequest}>نمایش نتیجه</Button>{' '}
+                  <Button color="secondary" onClick={this.handleDismissRequestModal}>بازگشت</Button>
+                </ModalFooter>
+              </>
+            )}
+          </Modal>
         </div>
         <div className="searchForm">
           <Form>
             <Row form className="search-input">
-              <Col lg={10} md={10} sm={9} xs={8}>
+              <Col lg={8} md={8} sm={8} xs={8}>
                 <FormGroup>
                   {renderSelectField({
                     input: {
@@ -807,17 +867,16 @@ class SearchForm extends PureComponent {
                   })}
                 </FormGroup>
               </Col>
-              <Col lg={2} md={2} sm={3} xs={4}>
+              <Col lg={2} md={2} sm={2} xs={4}>
                 <Button onClick={() => { this.handleSearch(); }} className="btn-success btn-search">تغییر جستجو</Button>
               </Col>
-            </Row>
-            <Row>
-              <Col>
+              <Col lg={2} md={2} sm={2} xs={12}>
                 <Button
                   color="success"
                   onClick={() => { this.saveAsRequest(); }}
+                  className="volume"
                 >
-                  درصورت یافتن آگهی جدید به من اطلاعا بده
+                  درخواست
                 </Button>
               </Col>
             </Row>
