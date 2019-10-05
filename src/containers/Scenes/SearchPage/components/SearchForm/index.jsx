@@ -410,6 +410,9 @@ class SearchForm extends PureComponent {
 
   componentDidMount() {
     // search data from server using searchParams
+    console.group('props in search page');
+    console.log(this.props);
+    console.groupEnd();
     let typeVal = 0;
     switch (this.props.type) {
       case 'sell':
@@ -572,8 +575,9 @@ class SearchForm extends PureComponent {
   }
 
   handleSearch() {
-    console.log('handle search');
+    console.group('handle search in search form (Search page)');
     console.log(this.state.searchSelect);
+    console.groupEnd();
   }
 
   saveAsRequest() {

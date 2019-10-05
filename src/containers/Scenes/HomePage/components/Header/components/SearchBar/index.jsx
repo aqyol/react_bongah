@@ -6,13 +6,59 @@ import {
   Row,
   Form,
   FormGroup,
-  Input,
   Nav,
   NavItem,
   NavLink,
 } from 'reactstrap';
+import AsyncSelect from 'react-select/async';
 import classnames from 'classnames';
 
+const zones = [
+  {
+    value: 0,
+    label: 'تهران',
+  },
+  {
+    value: 1,
+    label: 'شیراز',
+  },
+  {
+    value: 2,
+    label: 'مشهد',
+  },
+  {
+    value: 3,
+    label: 'تبریز',
+  },
+  {
+    value: 4,
+    label: 'اصفهان',
+  },
+  {
+    value: 5,
+    label: 'بندرعباس',
+  },
+  {
+    value: 6,
+    label: 'قم',
+  },
+  {
+    value: 7,
+    label: 'کرج',
+  },
+  {
+    value: 8,
+    label: 'یزد',
+  },
+  {
+    value: 9,
+    label: 'گنبد',
+  },
+  {
+    value: 10,
+    label: 'بندرترکمن',
+  },
+];
 
 class SearchBar extends PureComponent {
   static propTypes = {
@@ -41,6 +87,16 @@ class SearchBar extends PureComponent {
     }));
   }
 
+  filterColors = inputValue => (
+    zones.filter(i => i.label.toLowerCase().includes(inputValue.toLowerCase())));
+
+  promiseOptions = inputValue => (
+    new Promise((resolve) => {
+      setTimeout(() => {
+        resolve(this.filterColors(inputValue));
+      }, 1000);
+    }));
+
   toggle(tab) {
     if (this.state.activeTab !== tab) {
       this.setState({
@@ -58,11 +114,9 @@ class SearchBar extends PureComponent {
     console.log(e.target.value);
   }
 
-  handleSearch(e) {
-    e.preventDefault();
-    console.group('search click');
+  handleSearch(searchItem) {
+    this.setState({ searchItem });
     console.log(this.state.searchItem);
-    console.groupEnd();
   }
 
   render() {
@@ -93,13 +147,14 @@ class SearchBar extends PureComponent {
           <Row form>
             <Col md={6} sm={8} xs={12}>
               <FormGroup>
-                <Input
-                  type="text"
-                  name="searchItem"
-                  id="searchItem"
-                  placeholder="شهر مورد نظر را وارد کنید"
-                  value={this.state.searchItem}
-                  onChange={(e) => { this.handleInputChange(e); }}
+                <AsyncSelect
+                  isMulti
+                  cacheOptions
+                  defaultOptions
+                  placeholder="نام شهر، منطقه و .. خود را وارد کنید"
+                  loadOptions={this.promiseOptions}
+                  className="text-right text-black-50"
+                  onChange={(e) => { this.handleSearch(e); }}
                 />
               </FormGroup>
             </Col>
