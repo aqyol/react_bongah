@@ -95,54 +95,6 @@ class MenuBar extends PureComponent {
             </li>
             {this.loginField()}
             <li className="moreOption">
-              <Link
-                to={{
-                  pathname: '/search',
-                  state: {
-                    type: 'sell',
-                  },
-                }}
-              >
-                خرید
-              </Link>
-            </li>
-            <li className="moreOption">
-              <Link
-                to={{
-                  pathname: '/search',
-                  state: {
-                    type: 'rent',
-                  },
-                }}
-              >
-                رهن و اجاره
-              </Link>
-            </li>
-            <li className="moreOption">
-              <Link
-                to={{
-                  pathname: '/search',
-                  state: {
-                    type: 'preSell',
-                  },
-                }}
-              >
-                پیش فروش
-              </Link>
-            </li>
-            <li className="moreOption">
-              <Link
-                to={{
-                  pathname: '/search',
-                  state: {
-                    type: 'partnership',
-                  },
-                }}
-              >
-                مشارکت
-              </Link>
-            </li>
-            <li className="moreOption">
               <Link to="/promise">قول نامه</Link>
             </li>
             <li className="moreOption">

@@ -34,12 +34,6 @@ class LeftSide extends PureComponent {
       <div className={`leftSide slimScroll${this.props.isExpand ? ' expanded' : ' minimized'}`}>
         <nav className="leftNav scrollable bigNav">
           <ul>
-            <li>
-              <Link to="/search">
-                <span className="navIcon"><FaCompass className="navIcon" /></span>
-                <span className="navLabel">جستجو</span>
-              </Link>
-            </li>
             <li className="hasSub hasSubActive">
               <Link to="/newproperty/sell" onClick={this.toggleActive}>
                 <span className="navIcon"><FaPlusCircle /></span>
@@ -47,26 +41,12 @@ class LeftSide extends PureComponent {
                 <span className="closeIcon arrowRight"><FaAngleLeft /></span>
                 <span className="openIcon arrowRight"><FaAngleDown /></span>
               </Link>
-              <ul className="colors secondUl">
-                <li>
-                  <Link to="/newproperty/sell">
-                    <span className="span-right">فروش</span>
-                    <span className="icon-right"><FaCircleNotch /></span>
-                  </Link>
-                </li>
-                <li>
-                  <Link to="/newproperty/rent">
-                    <span className="span-right">رهن و اجاره</span>
-                    <span className="icon-right"><FaCircleNotch /></span>
-                  </Link>
-                </li>
-                <li>
-                  <Link to="/newproperty/renovation">
-                    <span className="span-right">نوسازی</span>
-                    <span className="icon-right"><FaCircleNotch /></span>
-                  </Link>
-                </li>
-              </ul>
+            </li>
+            <li>
+              <Link to="/search">
+                <span className="navIcon"><FaCompass className="navIcon" /></span>
+                <span className="navLabel">جستجو</span>
+              </Link>
             </li>
             <li className="hasSub hasSubActive">
               <Link to="/request" onClick={this.toggleActive}>

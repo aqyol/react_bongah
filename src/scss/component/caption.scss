@@ -36,7 +36,8 @@
     line-height: 30px;
   }
   .homeCaption {
-    top: calc(50vh - 200px);
+    //top: calc(50vh - 200px);
+    display: none;
   }
 }
 

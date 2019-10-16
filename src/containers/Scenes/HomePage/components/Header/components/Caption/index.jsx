@@ -1,5 +1,4 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 const Caption = props => (
@@ -11,7 +10,6 @@ const Caption = props => (
         <div className="homeSubtitle">
           اولین سایت بنگاهی با قابلیت قول نامه در کشور
         </div>
-        <Link className="btn btn-warning" to="/search">اطلاعات بیشتر</Link>
       </div>
     )
     }
