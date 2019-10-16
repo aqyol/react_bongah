@@ -113,6 +113,18 @@ class LeftSide extends PureComponent {
               </Link>
               <ul className="colors secondUl">
                 <li>
+                  <Link to="/agency/create">
+                    <span className="span-right">همکاری</span>
+                    <span className="icon-right"><FaCircleNotch /></span>
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/agency/info">
+                    <span className="span-right">بنگاه من</span>
+                    <span className="icon-right"><FaCircleNotch /></span>
+                  </Link>
+                </li>
+                <li>
                   <Link to="/agent/myagents">
                     <span className="span-right">بنگاه های من</span>
                     <span className="icon-right"><FaCircleNotch /></span>
