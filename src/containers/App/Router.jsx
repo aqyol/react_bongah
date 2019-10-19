@@ -20,7 +20,7 @@ import Promise from '../Scenes/PromisePage';
 import EditPromise from '../Scenes/EditPromise';
 import AdsDetail from '../Scenes/AdsDetail';
 import Request from '../Scenes/Request';
-import CreateAgency from '../Scenes/Agency/CreateAgency';
+import CreateAgency from '../Scenes/Agency/Create';
 
 const Pages = () => (
   <Switch>
@@ -44,7 +44,7 @@ const Router = () => (
       <Switch>
         <Route exact path="/home" component={HomePage} />
         <Route path="/search" component={SearchPage} />
-        <Route exact path="/newproperty/:action" component={NewPropertyPage} />
+        <Route exact path="/newproperty" component={NewPropertyPage} />
         <Route exact path="/property/:id" component={MyhousePage} />
         <Route exact path="/agent/:action" component={AgentPage} />
         <Route exact path="/agency/create" component={CreateAgency} />
