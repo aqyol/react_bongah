@@ -1,0 +1,16 @@
+.form-catalog {
+  width: calc(100% - 15px);
+  height: 100%;
+}
+
+.div-catalog {
+  width: 100%;
+  height: 50%;
+}
+
+@media screen and (max-width: 720px) {
+
+  .row {
+    margin: 0 !important;
+  }
+}

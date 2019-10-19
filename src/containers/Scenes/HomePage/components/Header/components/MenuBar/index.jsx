@@ -87,7 +87,7 @@ class MenuBar extends PureComponent {
         <div className={`rtl-direction homeNav${(this.state.isHandlerActive ? ' active' : '')}`}>
           <ul>
             <li>
-              <Link to="/newproperty/sell">
+              <Link to="/newproperty">
                 <div className="btn btn-success">
                   افزودن آگهی جدید
                 </div>

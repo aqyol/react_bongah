@@ -1,0 +1,96 @@
+
+.dzu-preview {
+  direction: rtl;
+
+  img {
+    height: 150px;
+  }
+}
+
+.dzu-dropzone {
+  width: 150px !important;
+  height: 110px !important;
+  float: right;
+  margin-bottom: 10px;
+  margin-right: 10px;
+  min-height: 110px !important;
+  outline: none;
+  border-color: $color-accent !important;
+  overflow: hidden !important;
+  label{
+    width: 100%;
+    overflow: hidden;
+    height: 100%;
+    font-size: 0;
+    svg{
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+      width: 100% !important;
+      height: 100% !important;
+      z-index: 1;
+      position: absolute;
+    }
+  }
+}
+
+.dzu-row {
+  display: unset !important;
+  width: 100%;
+  margin: 0;
+}
+
+.dzu-custom {
+
+}
+
+.dzu-frame {
+  width: 100%;
+  //max-width: 150px;
+
+  .dzu-previewContainer {
+    width: 150px;
+    height: 110px;
+    float: right;
+    margin-right: 10px;
+    margin-bottom: 25px;
+
+    .dzu-previewImage {
+      //position: absolute;
+      margin-left: auto;
+      margin-right: auto;
+      display: block;
+      left: 0;
+      right: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      max-height: 140px;
+    }
+
+    .dzu-previewStatusContainer {
+      //position: absolute;
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+      left: 0;
+      right: 0;
+      bottom: 20px;
+      width: 80%;
+
+      progress {
+        float: left;
+        width: 86%;
+      }
+
+      .dzu-previewButton {
+        width: 20px;
+        height: 20px;
+        display: block;
+        position: absolute;
+        margin: 0;
+      }
+    }
+  }
+
+}
