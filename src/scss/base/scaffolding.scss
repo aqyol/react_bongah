@@ -19,6 +19,10 @@ body {
   box-sizing: inherit;
 }
 
+input, textarea{
+  box-shadow: none !important;
+}
+
 ul, ol {
   padding-left: 15px;
   margin-bottom: 0;

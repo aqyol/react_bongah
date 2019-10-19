@@ -48,6 +48,7 @@ class RadioButtonField extends PureComponent {
 
     return (
       <label
+        style={{ paddingTop: '2px' }}
         htmlFor={name}
         className={`${RadioButtonClass}${className ? ` radio-btn--${className}` : ''}`}
         onClick={this.onChange}

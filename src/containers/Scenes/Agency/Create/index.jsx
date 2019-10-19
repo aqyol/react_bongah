@@ -52,12 +52,12 @@ class Cooperation extends PureComponent {
               </div>
               <Row>
                 <Col>
-                  <FormGroup>
+                  <FormGroup style={{ fontSize: '16px', height: '100%' }}>
                     <Label>نوع همکاری</Label>
                     {renderRadioButtonField({
                       input: {
                         onChange: () => { this.handleTypeSelect('type', 1); },
-                        name: 'expiration',
+                        name: 'type',
                         value: this.state.type,
                       },
                       radioValue: 1,
@@ -67,7 +67,7 @@ class Cooperation extends PureComponent {
                     {renderRadioButtonField({
                       input: {
                         onChange: () => { this.handleTypeSelect('type', 2); },
-                        name: 'expiration',
+                        name: 'type',
                         value: this.state.type,
                       },
                       radioValue: 2,

@@ -78,52 +78,6 @@ DropZoneInput.propTypes = {
   getFilesFromEvent: PropTypes.func.isRequired,
 };
 
-const zones = [
-  {
-    value: 0,
-    label: 'تهران',
-  },
-  {
-    value: 1,
-    label: 'شیراز',
-  },
-  {
-    value: 2,
-    label: 'مشهد',
-  },
-  {
-    value: 3,
-    label: 'تبریز',
-  },
-  {
-    value: 4,
-    label: 'اصفهان',
-  },
-  {
-    value: 5,
-    label: 'بندرعباس',
-  },
-  {
-    value: 6,
-    label: 'قم',
-  },
-  {
-    value: 7,
-    label: 'کرج',
-  },
-  {
-    value: 8,
-    label: 'یزد',
-  },
-  {
-    value: 9,
-    label: 'گنبد',
-  },
-  {
-    value: 10,
-    label: 'بندرترکمن',
-  },
-];
 
 class CreateAgency extends PureComponent {
   constructor() {
@@ -135,19 +89,13 @@ class CreateAgency extends PureComponent {
       website: '',
       attachments: [],
       type: 2,
-      city: '',
-      parish: '',
-      region: '',
-      zone: '',
       startDate: '',
+      description: '',
     };
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleSubmitRequest = this.handleSubmitRequest.bind(this);
     this.isFormValid = this.isFormValid.bind(this);
     this.handleTypeSelect = this.handleTypeSelect.bind(this);
-    this.handleMultiSelect = this.handleMultiSelect.bind(this);
-    this.handleSelectRegion = this.handleSelectRegion.bind(this);
-    this.searchRegion = this.searchRegion.bind(this);
     this.setStartDate = this.setStartDate.bind(this);
   }
 
@@ -231,30 +179,8 @@ class CreateAgency extends PureComponent {
       name.trim().length < 5
       || phone.trim().length < 11
       || address.trim().length < 10
-      || startDate.trim().length < 4
+      || startDate.length < 4
     );
-  }
-
-  searchRegion(name, callback) {
-    console.log(this.state.region);
-    setTimeout(() => {
-      callback(zones);
-    }, 1000);
-
-    //   searchGoods(name, this.props.businessId)
-    //     .then((response) => {
-    //       this.setState({ totalGoods: response.totalScopes });
-    //       callback(response.totalScopes);
-    //     })
-    //     .catch(() => (null));
-  }
-
-  handleSelectRegion(selected, name) {
-    if (selected === null || selected === undefined) {
-      this.setState({ [name]: [] });
-      return;
-    }
-    this.setState({ [name]: selected });
   }
 
   handleTypeSelect(name, num) {
@@ -262,10 +188,6 @@ class CreateAgency extends PureComponent {
     console.log(name, num);
     console.groupEnd();
     this.setState({ [name]: num });
-  }
-
-  handleMultiSelect(name, selected) {
-    this.setState({ [name]: (selected !== null) ? selected : [] });
   }
 
   render() {
@@ -321,18 +243,6 @@ class CreateAgency extends PureComponent {
                 />
               </FormGroup>
             </Col>
-            <Col xs={12} sm={6} md={4} lg={4} xl={3}>
-              <FormGroup>
-                <Label>آدرس</Label>
-                <Input
-                  type="textarea"
-                  value={this.state.address}
-                  autoComplete="off"
-                  name="address"
-                  onChange={(e) => { this.handleInputChange(e); }}
-                />
-              </FormGroup>
-            </Col>
           </Row>
           <div>
             <Label>آپلود مدارک</Label>
@@ -352,6 +262,32 @@ class CreateAgency extends PureComponent {
               </div>
             </div>
           </div>
+          <Row style={{ width: '100%' }}>
+            <Col xs={12} sm={6} md={6} lg={6} xl={6}>
+              <FormGroup>
+                <Label>آدرس</Label>
+                <Input
+                  type="textarea"
+                  value={this.state.address}
+                  autoComplete="off"
+                  name="address"
+                  onChange={(e) => { this.handleInputChange(e); }}
+                />
+              </FormGroup>
+            </Col>
+            <Col xs={12} sm={6} md={6} lg={6} xl={6}>
+              <FormGroup>
+                <Label>درباره بنگاه</Label>
+                <Input
+                  type="textarea"
+                  value={this.state.description}
+                  autoComplete="off"
+                  name="description"
+                  onChange={(e) => { this.handleInputChange(e); }}
+                />
+              </FormGroup>
+            </Col>
+          </Row>
         </form>
         <Row>
           <Col

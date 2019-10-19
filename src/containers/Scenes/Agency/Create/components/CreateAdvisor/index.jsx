@@ -5,6 +5,7 @@ import {
   FormGroup,
   Label,
   Button,
+  Input,
 } from 'reactstrap';
 import Dropzone from 'react-dropzone-uploader';
 import { getDroppedOrSelectedFiles } from 'html5-file-selector';
@@ -12,6 +13,7 @@ import PropTypes from 'prop-types';
 import AsyncSelect from 'react-select/async';
 import 'react-persian-calendar-date-picker/lib/DatePicker.css';
 import DatePicker from 'react-persian-calendar-date-picker';
+import { NumberInput } from 'react-hichestan-numberinput';
 
 
 const Layout = ({
@@ -124,8 +126,6 @@ const zones = [
   },
 ];
 
-// const styleFn = provided => ({ ...provided, width: '100%' });
-
 const customStyles = {
   option: provided => ({
     ...provided,
@@ -156,17 +156,13 @@ class CreateAdvisor extends PureComponent {
   constructor() {
     super();
     this.state = {
-      name: '',
-      phone: '',
-      address: '',
-      website: '',
       attachments: [],
-      type: 2,
       city: '',
       parish: '',
       region: '',
-      zone: '',
       startDate: '',
+      number: '',
+      description: '',
     };
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleSubmitRequest = this.handleSubmitRequest.bind(this);
@@ -251,16 +247,18 @@ class CreateAdvisor extends PureComponent {
 
   isFormValid() {
     const {
-      name,
-      phone,
-      address,
+      number,
       startDate,
+      city,
+      region,
+      parish,
     } = this.state;
     return (
-      name.trim().length < 5
-      || phone.trim().length < 11
-      || address.trim().length < 10
-      || startDate.trim().length < 4
+      number.trim().length < 11
+      || startDate.length < 4
+      || city.length < 4
+      || region.length < 4
+      || parish.length < 1
     );
   }
 
@@ -368,6 +366,19 @@ class CreateAdvisor extends PureComponent {
                 calendarClassName="date-picker"
               />
             </Col>
+            <Col xs={12} sm={4} md={4} lg={3} xl={2}>
+              <FormGroup>
+                <Label>تلفن ثابت یا موبایل</Label>
+                <NumberInput
+                  maxLength={11}
+                  value={this.state.number}
+                  autoComplete="off"
+                  name="number"
+                  className="form-control"
+                  onChange={(e) => { this.handleInputChange(e); }}
+                />
+              </FormGroup>
+            </Col>
           </Row>
           <div>
             <Label>آپلود مدارک</Label>
@@ -387,6 +398,20 @@ class CreateAdvisor extends PureComponent {
               </div>
             </div>
           </div>
+          <Row style={{ width: '100%' }}>
+            <Col xs={12} sm={6} md={6} lg={6} xl={6}>
+              <FormGroup>
+                <Label>درباره من</Label>
+                <Input
+                  type="textarea"
+                  value={this.state.description}
+                  autoComplete="off"
+                  name="description"
+                  onChange={(e) => { this.handleInputChange(e); }}
+                />
+              </FormGroup>
+            </Col>
+          </Row>
         </form>
         <Row>
           <Col
