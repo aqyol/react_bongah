@@ -92,6 +92,13 @@
   color: #999;
 }
 
+.nav-link.active,
+.nav-item.show .nav-link{
+  color: $nav-tabs-link-active-bg !important;
+  background-color: $nav-tabs-link-active-color !important;
+  border-color: $nav-tabs-link-active-border-color !important;
+}
+
 @media screen and (max-width: 767px) {
   .search-panel form {
     text-align: left;

@@ -1,41 +1,45 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
+import {
+  Row,
+  Col,
+} from 'reactstrap';
 
 
 const PromiseList = props => (
   <div className="promise-list">
-    <div className="row promise-head">
-      <div className="col-lg-3 col-md-3 col-xs-3">
+    <Row className="row promise-head">
+      <Col xs={3} sm={3} md={3} lg={3}>
         تاریخ
-      </div>
-      <div className="col-lg-3 col-md-3 col-xs-3">
+      </Col>
+      <Col xs={3} sm={3} md={3} lg={3}>
         طرف اول
-      </div>
-      <div className="col-lg-3 col-md-3 col-xs-3">
+      </Col>
+      <Col xs={3} sm={3} md={3} lg={3}>
         طرف دوم
-      </div>
-      <div className="col-lg-3 col-md-3 col-xs-3">
+      </Col>
+      <Col xs={3} sm={3} md={3} lg={3}>
         وضعیت
-      </div>
-    </div>
+      </Col>
+    </Row>
     {props.list.map(list => (
       <div className="agentInfoContainer">
         <Link to={`/promise/edit/${list.id}`}>
-          <div className={`row ${(list.status === 1 ? 'promise-complete' : 'promise-in-progress')}`}>
-            <div className="col-lg-3 col-md-3 col-xs-3 list-item text-black-50">
+          <Row className={`row ${(list.status === 1 ? 'promise-complete' : 'promise-in-progress')}`}>
+            <Col xs={3} sm={3} md={3} lg={3} className="list-item text-black-50">
               {list.date}
-            </div>
-            <div className="col-lg-3 col-md-3 col-xs-3 list-item text-black-50">
+            </Col>
+            <Col xs={3} sm={3} md={3} lg={3} className="list-item text-black-50">
               {list.first}
-            </div>
-            <div className="col-lg-3 col-md-3 col-xs-3 list-item text-black-50">
+            </Col>
+            <Col xs={3} sm={3} md={3} lg={3} className="list-item text-black-50">
               {list.second}
-            </div>
-            <div className="col-lg-3 col-md-3 col-xs-3 list-item text-black-50">
+            </Col>
+            <Col xs={3} sm={3} md={3} lg={3} className="col-lg-3 col-md-3 col-xs-3 list-item text-black-50">
               {(list.status === 1) ? 'تکمیل شده' : 'درحال بررسی'}
-            </div>
-          </div>
+            </Col>
+          </Row>
         </Link>
       </div>
     ))}
