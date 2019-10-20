@@ -82,7 +82,7 @@ class LeftSide extends PureComponent {
               </Link>
               <ul className="colors secondUl">
                 <li>
-                  <Link to="/agency/info">
+                  <Link to="/agent/list">
                     <span className="span-right">لیست مشاوران</span>
                     <span className="icon-right"><FaCircleNotch /></span>
                   </Link>

@@ -12,13 +12,14 @@ import {
   Input,
   CustomInput,
 } from 'reactstrap';
+import AsyncSelect from 'react-select/async';
 import renderSelectField from '../../../../../shared/components/form/Select';
 
 
 const renderMaskField = ({
   input, placeholder, type, mask,
 }) => (
-  <MaskedInput className="englishText" {...input} placeholder={placeholder} type={type} mask={mask} />
+  <MaskedInput className="englishText form-control" {...input} placeholder={placeholder} type={type} mask={mask} />
 );
 
 renderMaskField.propTypes = {
@@ -74,6 +75,32 @@ const adsList = [
   },
 ];
 
+const customStyles = {
+  option: provided => ({
+    ...provided,
+  }),
+  container: () => ({
+    width: '100%',
+  }),
+  menu: provided => ({
+    ...provided,
+    zIndex: 5,
+  }),
+  menuList: () => ({
+    width: '100%',
+  }),
+};
+
+const selectTheme = theme => ({
+  ...theme,
+  colors: {
+    ...theme.colors,
+    primary25: '#98EAD3',
+    primary: '#54E1B9',
+    primary50: '#B4EEDD',
+  },
+});
+
 
 class NewPromise extends PureComponent {
   static propTypes = {
@@ -84,7 +111,9 @@ class NewPromise extends PureComponent {
     super(props);
     this.state = {
       id: null,
+      isOwner: true,
       toggleUserInfo: false,
+      toggleOwnerInfo: false,
       toggleAdsInfo: false,
       type: 0,
       ads: 0,
@@ -105,6 +134,7 @@ class NewPromise extends PureComponent {
         pelakSabt: '',
         bakhsh: '',
         hozeSabt: '',
+        otherInfo: '',
       },
     };
     this.handleSelectChange = this.handleSelectChange.bind(this);
@@ -113,6 +143,8 @@ class NewPromise extends PureComponent {
     this.toggleUserInfoForm = this.toggleUserInfoForm.bind(this);
     this.handleCreatePromise = this.handleCreatePromise.bind(this);
     this.getPromiseInfo = this.getPromiseInfo.bind(this);
+    this.searchAds = this.searchAds.bind(this);
+    this.handleTypeSelect = this.handleTypeSelect.bind(this);
   }
 
   componentDidMount() {
@@ -125,6 +157,25 @@ class NewPromise extends PureComponent {
     console.group('get promise info => id');
     console.log(this.props.id);
     console.groupEnd();
+  }
+
+  promiseOptions = (inputValue, callback) => (
+    new Promise((resolve) => {
+      resolve(this.searchAds(inputValue, callback));
+    }));
+
+  searchAds(name, callback) {
+    console.log(this.state.region);
+    setTimeout(() => {
+      callback(adsList);
+    }, 1000);
+
+    //   searchGoods(name, this.props.businessId)
+    //     .then((response) => {
+    //       this.setState({ totalGoods: response.totalScopes });
+    //       callback(response.totalScopes);
+    //     })
+    //     .catch(() => (null));
   }
 
   handleTypeSelect(index, name) {
@@ -145,8 +196,12 @@ class NewPromise extends PureComponent {
   handleInputMelkChange(e) {
     e.preventDefault();
     const { name, value } = e.target;
-    this.setState({
-      melk: { [name]: value },
+    this.setState((prevState) => {
+      const { [name]: prevValue, ...other } = prevState.melk;
+      const newMelk = { ...other, [name]: value };
+      return {
+        melk: newMelk,
+      };
     });
     console.log(e.target.value);
   }
@@ -168,7 +223,7 @@ class NewPromise extends PureComponent {
 
   handleCreatePromise() {
     console.group('create promise');
-    console.log(this.state.melk);
+    console.log(this.state);
     console.groupEnd();
   }
 
@@ -179,13 +234,14 @@ class NewPromise extends PureComponent {
           فرم ایجاد قول نامه
         </div>
         <Form>
-          <Row form>
+          <Row className="form">
             <Col xs={12} md={4} sm={6}>
               <FormGroup>
                 {renderSelectField({
                   input: {
-                    onChange: (e) => { this.handleTypeSelect(Number(e.value), 'type'); },
+                    onChange: (e) => { this.handleTypeSelect(e, 'type'); },
                     isMulti: false,
+                    isDisabled: (!this.state.isOwner),
                     name: 'type',
                     value: types[this.state.type],
                   },
@@ -198,29 +254,32 @@ class NewPromise extends PureComponent {
             </Col>
             <Col xs={12} md={4} sm={6}>
               <FormGroup>
-                {renderSelectField({
-                  input: {
-                    onChange: (e) => { this.handleTypeSelect(Number(e.value), 'ads'); },
-                    isMulti: false,
-                    name: 'ads',
-                    value: adsList[this.state.ads],
-                  },
-                  placeholder: 'انتخاب آگهی',
-                  options: adsList,
-                  name: 'select',
-                  type: 'text',
-                })}
+                <AsyncSelect
+                  isMulti={false}
+                  cache={false}
+                  defaultOptions
+                  loadOptions={(input, callback) => { this.promiseOptions(input, callback); }}
+                  onChange={(e) => { this.handleTypeSelect(e, 'ads'); }}
+                  placeholder="انتخاب آگهی"
+                  value={this.state.ads}
+                  options={adsList}
+                  loadingMessage={() => ('درحال بارگزاری...')}
+                  theme={theme => selectTheme(theme)}
+                  noOptionsMessage={() => ('آگهی یافت نشد')}
+                  styles={customStyles}
+                  isDisabled={!this.state.isOwner}
+                />
               </FormGroup>
             </Col>
             <Col xs={12} md={4} sm={6}>
               <FormGroup>
-                <Label>شماره موبایل</Label>
                 {renderMaskField({
                   input: {
                     name: 'number',
                     autoComplete: 'off',
                     value: this.state.number,
                     onChange: (e) => { this.handleInputChange(e); },
+                    disabled: (!this.state.isOwner),
                   },
                   placeholder: 'شماره موبایل',
                   mask: [/[0]/, /[9]/, /\d/, /\d/, ' ', /\d/, /\d/, /\d/, ' ', /\d/, /\d/, /\d/, /\d/],
@@ -228,20 +287,21 @@ class NewPromise extends PureComponent {
               </FormGroup>
             </Col>
           </Row>
-          <Row>
+          <Row className="form">
             <Col xs={12} md={4} sm={6}>
               <Button
                 outline
                 color="primary"
-                onClick={(e) => { this.toggleUserInfoForm(e, 'toggleUserInfo'); }}
+                onClick={(e) => { this.toggleUserInfoForm(e, 'toggleOwnerInfo'); }}
                 style={{ marginBottom: '1rem', width: '100%' }}
               >
-                وارد کردن اطلاعات شخصی
+                اطلاعات طرف اول (مالک)
               </Button>
             </Col>
           </Row>
           <Collapse
-            isOpen={this.state.toggleUserInfo}
+            className="form"
+            isOpen={this.state.toggleOwnerInfo}
           >
             <Row>
               <Col xs={12} md={4} sm={6}>
@@ -254,6 +314,7 @@ class NewPromise extends PureComponent {
                     placeholder="نام"
                     value={this.state.name}
                     onChange={(e) => { this.handleInputChange(e); }}
+                    disabled={!this.state.isOwner}
                   />
                 </FormGroup>
               </Col>
@@ -267,6 +328,7 @@ class NewPromise extends PureComponent {
                     placeholder="نام خانوادگی"
                     value={this.state.surname}
                     onChange={(e) => { this.handleInputChange(e); }}
+                    disabled={!this.state.isOwner}
                   />
                 </FormGroup>
               </Col>
@@ -280,6 +342,7 @@ class NewPromise extends PureComponent {
                     placeholder="شماره شناسنامه"
                     value={this.state.shenasname}
                     onChange={(e) => { this.handleInputChange(e); }}
+                    disabled={!this.state.isOwner}
                   />
                 </FormGroup>
               </Col>
@@ -293,6 +356,7 @@ class NewPromise extends PureComponent {
                     placeholder="کد ملی"
                     value={this.state.nationalCode}
                     onChange={(e) => { this.handleInputChange(e); }}
+                    disabled={!this.state.isOwner}
                   />
                 </FormGroup>
               </Col>
@@ -306,12 +370,102 @@ class NewPromise extends PureComponent {
                     placeholder="کد پستی"
                     value={this.state.postCode}
                     onChange={(e) => { this.handleInputChange(e); }}
+                    disabled={!this.state.isOwner}
                   />
                 </FormGroup>
               </Col>
             </Row>
           </Collapse>
-          <Row>
+          <Row className="form">
+            <Col xs={12} md={4} sm={6}>
+              <Button
+                outline
+                color="primary"
+                onClick={(e) => { this.toggleUserInfoForm(e, 'toggleUserInfo'); }}
+                style={{ marginBottom: '1rem', width: '100%' }}
+              >
+                اطلاعات طرف دوم
+              </Button>
+            </Col>
+          </Row>
+          <Collapse
+            className="form"
+            isOpen={this.state.toggleUserInfo}
+          >
+            <Row>
+              <Col xs={12} md={4} sm={6}>
+                <FormGroup>
+                  <Label for="name">نام</Label>
+                  <Input
+                    type="text"
+                    name="name"
+                    id="name"
+                    placeholder="نام"
+                    value={this.state.name}
+                    onChange={(e) => { this.handleInputChange(e); }}
+                    disabled={this.state.isOwner}
+                  />
+                </FormGroup>
+              </Col>
+              <Col xs={12} md={4} sm={6}>
+                <FormGroup>
+                  <Label for="surname">نام خانوادگی</Label>
+                  <Input
+                    type="text"
+                    name="surname"
+                    id="surname"
+                    placeholder="نام خانوادگی"
+                    value={this.state.surname}
+                    onChange={(e) => { this.handleInputChange(e); }}
+                    disabled={this.state.isOwner}
+                  />
+                </FormGroup>
+              </Col>
+              <Col xs={12} md={4} sm={6}>
+                <FormGroup>
+                  <Label for="shenasname">شماره شناسنامه</Label>
+                  <Input
+                    type="text"
+                    name="shenasname"
+                    id="shenasname"
+                    placeholder="شماره شناسنامه"
+                    value={this.state.shenasname}
+                    onChange={(e) => { this.handleInputChange(e); }}
+                    disabled={this.state.isOwner}
+                  />
+                </FormGroup>
+              </Col>
+              <Col xs={12} md={4} sm={6}>
+                <FormGroup>
+                  <Label for="nationalCode">کد ملی</Label>
+                  <Input
+                    type="text"
+                    name="nationalCode"
+                    id="nationalCode"
+                    placeholder="کد ملی"
+                    value={this.state.nationalCode}
+                    onChange={(e) => { this.handleInputChange(e); }}
+                    disabled={this.state.isOwner}
+                  />
+                </FormGroup>
+              </Col>
+              <Col xs={12} md={4} sm={6}>
+                <FormGroup>
+                  <Label for="postCode">کد پستی</Label>
+                  <Input
+                    type="text"
+                    name="postCode"
+                    id="postCode"
+                    placeholder="کد پستی"
+                    value={this.state.postCode}
+                    onChange={(e) => { this.handleInputChange(e); }}
+                    disabled={this.state.isOwner}
+                  />
+                </FormGroup>
+              </Col>
+            </Row>
+          </Collapse>
+          <Row className="form">
             <Col xs={12} md={4} sm={6}>
               <Button
                 outline
@@ -319,23 +473,29 @@ class NewPromise extends PureComponent {
                 onClick={(e) => { this.toggleUserInfoForm(e, 'toggleAdsInfo'); }}
                 style={{ marginBottom: '1rem', width: '100%' }}
               >
-                وارد کردن اطلاعات ملک(اختیاری)
+                اطلاعات ملک(اختیاری)
               </Button>
             </Col>
           </Row>
           <Collapse
+            className="form"
             isOpen={this.state.toggleAdsInfo}
           >
             <Row>
               <Col xs={12} md={4} sm={6}>
                 <FormGroup>
-                  <Label for="dang">تعداد دانگ</Label>
+                  <Label for="dang">
+                    تعداد دانگ
+                    <span>{this.state.melk.dang}</span>
+                  </Label>
                   <CustomInput
                     type="range"
                     id="dang"
                     name="dang"
                     value={this.state.melk.dang}
+                    max={6}
                     onChange={(e) => { this.handleInputMelkChange(e); }}
+                    disabled={!this.state.isOwner}
                   />
                 </FormGroup>
               </Col>
@@ -349,6 +509,7 @@ class NewPromise extends PureComponent {
                     placeholder="پلاک ثبتی"
                     value={this.state.melk.pelakSabt}
                     onChange={(e) => { this.handleInputMelkChange(e); }}
+                    disabled={!this.state.isOwner}
                   />
                 </FormGroup>
               </Col>
@@ -362,6 +523,7 @@ class NewPromise extends PureComponent {
                     placeholder="فرعی از"
                     value={this.state.melk.fareiAz}
                     onChange={(e) => { this.handleInputMelkChange(e); }}
+                    disabled={!this.state.isOwner}
                   />
                 </FormGroup>
               </Col>
@@ -375,6 +537,7 @@ class NewPromise extends PureComponent {
                     placeholder="اصلی قطعه"
                     value={this.state.melk.asliGhete}
                     onChange={(e) => { this.handleInputMelkChange(e); }}
+                    disabled={!this.state.isOwner}
                   />
                 </FormGroup>
               </Col>
@@ -388,6 +551,7 @@ class NewPromise extends PureComponent {
                     placeholder="سریال سند"
                     value={this.state.melk.serialSanad}
                     onChange={(e) => { this.handleInputMelkChange(e); }}
+                    disabled={!this.state.isOwner}
                   />
                 </FormGroup>
               </Col>
@@ -401,6 +565,7 @@ class NewPromise extends PureComponent {
                     placeholder="واقع در بخش"
                     value={this.state.melk.bakhsh}
                     onChange={(e) => { this.handleInputMelkChange(e); }}
+                    disabled={!this.state.isOwner}
                   />
                 </FormGroup>
               </Col>
@@ -414,6 +579,7 @@ class NewPromise extends PureComponent {
                     placeholder="حوزه ثبتی"
                     value={this.state.melk.hozeSabt}
                     onChange={(e) => { this.handleInputMelkChange(e); }}
+                    disabled={!this.state.isOwner}
                   />
                 </FormGroup>
               </Col>
@@ -427,6 +593,7 @@ class NewPromise extends PureComponent {
                     placeholder="صفحه"
                     value={this.state.melk.safheSanad}
                     onChange={(e) => { this.handleInputMelkChange(e); }}
+                    disabled={!this.state.isOwner}
                   />
                 </FormGroup>
               </Col>
@@ -440,6 +607,7 @@ class NewPromise extends PureComponent {
                     placeholder="دفتر"
                     value={this.state.melk.daftarSanad}
                     onChange={(e) => { this.handleInputMelkChange(e); }}
+                    disabled={!this.state.isOwner}
                   />
                 </FormGroup>
               </Col>
@@ -453,6 +621,23 @@ class NewPromise extends PureComponent {
                     placeholder="به نام"
                     value={this.state.melk.nameSanad}
                     onChange={(e) => { this.handleInputMelkChange(e); }}
+                    disabled={!this.state.isOwner}
+                  />
+                </FormGroup>
+              </Col>
+            </Row>
+            <Row>
+              <Col>
+                <FormGroup>
+                  <Label for="otherInfo">اطلاعات بیشتر</Label>
+                  <Input
+                    type="textarea"
+                    name="otherInfo"
+                    id="otherInfo"
+                    placeholder="اطلاعات بیشتر"
+                    value={this.state.melk.otherInfo}
+                    onChange={(e) => { this.handleInputMelkChange(e); }}
+                    disabled={!this.state.isOwner}
                   />
                 </FormGroup>
               </Col>
