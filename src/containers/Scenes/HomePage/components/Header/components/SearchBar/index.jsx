@@ -135,7 +135,7 @@ class SearchBar extends PureComponent {
     }
     return (
       <div className="search-panel">
-        <Form>
+        <Form style={{ width: '80%', margin: 'auto' }}>
           <Nav tabs style={{ border: 'none' }}>
             <NavItem>
               <NavLink
