@@ -82,7 +82,7 @@ class MyInfoForm extends PureComponent {
 
   render() {
     return (
-      <div className="myInfoForm nav-link">
+      <div className="myInfoForm">
         <Row>
           <Col xs={12} sm={6} md={4} lg={3} xl={2}>
             <FormGroup>
