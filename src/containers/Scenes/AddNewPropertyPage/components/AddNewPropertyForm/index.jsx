@@ -12,6 +12,7 @@ import {
 } from 'reactstrap';
 import CedarMaps from '@cedarstudios/react-cedarmaps';
 import ImageUploader from 'react-images-upload';
+import { DecimalInput } from 'react-hichestan-numberinput';
 import renderSelectField from '../../../../../shared/components/form/Select';
 
 
@@ -19,35 +20,62 @@ const applicationTypes = [
   {
     value: '0',
     label: 'مسکونی',
-  }, {
+  },
+  {
     value: '1',
     label: 'اداری',
-  }, {
+  },
+  {
     value: '2',
     label: 'موقعیت اداری',
-  }, {
-    value: '3',
-    label: 'اقامتی،تفریحی',
   },
   {
     value: '3',
     label: 'انبار کالا',
   },
   {
-    value: '3',
+    value: '4',
     label: 'تفریحی',
   },
   {
-    value: '3',
+    value: '5',
     label: 'ورزشی',
   },
   {
-    value: '3',
+    value: '6',
     label: 'مطب',
   },
   {
-    value: '3',
+    value: '7',
     label: 'آموزشی',
+  },
+  {
+    value: '8',
+    label: 'سوئیت',
+  },
+  {
+    value: '9',
+    label: 'آپارتمان',
+  },
+  {
+    value: '10',
+    label: 'هتل آپارتمان',
+  },
+  {
+    value: '11',
+    label: 'سوئیت (اتاق) بوم گردی',
+  },
+  {
+    value: '12',
+    label: 'هتل',
+  },
+  {
+    value: '13',
+    label: 'ویلا',
+  },
+  {
+    value: '14',
+    label: 'باغ',
   },
 ];
 
@@ -55,14 +83,21 @@ const types = [
   {
     value: '0',
     label: 'فروش',
-  }, {
+  },
+  {
     value: '1',
     label: 'رهن و اجاره',
-  }, {
+  },
+  {
     value: '2',
-    label: 'پیش فروش',
-  }, {
+    label: 'اقامتی، تفریحی',
+  },
+  {
     value: '3',
+    label: 'پیش فروش',
+  },
+  {
+    value: '4',
     label: 'مشارکت',
   },
 ];
@@ -966,6 +1001,7 @@ class AddNewPropertyForm extends PureComponent {
       unitPrice: 0,
       deposit: 0,
       rent: 0,
+      dailyRent: 0,
       images: '',
       imagesData: '',
       toggleMoreInfo: false,
@@ -1039,6 +1075,7 @@ class AddNewPropertyForm extends PureComponent {
     this.handleMapClick = this.handleMapClick.bind(this);
     this.handleSave = this.handleSave.bind(this);
     this.onDrop = this.onDrop.bind(this);
+    this.handleNumberInputChange = this.handleNumberInputChange.bind(this);
   }
 
   onDrop(images, imagesData) {
@@ -1053,7 +1090,6 @@ class AddNewPropertyForm extends PureComponent {
   }
 
   handleInputChange(e) {
-    e.preventDefault();
     const { name, value } = e.target;
     if ((name === 'area') && (value > 0)) {
       const { price } = this.state;
@@ -1074,7 +1110,13 @@ class AddNewPropertyForm extends PureComponent {
     this.setState({
       [name]: value,
     });
-    console.log(e.target.value);
+  }
+
+  handleNumberInputChange(e) {
+    console.group('num input');
+    console.log(e);
+    console.log(this.state);
+    console.groupEnd();
   }
 
   toggleCollapse(e, name) {
@@ -1265,7 +1307,7 @@ class AddNewPropertyForm extends PureComponent {
         }
         <Form>
           <Row form>
-            <Col md={4} sm={6} xs={12}>
+            <Col md={6} sm={6} xs={12}>
               <FormGroup>
                 {renderSelectField({
                   input: {
@@ -1281,7 +1323,7 @@ class AddNewPropertyForm extends PureComponent {
                 })}
               </FormGroup>
             </Col>
-            <Col md={4} sm={6} xs={12}>
+            <Col md={6} sm={6} xs={12}>
               <FormGroup>
                 {renderSelectField({
                   input: {
@@ -1297,34 +1339,38 @@ class AddNewPropertyForm extends PureComponent {
                 })}
               </FormGroup>
             </Col>
-            <Col md={4} sm={6} xs={12}>
-              <FormGroup>
-                {renderSelectField({
-                  input: {
-                    onChange: (e) => { this.handleTypeSelect(Number(e.value), 'ownerType'); },
-                    isMulti: false,
-                    name: 'ownerType',
-                    value: ownerTypes[this.state.ownerType],
-                  },
-                  placeholder: 'عنوان آورنده',
-                  options: ownerTypes,
-                  name: 'select',
-                  type: 'text',
-                })}
-              </FormGroup>
-            </Col>
-            {this.state.type !== 1
+            {this.state.type === 4
+            && (
+              <Col md={4} sm={6} xs={12}>
+                <FormGroup>
+                  {renderSelectField({
+                    input: {
+                      onChange: (e) => { this.handleTypeSelect(Number(e.value), 'ownerType'); },
+                      isMulti: false,
+                      name: 'ownerType',
+                      value: ownerTypes[this.state.ownerType],
+                    },
+                    placeholder: 'عنوان آورنده',
+                    options: ownerTypes,
+                    name: 'select',
+                    type: 'text',
+                  })}
+                </FormGroup>
+              </Col>
+            )}
+            {(this.state.type !== 1 && this.state.type !== 2)
             && (
               <Col md={4} sm={6} xs={12}>
                 <FormGroup>
                   <Label for="price">قیمت کل(تومان)</Label>
-                  <Input
+                  <DecimalInput
                     type="number"
                     name="price"
                     id="price"
                     placeholder="قیمت"
                     value={this.state.price}
                     onChange={(e) => { this.handleInputChange(e); }}
+                    className="form-control"
                   />
                 </FormGroup>
               </Col>
@@ -1335,26 +1381,47 @@ class AddNewPropertyForm extends PureComponent {
                 <Col md={4} sm={6} xs={12}>
                   <FormGroup>
                     <Label for="deposit">ودیعه(تومان)</Label>
-                    <Input
+                    <DecimalInput
                       type="number"
                       name="deposit"
                       id="deposit"
                       placeholder="ودیعه"
                       value={this.state.deposit}
                       onChange={(e) => { this.handleInputChange(e); }}
+                      className="form-control"
                     />
                   </FormGroup>
                 </Col>
                 <Col md={4} sm={6} xs={12}>
                   <FormGroup>
                     <Label for="rent">اجاره(تومان)</Label>
-                    <Input
+                    <DecimalInput
                       type="number"
                       name="rent"
                       id="rent"
                       placeholder="اجاره"
                       value={this.state.rent}
                       onChange={(e) => { this.handleInputChange(e); }}
+                      className="form-control"
+                    />
+                  </FormGroup>
+                </Col>
+              </>
+            )}
+            {this.state.type === 2
+            && (
+              <>
+                <Col md={4} sm={6} xs={12}>
+                  <FormGroup>
+                    <Label for="deposit">اجاره روزانه(تومان)</Label>
+                    <DecimalInput
+                      type="number"
+                      name="dailyRent"
+                      id="dailyRent"
+                      placeholder="اجاره روزانه"
+                      value={this.state.dailyRent}
+                      onChange={(e) => { this.handleInputChange(e); }}
+                      className="form-control"
                     />
                   </FormGroup>
                 </Col>
@@ -1363,30 +1430,35 @@ class AddNewPropertyForm extends PureComponent {
             <Col md={4} sm={6} xs={12}>
               <FormGroup>
                 <Label for="area">متراژ</Label>
-                <Input
+                <DecimalInput
                   type="number"
                   name="area"
                   id="area"
                   placeholder="متراژ"
                   value={this.state.area}
                   onChange={(e) => { this.handleInputChange(e); }}
+                  className="form-control"
                 />
               </FormGroup>
             </Col>
-            <Col md={4} sm={6} xs={12}>
-              <FormGroup>
-                <Label for="unitPrice">قیمت هر مترمربع</Label>
-                <Input
-                  type="number"
-                  name="unitPrice"
-                  id="unitPrice"
-                  placeholder="قیمت هر مترمربع"
-                  disabled
-                  value={this.state.unitPrice}
-                  onChange={(e) => { this.handleInputChange(e); }}
-                />
-              </FormGroup>
-            </Col>
+            {(this.state.type !== 1 && this.state.type !== 2)
+            && (
+              <Col md={4} sm={6} xs={12}>
+                <FormGroup>
+                  <Label for="unitPrice">قیمت هر مترمربع</Label>
+                  <DecimalInput
+                    type="number"
+                    name="unitPrice"
+                    id="unitPrice"
+                    placeholder="قیمت هر مترمربع"
+                    disabled
+                    value={this.state.unitPrice}
+                    onChange={(e) => { this.handleInputChange(e); }}
+                    className="form-control"
+                  />
+                </FormGroup>
+              </Col>
+            )}
           </Row>
           <Row>
             <Col xs={12} md={4} sm={6}>
@@ -1452,7 +1524,7 @@ class AddNewPropertyForm extends PureComponent {
                 withIcon
                 buttonText="انتخاب عکس"
                 onChange={(images, pictures) => { this.onDrop(images, pictures); }}
-                imgExtension={['.jpg', '.gif', '.png', '.gif']}
+                imgExtension={['.jpg', '.jpeg', '.gif', '.png', '.gif']}
                 maxFileSize={5242880}
                 withPreview
                 fileSizeError="حجم فایل انتخاب شده بیشتر از حد مجاز است"

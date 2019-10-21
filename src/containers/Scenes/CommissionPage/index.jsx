@@ -5,8 +5,20 @@ import {
   TabPanel,
   TabList,
 } from 'react-web-tabs';
+import {
+  Row,
+  Col,
+} from 'reactstrap';
+import MaskedInput from 'react-text-mask';
+import createNumberMask from 'text-mask-addons/dist/createNumberMask';
 import Dashboard from '../../../shared/components/DashboardLayout';
 import CheckBox from '../../../shared/components/CheckBox';
+
+
+const numberMask = createNumberMask({
+  prefix: '',
+  suffix: '',
+});
 
 class Commission extends PureComponent {
   constructor() {
@@ -19,7 +31,6 @@ class Commission extends PureComponent {
       normalCommission: 0,
       ourCommission: 0,
       haveCode: false,
-      a: 0,
     };
     this.handleTabChange = this.handleTabChange.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
@@ -33,7 +44,6 @@ class Commission extends PureComponent {
       normalCommission: 0,
       ourCommission: 0,
     });
-    console.log(this.state.a);
   }
 
   handleInputChange(e) {
@@ -58,18 +68,21 @@ class Commission extends PureComponent {
     if (deposit === '' || deposit === undefined) {
       deposit = 0;
     }
+    const priceNum = (price === 0) ? 0 : parseFloat(price.replace(/,/g, ''));
+    const depositNum = (deposit === 0) ? 0 : parseFloat(deposit.replace(/,/g, ''));
+    const rentNum = (rent === 0) ? 0 : parseFloat(rent.replace(/,/g, ''));
     if (this.state.type === 'sell') {
       // totalRent = this.sellToRent(0, Number(convertToNum(this.price)));
-      if (price > 500000000) {
-        union = Math.floor((500000000 * 0.005) + (Number(price) - 500000000) * 0.0025);
+      if (priceNum > 500000000) {
+        union = Math.floor((500000000 * 0.005) + (Number(priceNum) - 500000000) * 0.0025);
         myCom = Math.floor(union / 4);
       } else {
-        union = Math.floor((Number(price) * 0.005));
+        union = Math.floor((Number(priceNum) * 0.005));
         myCom = Math.floor(union / 4);
       }
     } else {
       // totalRent = this.sellToRent(Number(rent), Number(deposit));
-      totalRent = (30000 * Number(deposit)) / 1000000 + Number(rent);
+      totalRent = (30000 * Number(depositNum)) / 1000000 + Number(rentNum);
       myCom = Math.floor(totalRent * 0.05);
       union = Math.floor(totalRent * 0.25);
     }
@@ -90,9 +103,7 @@ class Commission extends PureComponent {
     });
   }
 
-  handleCheckChange(e) {
-    console.log(e.target);
-    console.log(this.state);
+  handleCheckChange() {
     this.setState(prevState => ({
       haveCode: !prevState.haveCode,
     }));
@@ -116,56 +127,66 @@ class Commission extends PureComponent {
                 <div className="wrapper">
                   <TabPanel tabId="sell">
                     <div className="row form-group">
-                      <div className="Price col-xs-12 col-sm-12 col-md-12 tab-panel">
-                        <div className="input-group">
+                      <Row className="commission-row">
+                        <Col xs={3} sm={3} md={2} lg={2}>
                           <span className="input-group-addon">قیمت</span>
-                          <input
-                            type="text"
-                            name="price"
-                            id=""
-                            value={this.state.price}
-                            className="form-control"
-                            onChange={this.handleInputChange}
+                        </Col>
+                        <Col xs={6} sm={6} md={8} lg={8}>
+                          <MaskedInput
+                            mask={numberMask}
+                            className="input-commission text-center"
                             placeholder="قیمت به تومان"
+                            name="price"
+                            value={this.state.price}
+                            autoComplete="off"
+                            onChange={this.handleInputChange}
                           />
+                        </Col>
+                        <Col xs={3} sm={3} md={2} lg={2}>
                           <span className="input-group-addon">تومان</span>
-                        </div>
-                      </div>
+                        </Col>
+                      </Row>
                     </div>
                   </TabPanel>
                   <TabPanel tabId="rent">
-                    <div className="row form-group">
-                      <div className="title col-xs-12 col-sm-6 col-md-6 tab-panel">
-                        <div className="input-group">
-                          <span className="input-group-addon">ودیعه</span>
-                          <input
-                            type="text"
-                            name="deposit"
-                            id=""
-                            value={this.state.deposit}
-                            className="form-control"
-                            onChange={this.handleInputChange}
-                            placeholder="ودیعه به تومان"
-                          />
-                          <span className="input-group-addon">تومان</span>
-                        </div>
-                      </div>
-                      <div className="Price col-xs-12 col-sm-6 col-md-6 tab-panel">
-                        <div className="input-group">
-                          <span className="input-group-addon">اجاره</span>
-                          <input
-                            type="text"
-                            name="rent"
-                            id=""
-                            value={this.state.rent}
-                            className="form-control"
-                            onChange={this.handleInputChange}
-                            placeholder="اجاره به تومان"
-                          />
-                          <span className="input-group-addon">تومان</span>
-                        </div>
-                      </div>
-                    </div>
+                    <Row className="commission-row">
+                      <Col xs={3} sm={3} md={2} lg={2}>
+                        <span className="input-group-addon">ودیعه</span>
+                      </Col>
+                      <Col xs={6} sm={6} md={8} lg={8}>
+                        <MaskedInput
+                          mask={numberMask}
+                          className="input-commission text-center"
+                          placeholder="ودیعه به تومان"
+                          name="deposit"
+                          value={this.state.deposit}
+                          autoComplete="off"
+                          onChange={this.handleInputChange}
+                        />
+                      </Col>
+                      <Col xs={3} sm={3} md={2} lg={2}>
+                        <span className="input-group-addon">تومان</span>
+                      </Col>
+                    </Row>
+                    <Row className="commission-row">
+                      <Col xs={3} sm={3} md={2} lg={2}>
+                        <span className="input-group-addon">اجاره</span>
+                      </Col>
+                      <Col xs={6} sm={6} md={8} lg={8}>
+                        <MaskedInput
+                          mask={numberMask}
+                          className="input-commission text-center"
+                          placeholder="اجاره به تومان"
+                          name="rent"
+                          value={this.state.rent}
+                          autoComplete="off"
+                          onChange={this.handleInputChange}
+                        />
+                      </Col>
+                      <Col xs={3} sm={3} md={2} lg={2}>
+                        <span className="input-group-addon">تومان</span>
+                      </Col>
+                    </Row>
                   </TabPanel>
                   <div className="row text-center have-code">
                     <CheckBox

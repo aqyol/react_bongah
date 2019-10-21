@@ -1,18 +1,64 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 import {
   Col,
   Row,
   Form,
-  Button,
   FormGroup,
-  Input,
   Nav,
   NavItem,
   NavLink,
 } from 'reactstrap';
+import AsyncSelect from 'react-select/async';
 import classnames from 'classnames';
 
+const zones = [
+  {
+    value: 0,
+    label: 'تهران',
+  },
+  {
+    value: 1,
+    label: 'شیراز',
+  },
+  {
+    value: 2,
+    label: 'مشهد',
+  },
+  {
+    value: 3,
+    label: 'تبریز',
+  },
+  {
+    value: 4,
+    label: 'اصفهان',
+  },
+  {
+    value: 5,
+    label: 'بندرعباس',
+  },
+  {
+    value: 6,
+    label: 'قم',
+  },
+  {
+    value: 7,
+    label: 'کرج',
+  },
+  {
+    value: 8,
+    label: 'یزد',
+  },
+  {
+    value: 9,
+    label: 'گنبد',
+  },
+  {
+    value: 10,
+    label: 'بندرترکمن',
+  },
+];
 
 class SearchBar extends PureComponent {
   static propTypes = {
@@ -33,12 +79,32 @@ class SearchBar extends PureComponent {
     this.toggle = this.toggle.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleSearch = this.handleSearch.bind(this);
+    this.searchRegion = this.searchRegion.bind(this);
   }
 
   toggleAdvSearch = () => {
     this.setState(prevState => ({
       isAdvance: !prevState.isAdvance,
     }));
+  }
+
+  promiseOptions = (inputValue, callback) => (
+    new Promise((resolve) => {
+      resolve(this.searchRegion(inputValue, callback));
+    }));
+
+  searchRegion(name, callback) {
+    console.log(this.state.region);
+    setTimeout(() => {
+      callback(zones);
+    }, 1000);
+
+    //   searchGoods(name, this.props.businessId)
+    //     .then((response) => {
+    //       this.setState({ totalGoods: response.totalScopes });
+    //       callback(response.totalScopes);
+    //     })
+    //     .catch(() => (null));
   }
 
   toggle(tab) {
@@ -58,11 +124,9 @@ class SearchBar extends PureComponent {
     console.log(e.target.value);
   }
 
-  handleSearch(e) {
-    e.preventDefault();
-    console.group('search click');
+  handleSearch(searchItem) {
+    this.setState({ searchItem });
     console.log(this.state.searchItem);
-    console.groupEnd();
   }
 
   render() {
@@ -71,7 +135,7 @@ class SearchBar extends PureComponent {
     }
     return (
       <div className="search-panel">
-        <Form>
+        <Form style={{ width: '80%', margin: 'auto' }}>
           <Nav tabs style={{ border: 'none' }}>
             <NavItem>
               <NavLink
@@ -93,21 +157,33 @@ class SearchBar extends PureComponent {
           <Row form>
             <Col md={6} sm={8} xs={12}>
               <FormGroup>
-                <Input
-                  type="text"
-                  name="searchItem"
-                  id="searchItem"
-                  placeholder="شهر مورد نظر را وارد کنید"
-                  value={this.state.searchItem}
-                  onChange={(e) => { this.handleInputChange(e); }}
+                <AsyncSelect
+                  isMulti
+                  cacheOptions
+                  defaultOptions
+                  placeholder="نام شهر، منطقه و .. خود را وارد کنید"
+                  loadOptions={(input, callback) => { this.promiseOptions(input, callback); }}
+                  className="text-right text-black-50"
+                  onChange={(e) => { this.handleSearch(e); }}
                 />
               </FormGroup>
             </Col>
             <Col md={4} sm={4} xs={12}>
               <FormGroup style={{ width: '80%', margin: 'auto' }}>
-                <Button style={{ width: '100%' }} onClick={(e) => { this.handleSearch(e); }} color="success">
-                  جستجو
-                </Button>
+                <Link
+                  to={{
+                    pathname: '/search',
+                    state: {
+                      searchItem: this.state.searchItem,
+                      type: (this.state.activeTab === '1') ? 'sell' : 'rent',
+                    },
+                  }}
+                  style={{ width: '100%' }}
+                  className="btn btn-success"
+                  color="success"
+                >
+                  جستجو و درخواست
+                </Link>
               </FormGroup>
             </Col>
           </Row>

@@ -1,7 +1,38 @@
 .myInfoForm {
   padding: 20px 30px;
   margin: 0 auto;
-  max-width: 900px;
+  direction: rtl;
+  background: aliceblue;
+}
+
+.infoForm {
+  padding: 20px 30px;
+  margin: 0 auto;
+  direction: rtl;
+  width: 80%;
+  background: aliceblue;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.profile-title{
+  text-align: center;
+}
+
+.profile-image{
+  border-radius: 15%;
+  width: 50%;
+}
+
+.profile-info{
+  padding: 2%;
+  text-align: right;
+}
+
+.profile-info-text{
+  padding-top: 5%;
 }
 
 .yearOfBirth .selectItem {
@@ -31,7 +62,14 @@
 }
 
 @media screen and (max-width: 767px) {
-  .myInfoForm {
+  .infoForm {
     padding: 10px 15px;
+    width: 100%;
   }
+
+  .profile-image{
+    border-radius: 15%;
+    width: 50%;
+  }
+
 }
