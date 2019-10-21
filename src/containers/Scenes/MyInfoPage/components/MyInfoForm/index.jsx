@@ -1,92 +1,179 @@
-import React from 'react';
-import SelectComponent from '../../../../../shared/components/SelectComponent';
+import React, { PureComponent } from 'react';
+import {
+  Row,
+  Col,
+  FormGroup,
+  Label,
+  Input,
+  Button,
+} from 'reactstrap';
+import MaskedInput from 'react-text-mask';
+import PropTypes from 'prop-types';
 
-const yearOfBirth = [
-  'Select',
-  '2014',
-  '2013',
-  '2012',
-  '2011',
-  '2010',
-];
-const propertyType = [
-  'Property Type',
-  'House',
-  'Apartment',
-  'Unit',
-];
-const bedProperty = [
-  'Beds',
-  'Studio',
-  '1 Bed',
-  '2 Beds',
-];
-const ownOrRent = [
-  'Own or Rent',
-  'Owner',
-  'Investor',
-];
 
-const MyInfoForm = () => (
-  <div className="myInfoForm">
-    <div className="row form-group">
-      <div className="first-name form-group col-xs-12 col-sm-6 col-md-6">
-        <h4>Your name</h4>
-        <input type="text" className="form-control" placeholder="First name" />
-      </div>
-      <div className="last-name form-group col-xs-12 col-sm-6 col-md-6">
-        <h4 className="hidden-xs invisible">Your last name</h4>
-        <input type="text" className="form-control" placeholder="Last name" />
-      </div>
-    </div>
-    <div className="row form-group">
-      <div className="col-xs-6 col-sm-6 col-md-6 yearOfBirth">
-        <h4>Year of birth</h4>
-        <div className="selectItem">
-          <SelectComponent switchTop listItem={yearOfBirth} />
-        </div>
-      </div>
-      <div className="col-xs-6 col-sm-6 col-md-6 gender">
-        <h4>Gender</h4>
-        <div className="radioGender">
-          <label htmlFor="male">
-            <input id="male" type="radio" name="gender" />
-            Male
-          </label>
-        </div>
-        <div className="radioGender">
-          <label htmlFor="female">
-            <input id="female" type="radio" name="gender" />
-            Female
-          </label>
-        </div>
-      </div>
-    </div>
-    <div className="row form-group">
-
-      <div className="form-group col-sm-12 col-md-6">
-        <h4>Your street address</h4>
-        <input type="text" className="form-control" placeholder="Address" />
-      </div>
-      <div className="form-group col-xs-12 col-sm-4 col-md-2">
-        <h4 className="hidden-xs hidden-sm invisible">Property Type</h4>
-        <SelectComponent switchTop listItem={propertyType} />
-      </div>
-      <div className="form-group col-xs-12 col-sm-4 col-md-2">
-        <h4 className="hidden-xs hidden-sm invisible">Beds</h4>
-        <SelectComponent switchTop listItem={bedProperty} />
-      </div>
-      <div className="form-group col-xs-12 col-sm-4 col-md-2">
-        <h4 className="hidden-xs hidden-sm invisible">Own Or Rent</h4>
-        <SelectComponent switchTop listItem={ownOrRent} />
-      </div>
-    </div>
-    <div className="row btnRow">
-      <div className="form-group">
-        <input type="button" className="btn btn-green btn-lg" value="Save profile" />
-      </div>
-    </div>
-  </div>
+const renderMaskField = ({
+  input, placeholder, type, mask,
+}) => (
+  <MaskedInput className="englishText form-control" {...input} placeholder={placeholder} type={type} mask={mask} />
 );
+
+renderMaskField.propTypes = {
+  input: PropTypes.shape().isRequired,
+  placeholder: PropTypes.string,
+  type: PropTypes.string,
+  mask: PropTypes.arrayOf(PropTypes.any).isRequired,
+};
+
+renderMaskField.defaultProps = {
+  placeholder: '',
+  type: 'text',
+};
+
+
+class MyInfoForm extends PureComponent {
+  constructor(props) {
+    super(props);
+    this.state = {
+      activeTab: '1',
+      isDisabled: false,
+      info: {
+        name: 'علی',
+        surname: 'کریمی',
+        number: '09111111111',
+        phone: '02122233444',
+        budget: '0',
+        nationalCode: '1234567890',
+        image: 'http://mariusn.com/themes/reales/images/avatar-1.png',
+      },
+    };
+    this.handleInputChange = this.handleInputChange.bind(this);
+    this.saveChanges = this.saveChanges.bind(this);
+    this.toggle = this.toggle.bind(this);
+  }
+
+  toggle(tab) {
+    const { activeTab } = this.state;
+    if (activeTab !== tab) {
+      this.setState({
+        activeTab: tab,
+      });
+    }
+  }
+
+  handleInputChange(e) {
+    e.preventDefault();
+    const { name, value } = e.target;
+    this.setState((prevState) => {
+      const { [name]: prevVal, ...other } = prevState.info;
+      const newInfo = { [name]: value, ...other };
+      return {
+        info: newInfo,
+      };
+    });
+  }
+
+  saveChanges(e) {
+    e.preventDefault();
+    console.group('save profile info changes');
+    console.log(this.state.info);
+    console.groupEnd();
+  }
+
+
+  render() {
+    return (
+      <div className="myInfoForm nav-link">
+        <Row>
+          <Col xs={12} sm={6} md={4} lg={3} xl={2}>
+            <FormGroup>
+              <Label>نام</Label>
+              <Input
+                value={this.state.info.name}
+                name="name"
+                onChange={this.handleInputChange}
+                disabled={this.state.isDisabled}
+                autoComplete="off"
+              />
+            </FormGroup>
+          </Col>
+          <Col xs={12} sm={6} md={4} lg={3} xl={2}>
+            <FormGroup>
+              <Label>نام خانوادگی</Label>
+              <Input
+                value={this.state.info.surname}
+                name="surname"
+                onChange={this.handleInputChange}
+                disabled={this.state.isDisabled}
+                autoComplete="off"
+              />
+            </FormGroup>
+          </Col>
+          <Col xs={12} sm={6} md={4} lg={3} xl={2}>
+            <FormGroup>
+              <Label>تلفن همراه</Label>
+              {renderMaskField({
+                input: {
+                  name: 'number',
+                  autoComplete: 'off',
+                  value: this.state.info.number,
+                  onChange: (e) => { this.handleInputChange(e); },
+                  disabled: (this.state.isDisabled),
+                },
+                placeholder: 'شماره موبایل',
+                mask: [/[0]/, /[9]/, /\d/, /\d/, ' ', /\d/, /\d/, /\d/, ' ', /\d/, /\d/, /\d/, /\d/],
+              })}
+            </FormGroup>
+          </Col>
+          <Col xs={12} sm={6} md={4} lg={3} xl={2}>
+            <FormGroup>
+              <Label>تلفن ثابت</Label>
+              {renderMaskField({
+                input: {
+                  name: 'phone',
+                  autoComplete: 'off',
+                  value: this.state.info.phone,
+                  onChange: (e) => { this.handleInputChange(e); },
+                  disabled: (this.state.isDisabled),
+                },
+                placeholder: 'شماره تلفن ثابت',
+                mask: [/[0]/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/],
+              })}
+            </FormGroup>
+          </Col>
+          <Col xs={12} sm={6} md={4} lg={3} xl={2}>
+            <FormGroup>
+              <Label>کد ملی</Label>
+              {renderMaskField({
+                input: {
+                  name: 'nationalCode',
+                  autoComplete: 'off',
+                  value: this.state.info.nationalCode,
+                  onChange: (e) => { this.handleInputChange(e); },
+                  disabled: (this.state.isDisabled),
+                },
+                placeholder: 'کد ملی',
+                mask: [/\d/, /\d/, /\d/, /\d/, /\d/, /\d/, /\d/, /\d/, /\d/, /\d/],
+              })}
+            </FormGroup>
+          </Col>
+        </Row>
+        <Row>
+          <Col />
+          <Col xs={12} sm={6} md={4} lg={3} xl={2}>
+            <Button
+              onClick={this.saveChanges}
+              color="success"
+              className="full-width"
+            >
+              ذخیره تغییرات
+            </Button>
+          </Col>
+          <Col />
+        </Row>
+      </div>
+    );
+  }
+}
+
 
 export default MyInfoForm;
