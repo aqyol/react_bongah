@@ -70,6 +70,12 @@
 @import './component/edit_promise';
 @import './component/new_promise';
 @import './../../node_modules/react-web-tabs/dist/react-web-tabs.css';
+@import './component/request';
+@import './component/dropzone';
+@import './component/radio-btn';
+@import './component/create_advisor';
+@import './component/create_agency';
+@import './component/tabs';
 
 //pages...
 //@import 'containers/account';
@@ -78,3 +84,4 @@
 @import 'containers/main_root';
 @import 'containers/promise';
 @import 'containers/ads_detail';
+@import 'containers/cooperation';

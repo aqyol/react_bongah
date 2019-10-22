@@ -11,8 +11,8 @@ import {
   Col,
   Form,
   FormGroup,
-  // Label,
-  // Input,
+  Label,
+  Input,
   Button,
   // Collapse,
   // CustomInput,
@@ -21,7 +21,8 @@ import {
   ModalFooter,
   ModalHeader,
 } from 'reactstrap';
-// import { Fab, Action } from 'react-tiny-fab';
+import AsyncSelect from 'react-select/async';
+import { PropTypes } from 'prop-types';
 import SingleHouse from '../../../../../shared/components/SingleHouse';
 import SearchMap from '../SearchMap';
 import renderSelectField from '../../../../../shared/components/form/Select';
@@ -137,7 +138,7 @@ const types = [
   },
   {
     value: '2',
-    label: 'سوئیت',
+    label: 'اقامتی، تفریحی',
   },
   {
     value: '3',
@@ -358,7 +359,38 @@ const zones = [
   },
 ];
 
+const customStyles = {
+  option: provided => ({
+    ...provided,
+  }),
+  container: () => ({
+    width: '100%',
+  }),
+  menu: provided => ({
+    ...provided,
+    zIndex: 5,
+  }),
+  menuList: () => ({
+    width: '100%',
+  }),
+};
+
+const selectTheme = theme => ({
+  ...theme,
+  colors: {
+    ...theme.colors,
+    primary25: '#98EAD3',
+    primary: '#54E1B9',
+    primary50: '#B4EEDD',
+  },
+});
+
 class SearchForm extends PureComponent {
+  static propTypes = {
+    searchParams: PropTypes.objectOf(PropTypes.object).isRequired,
+    type: PropTypes.objectOf(PropTypes.object).isRequired,
+  };
+
   constructor() {
     super();
     this.state = {
@@ -387,13 +419,49 @@ class SearchForm extends PureComponent {
       },
       type: 0,
       openModal: false,
+      requestModal: false,
+      requestModalLoading: false,
+      requestTitle: '',
     };
     this.handleRangeChange = this.handleRangeChange.bind(this);
-    this.handlePriceLabel = this.handlePriceLabel.bind(this);
     this.handleTypeSelect = this.handleTypeSelect.bind(this);
-    this.handleRentLabel = this.handleRentLabel.bind(this);
-    this.handleDailyRentLabel = this.handleDailyRentLabel.bind(this);
     this.handleFilter = this.handleFilter.bind(this);
+    this.handleSearch = this.handleSearch.bind(this);
+    this.saveAsRequest = this.saveAsRequest.bind(this);
+    this.handleCreateRequest = this.handleCreateRequest.bind(this);
+    this.handleDismissRequestModal = this.handleDismissRequestModal.bind(this);
+    this.handleInputChange = this.handleInputChange.bind(this);
+    this.handleRoomNumSelect = this.handleRoomNumSelect.bind(this);
+    this.searchRegion = this.searchRegion.bind(this);
+  }
+
+  componentDidMount() {
+    // search data from server using searchParams
+    console.group('props in search page');
+    console.log(this.props);
+    console.groupEnd();
+    let typeVal = 0;
+    switch (this.props.type) {
+      case 'sell':
+        typeVal = 0;
+        break;
+      case 'rent':
+        typeVal = 1;
+        break;
+      case 'preSell':
+        typeVal = 3;
+        break;
+      case 'partnership':
+        typeVal = 4;
+        break;
+      default:
+        break;
+    }
+    this.setState({
+      searchSelect: (this.props.searchParams !== undefined) ? this.props.searchParams : undefined,
+      type: typeVal,
+    });
+    this.handleSearch();
   }
 
   changeResultTab = (tab) => {
@@ -424,89 +492,116 @@ class SearchForm extends PureComponent {
     </div>
   );
 
-  handleRangeChange(name, value) {
-    this.setState({ [name]: { min: value.min, max: value.max } });
-  }
-
-  handlePriceLabel(value, type) {
+  handlePriceLabel = (value, type) => {
     // type have => min, value, value, max
     if (type === 'min' || type === 'max') {
       return '';
     }
     if (value > 0 && value <= 9) {
-      return (`میلیون${value * 100}`);
+      return (`میلیون تومان${value * 100}`);
     }
     if (value >= 10 && value <= 22) {
-      return (`میلیارد${1 + (value - 10) * 0.25}`);
+      return (`میلیارد تومان${1 + (value - 10) * 0.25}`);
     }
     if (value >= 23 && value <= 30) {
-      return (`میلیارد${4 + (value - 22) * 0.5}`);
+      return (`میلیارد تومان${4 + (value - 22) * 0.5}`);
     }
     if (value >= 31 && value <= 32) {
-      return (`میلیارد${8 + (value - 30)}`);
+      return (`میلیارد تومان${8 + (value - 30)}`);
     }
     if (value >= 33 && value <= 34) {
-      return (`میلیارد${10 + (value - 32) * 5}`);
+      return (`میلیارد تومان${10 + (value - 32) * 5}`);
     }
     if (value >= 35 && value <= 38) {
-      return (`میلیارد${(value - 34) * 50}`);
+      return (`میلیارد تومان${(value - 34) * 50}`);
     }
 
-    console.log(this.state.price);
     return value;
   }
 
-  handleRentLabel(value, type) {
+  handleRentLabel = (value, type) => {
     // type have => min, value, value, max
     if (type === 'min' || type === 'max') {
       return '';
     }
     if (value > 0 && value <= 1) {
-      return (`هزار${value * 100}`);
+      return (`هزار تومان${value * 100}`);
     }
     if (value === 2) {
-      return (`هزار${500}`);
+      return (`هزار تومان${500}`);
     }
     if (value >= 3 && value <= 13) {
-      return (`میلیون${1 + (value - 3) * 0.5}`);
+      return (`میلیون تومان${1 + (value - 3) * 0.5}`);
     }
     if (value >= 14 && value <= 17) {
-      return (`میلیون${6 + (value - 13)}`);
+      return (`میلیون تومان${6 + (value - 13)}`);
     }
     if (value >= 18 && value <= 19) {
-      return (`میلیون${10 + (value - 17) * 2.5}`);
+      return (`میلیون تومان${10 + (value - 17) * 2.5}`);
     }
     if (value >= 20 && value <= 23) {
-      return (`میلیون${(value - 18) * 10}`);
+      return (`میلیون تومان${(value - 18) * 10}`);
     }
     if (value >= 24 && value <= 28) {
-      return (`میلیون${(value - 23) * 100}`);
+      return (`میلیون تومان${(value - 23) * 100}`);
     }
 
-    console.log(this.state.price);
     return value;
   }
 
-  handleDailyRentLabel(value, type) {
+  handleDailyRentLabel = (value, type) => {
     // type have => min, value, value, max
     if (type === 'min' || type === 'max') {
       return '';
     }
     if (value > 0 && value <= 19) {
-      return (`هزار${value * 50}`);
+      return (`هزار تومان${value * 50}`);
     }
     if (value > 19 && value <= 28) {
-      return (`میلیون${1 + (value - 20) * 0.5}`);
+      return (`میلیون تومان${1 + (value - 20) * 0.5}`);
     }
-    console.log(this.state.price);
-    console.log(value);
     return value;
+  }
+
+  filterColors = inputValue => (
+    zones.filter(i => i.label.toLowerCase().includes(inputValue.toLowerCase())));
+
+  promiseOptions = (inputValue, callback) => (
+    new Promise((resolve) => {
+      resolve(this.searchRegion(inputValue, callback));
+      // setTimeout(() => {
+      //   resolve(this.filterColors(inputValue));
+      // }, 1000);
+    }));
+
+  searchRegion(name, callback) {
+    console.log(this.state.region);
+    setTimeout(() => {
+      callback(zones);
+    }, 1000);
+
+    //   searchGoods(name, this.props.businessId)
+    //     .then((response) => {
+    //       this.setState({ totalGoods: response.totalScopes });
+    //       callback(response.totalScopes);
+    //     })
+    //     .catch(() => (null));
+  }
+
+  handleRangeChange(name, value) {
+    this.setState({ [name]: { min: value.min, max: value.max } });
   }
 
   handleTypeSelect(index, name) {
     this.setState({ [name]: index });
-    console.log(index);
-    console.log(name);
+  }
+
+  handleRoomNumSelect(rooms) {
+    if (rooms === null) {
+      this.setState({ rooms: [] });
+      return;
+    }
+    this.setState({ rooms });
   }
 
   handleSearchSelect(searchSelect) {
@@ -521,6 +616,43 @@ class SearchForm extends PureComponent {
     this.setState(prevState => ({ openModal: !prevState.openModal }));
   }
 
+  handleSearch() {
+    console.group('handle search in search form (Search page)');
+    console.log(this.state.searchSelect);
+    console.groupEnd();
+  }
+
+  saveAsRequest() {
+    this.setState({ requestModal: true });
+  }
+
+  handleCreateRequest() {
+    if (this.state.requestTitle.length <= 0) {
+      console.log('enter title for request');
+      return;
+    }
+    this.setState({ requestModalLoading: true });
+    setTimeout(() => {
+      this.setState({
+        requestModalLoading: false,
+        requestModal: false,
+      });
+    }, 1000);
+  }
+
+  handleDismissRequestModal() {
+    this.setState({
+      requestModalLoading: false,
+      requestModal: false,
+      requestTitle: '',
+    });
+  }
+
+  handleInputChange(e) {
+    const { name, value } = e.target;
+    this.setState({ [name]: value });
+  }
+
   render() {
     return (
       <div>
@@ -528,7 +660,7 @@ class SearchForm extends PureComponent {
           <Modal fade={false} isOpen={this.state.openModal} toggle={this.handleFilter}>
             <ModalHeader toggle={this.handleFilter}>فیلتر جستجو</ModalHeader>
             <ModalBody>
-              <Row form className="search-input">
+              <Row className="search-input">
                 <Col lg={12} md={12} sm={12} xs={12}>
                   <FormGroup>
                     {renderSelectField({
@@ -547,7 +679,7 @@ class SearchForm extends PureComponent {
                 </Col>
                 {(this.state.type !== 1 && this.state.type !== 2)
                 && (
-                  <Col lg={12} md={12} sm={12} xs={12} style={{ direction: 'ltr' }}>
+                  <Col lg={12} md={12} sm={12} xs={12} style={{ direction: 'ltr' }} className="range-price">
                     <FormGroup>
                       <Col md={2} lg={2} sm={2} xs={2}>قیمت</Col>
                       <Col md={10} lg={10} sm={10} xs={10}>
@@ -567,7 +699,7 @@ class SearchForm extends PureComponent {
                 {this.state.type === 1
                 && (
                   <>
-                    <Col lg={12} md={12} sm={12} xs={12} style={{ direction: 'ltr' }}>
+                    <Col lg={12} md={12} sm={12} xs={12} style={{ direction: 'ltr' }} className="range-price">
                       <FormGroup>
                         <Col md={2} lg={2} sm={2} xs={2}>رهن</Col>
                         <Col md={10} lg={10} sm={10} xs={10}>
@@ -583,7 +715,7 @@ class SearchForm extends PureComponent {
                         </Col>
                       </FormGroup>
                     </Col>
-                    <Col lg={12} md={12} sm={12} xs={12} style={{ direction: 'ltr' }}>
+                    <Col lg={12} md={12} sm={12} xs={12} style={{ direction: 'ltr' }} className="range-price">
                       <FormGroup>
                         <Col md={2} lg={2} sm={2} xs={2}>اجاره</Col>
                         <Col md={10} lg={10} sm={10} xs={10}>
@@ -604,7 +736,7 @@ class SearchForm extends PureComponent {
                 {this.state.type === 2
                 && (
                   <>
-                    <Col lg={12} md={12} sm={12} xs={12} style={{ direction: 'ltr' }}>
+                    <Col lg={12} md={12} sm={12} xs={12} style={{ direction: 'ltr' }} className="range-price">
                       <FormGroup>
                         <Col md={2} lg={2} sm={2} xs={2}>اجاره روزانه</Col>
                         <Col md={10} lg={10} sm={10} xs={10}>
@@ -626,8 +758,8 @@ class SearchForm extends PureComponent {
                   <FormGroup>
                     {renderSelectField({
                       input: {
-                        onChange: (e) => { this.handleTypeSelect(Number(e.value), 'rooms'); },
-                        isMulti: false,
+                        onChange: (e) => { this.handleRoomNumSelect(e); },
+                        isMulti: true,
                         name: 'rooms',
                         value: nums[() => {
                           const { rooms: value } = this.state;
@@ -742,28 +874,83 @@ class SearchForm extends PureComponent {
               <Button color="secondary" onClick={this.handleFilter}>بازگشت</Button>
             </ModalFooter>
           </Modal>
+          <Modal fade={false} isOpen={this.state.requestModal} toggle={this.handleDismissRequestModal}>
+            <ModalHeader toggle={this.handleDismissRequestModal}>درخواست جدید</ModalHeader>
+            {this.state.requestModalLoading
+            && (
+              <div className={`request-modal load${this.state.isLoading ? '' : ' loaded'}`}>
+                <div className="load__icon-wrap">
+                  <svg className="load__icon">
+                    <path fill="#4ce1b6" d="M12,4V2A10,10 0 0,0 2,12H4A8,8 0 0,1 12,4Z" />
+                  </svg>
+                </div>
+              </div>
+            )
+            }
+            {!this.state.requestModalLoading
+            && (
+              <>
+                <ModalBody>
+                  <Row className="search-input">
+                    <Col lg={12} md={12} sm={12} xs={12}>
+                      <FormGroup>
+                        <Label>عنوان درخواست</Label>
+                        <Input
+                          name="requestTitle"
+                          type="text"
+                          value={this.state.requestTitle}
+                          onChange={this.handleInputChange}
+                          className="text-right"
+                        />
+                      </FormGroup>
+                    </Col>
+                  </Row>
+                </ModalBody>
+                <ModalFooter>
+                  <Button color="primary" onClick={this.handleCreateRequest}>نمایش نتیجه</Button>{' '}
+                  <Button color="secondary" onClick={this.handleDismissRequestModal}>بازگشت</Button>
+                </ModalFooter>
+              </>
+            )}
+          </Modal>
         </div>
         <div className="searchForm">
           <Form>
             <Row form className="search-input">
-              <Col lg={10} md={10} sm={9} xs={8}>
+              <Col lg={8} md={8} sm={8} xs={12}>
                 <FormGroup>
-                  {renderSelectField({
-                    input: {
-                      onChange: (items) => { this.handleSearchSelect(items); },
-                      isMulti: true,
-                      name: 'searchSelect',
-                      value: zones[this.state.searchSelect],
-                    },
-                    placeholder: 'نام شهر، منطقه و .. خود را وارد کنید',
-                    options: zones,
-                    name: 'select',
-                    type: 'text',
-                  })}
+                  <AsyncSelect
+                    isMulti
+                    cacheOptions
+                    defaultOptions
+                    placeholder="نام شهر، منطقه و .. خود را وارد کنید"
+                    loadOptions={(input, callback) => { this.promiseOptions(input, callback); }}
+                    onChange={(e) => { this.handleSearchSelect(e); }}
+                    value={this.state.city}
+                    loadingMessage={() => ('درحال بارگزاری...')}
+                    theme={theme => selectTheme(theme)}
+                    noOptionsMessage={() => ('نتیجه ای یافت نشد')}
+                    styles={customStyles}
+                  />
                 </FormGroup>
               </Col>
-              <Col lg={2} md={2} sm={3} xs={4}>
-                <Button className="btn-success btn-search">تغییر جستجو</Button>
+              <Col lg={2} md={2} sm={2} xs={12}>
+                <Button
+                  style={{ margin: '0px 2px 5px 2px' }}
+                  onClick={() => { this.handleSearch(); }}
+                  className="btn-success volume"
+                >تغییر جستجو
+                </Button>
+              </Col>
+              <Col lg={2} md={2} sm={2} xs={12}>
+                <Button
+                  style={{ margin: '0px 2px 5px 2px' }}
+                  color="success"
+                  onClick={() => { this.saveAsRequest(); }}
+                  className="volume"
+                >
+                  درخواست
+                </Button>
               </Col>
             </Row>
             <Row form className="search-input search-advanced">
@@ -775,6 +962,7 @@ class SearchForm extends PureComponent {
                       isMulti: false,
                       name: 'type',
                       value: types[this.state.type],
+                      clearable: true,
                     },
                     placeholder: 'نوع',
                     options: types,
@@ -785,7 +973,7 @@ class SearchForm extends PureComponent {
               </Col>
               {(this.state.type !== 1 && this.state.type !== 2)
               && (
-                <Col lg={3} md={4} sm={6} xs={12} style={{ direction: 'ltr' }}>
+                <Col lg={3} md={4} sm={6} xs={12} style={{ direction: 'ltr' }} className="range-price">
                   <FormGroup>
                     <Col md={2} lg={2} sm={2} xs={2}>قیمت</Col>
                     <Col md={10} lg={10} sm={10} xs={10}>
@@ -805,7 +993,7 @@ class SearchForm extends PureComponent {
               {this.state.type === 1
               && (
                 <>
-                  <Col lg={3} md={4} sm={6} xs={12} style={{ direction: 'ltr' }}>
+                  <Col lg={3} md={4} sm={6} xs={12} style={{ direction: 'ltr' }} className="range-price">
                     <FormGroup>
                       <Col md={2} lg={2} sm={2} xs={2}>رهن</Col>
                       <Col md={10} lg={10} sm={10} xs={10}>
@@ -821,7 +1009,7 @@ class SearchForm extends PureComponent {
                       </Col>
                     </FormGroup>
                   </Col>
-                  <Col lg={3} md={4} sm={6} xs={12} style={{ direction: 'ltr' }}>
+                  <Col lg={3} md={4} sm={6} xs={12} style={{ direction: 'ltr' }} className="range-price">
                     <FormGroup>
                       <Col md={2} lg={2} sm={2} xs={2}>اجاره</Col>
                       <Col md={10} lg={10} sm={10} xs={10}>
@@ -842,7 +1030,7 @@ class SearchForm extends PureComponent {
               {this.state.type === 2
               && (
                 <>
-                  <Col lg={3} md={4} sm={6} xs={12} style={{ direction: 'ltr' }}>
+                  <Col lg={3} md={4} sm={6} xs={12} style={{ direction: 'ltr' }} className="range-price">
                     <FormGroup>
                       <Col md={2} lg={2} sm={2} xs={2}>اجاره روزانه</Col>
                       <Col md={10} lg={10} sm={10} xs={10}>
@@ -860,12 +1048,12 @@ class SearchForm extends PureComponent {
                   </Col>
                 </>
               )}
-              <Col md={2} sm={4} xs={12}>
+              <Col md={4} sm={4} xs={12}>
                 <FormGroup>
                   {renderSelectField({
                     input: {
-                      onChange: (e) => { this.handleTypeSelect(Number(e.value), 'rooms'); },
-                      isMulti: false,
+                      onChange: (e) => { this.handleRoomNumSelect(e); },
+                      isMulti: true,
                       name: 'rooms',
                       value: nums[() => {
                         const { rooms: value } = this.state;

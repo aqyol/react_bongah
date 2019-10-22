@@ -9,6 +9,12 @@
 
 .search-input {
   padding: 2%;
+  text-align: right;
+}
+
+.range-price {
+  padding: 1%;
+  margin: 1%;
 }
 
 .btn-search {
@@ -18,6 +24,10 @@
 
 .volume {
   width: 100%;
+}
+
+.request-modal {
+  height: 50vh !important;
 }
 
 .volume a, .volume input {
