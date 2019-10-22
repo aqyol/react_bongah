@@ -2,11 +2,40 @@ import React, { PureComponent } from 'react';
 import Select from 'react-select';
 import PropTypes from 'prop-types';
 
+
+const customStyles = {
+  option: provided => ({
+    ...provided,
+  }),
+  container: () => ({
+    width: '100%',
+  }),
+  menu: provided => ({
+    ...provided,
+    zIndex: 5,
+    marginTop: 0,
+  }),
+  menuList: () => ({
+    width: '100%',
+  }),
+};
+
+const selectTheme = theme => ({
+  ...theme,
+  colors: {
+    ...theme.colors,
+    primary25: '#98EAD3',
+    primary: '#54E1B9',
+    primary50: '#B4EEDD',
+  },
+});
+
 class SelectField extends PureComponent {
   static propTypes = {
     onChange: PropTypes.func.isRequired,
     name: PropTypes.string.isRequired,
     isMulti: PropTypes.bool.isRequired,
+    isDisabled: PropTypes.bool.isRequired,
     isClearable: PropTypes.bool,
     placeholder: PropTypes.string,
     options: PropTypes.arrayOf(PropTypes.shape({
@@ -32,7 +61,7 @@ class SelectField extends PureComponent {
 
   render() {
     const {
-      value, name, placeholder, options, isMulti, isClearable,
+      value, name, placeholder, options, isMulti, isClearable, isDisabled,
     } = this.props;
 
     return (
@@ -48,6 +77,9 @@ class SelectField extends PureComponent {
         classNamePrefix="react-select"
         pageSize={5}
         isRtl
+        isDisabled={isDisabled}
+        styles={customStyles}
+        theme={theme => selectTheme(theme)}
       />
     );
   }

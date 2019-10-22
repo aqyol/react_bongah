@@ -359,6 +359,32 @@ const zones = [
   },
 ];
 
+const customStyles = {
+  option: provided => ({
+    ...provided,
+  }),
+  container: () => ({
+    width: '100%',
+  }),
+  menu: provided => ({
+    ...provided,
+    zIndex: 5,
+  }),
+  menuList: () => ({
+    width: '100%',
+  }),
+};
+
+const selectTheme = theme => ({
+  ...theme,
+  colors: {
+    ...theme.colors,
+    primary25: '#98EAD3',
+    primary: '#54E1B9',
+    primary50: '#B4EEDD',
+  },
+});
+
 class SearchForm extends PureComponent {
   static propTypes = {
     searchParams: PropTypes.objectOf(PropTypes.object).isRequired,
@@ -406,6 +432,7 @@ class SearchForm extends PureComponent {
     this.handleDismissRequestModal = this.handleDismissRequestModal.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleRoomNumSelect = this.handleRoomNumSelect.bind(this);
+    this.searchRegion = this.searchRegion.bind(this);
   }
 
   componentDidMount() {
@@ -539,12 +566,27 @@ class SearchForm extends PureComponent {
   filterColors = inputValue => (
     zones.filter(i => i.label.toLowerCase().includes(inputValue.toLowerCase())));
 
-  promiseOptions = inputValue => (
+  promiseOptions = (inputValue, callback) => (
     new Promise((resolve) => {
-      setTimeout(() => {
-        resolve(this.filterColors(inputValue));
-      }, 1000);
+      resolve(this.searchRegion(inputValue, callback));
+      // setTimeout(() => {
+      //   resolve(this.filterColors(inputValue));
+      // }, 1000);
     }));
+
+  searchRegion(name, callback) {
+    console.log(this.state.region);
+    setTimeout(() => {
+      callback(zones);
+    }, 1000);
+
+    //   searchGoods(name, this.props.businessId)
+    //     .then((response) => {
+    //       this.setState({ totalGoods: response.totalScopes });
+    //       callback(response.totalScopes);
+    //     })
+    //     .catch(() => (null));
+  }
 
   handleRangeChange(name, value) {
     this.setState({ [name]: { min: value.min, max: value.max } });
@@ -875,22 +917,34 @@ class SearchForm extends PureComponent {
         <div className="searchForm">
           <Form>
             <Row form className="search-input">
-              <Col lg={8} md={8} sm={8} xs={8}>
+              <Col lg={8} md={8} sm={8} xs={12}>
                 <FormGroup>
                   <AsyncSelect
                     isMulti
                     cacheOptions
                     defaultOptions
                     placeholder="نام شهر، منطقه و .. خود را وارد کنید"
-                    loadOptions={this.promiseOptions}
+                    loadOptions={(input, callback) => { this.promiseOptions(input, callback); }}
+                    onChange={(e) => { this.handleSearchSelect(e); }}
+                    value={this.state.city}
+                    loadingMessage={() => ('درحال بارگزاری...')}
+                    theme={theme => selectTheme(theme)}
+                    noOptionsMessage={() => ('نتیجه ای یافت نشد')}
+                    styles={customStyles}
                   />
                 </FormGroup>
               </Col>
-              <Col lg={2} md={2} sm={2} xs={4}>
-                <Button onClick={() => { this.handleSearch(); }} className="btn-success btn-search">تغییر جستجو</Button>
+              <Col lg={2} md={2} sm={2} xs={12}>
+                <Button
+                  style={{ margin: '0px 2px 5px 2px' }}
+                  onClick={() => { this.handleSearch(); }}
+                  className="btn-success volume"
+                >تغییر جستجو
+                </Button>
               </Col>
               <Col lg={2} md={2} sm={2} xs={12}>
                 <Button
+                  style={{ margin: '0px 2px 5px 2px' }}
                   color="success"
                   onClick={() => { this.saveAsRequest(); }}
                   className="volume"

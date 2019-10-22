@@ -194,7 +194,7 @@ class CreateAgency extends PureComponent {
     return (
       <div>
         <form className="form form--horizontal">
-          <Row>
+          <Row style={{ width: '100%' }}>
             <Col xs={12} sm={4} md={3} lg={3} xl={2}>
               <FormGroup>
                 <Label>نام آژانس املاک</Label>

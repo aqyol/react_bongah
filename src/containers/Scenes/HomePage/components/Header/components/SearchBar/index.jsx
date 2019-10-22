@@ -79,6 +79,7 @@ class SearchBar extends PureComponent {
     this.toggle = this.toggle.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleSearch = this.handleSearch.bind(this);
+    this.searchRegion = this.searchRegion.bind(this);
   }
 
   toggleAdvSearch = () => {
@@ -87,15 +88,24 @@ class SearchBar extends PureComponent {
     }));
   }
 
-  filterColors = inputValue => (
-    zones.filter(i => i.label.toLowerCase().includes(inputValue.toLowerCase())));
-
-  promiseOptions = inputValue => (
+  promiseOptions = (inputValue, callback) => (
     new Promise((resolve) => {
-      setTimeout(() => {
-        resolve(this.filterColors(inputValue));
-      }, 1000);
+      resolve(this.searchRegion(inputValue, callback));
     }));
+
+  searchRegion(name, callback) {
+    console.log(this.state.region);
+    setTimeout(() => {
+      callback(zones);
+    }, 1000);
+
+    //   searchGoods(name, this.props.businessId)
+    //     .then((response) => {
+    //       this.setState({ totalGoods: response.totalScopes });
+    //       callback(response.totalScopes);
+    //     })
+    //     .catch(() => (null));
+  }
 
   toggle(tab) {
     if (this.state.activeTab !== tab) {
@@ -125,7 +135,7 @@ class SearchBar extends PureComponent {
     }
     return (
       <div className="search-panel">
-        <Form>
+        <Form style={{ width: '80%', margin: 'auto' }}>
           <Nav tabs style={{ border: 'none' }}>
             <NavItem>
               <NavLink
@@ -152,7 +162,7 @@ class SearchBar extends PureComponent {
                   cacheOptions
                   defaultOptions
                   placeholder="نام شهر، منطقه و .. خود را وارد کنید"
-                  loadOptions={this.promiseOptions}
+                  loadOptions={(input, callback) => { this.promiseOptions(input, callback); }}
                   className="text-right text-black-50"
                   onChange={(e) => { this.handleSearch(e); }}
                 />

@@ -23,6 +23,10 @@ input, textarea{
   box-shadow: none !important;
 }
 
+input:focus, textarea:focus{
+  border-color: $color-accent !important;
+}
+
 ul, ol {
   padding-left: 15px;
   margin-bottom: 0;
