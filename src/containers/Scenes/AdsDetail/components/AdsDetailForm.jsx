@@ -11,6 +11,20 @@ import {
 } from 'reactstrap';
 import CedarMaps from '@cedarstudios/react-cedarmaps';
 import { Line } from 'react-chartjs-2';
+import {
+  MdBorderStyle,
+  MdAirlineSeatIndividualSuite,
+  MdClearAll,
+  MdDomain,
+} from 'react-icons/md';
+import {
+  GiChart,
+} from 'react-icons/gi';
+import {
+  FaAngleUp,
+  FaAngleDown,
+} from 'react-icons/fa';
+
 
 const data = {
   labels: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
@@ -60,13 +74,16 @@ const data = {
 
 const items = [
   {
+    key: '1',
     src: 'http://mariusn.com/themes/reales/images/prop/1-1.png',
   },
   {
+    key: '2',
     src: 'http://mariusn.com/themes/reales/images/prop/2-1.png',
   },
   {
-    src: 'http://mariusn.com/themes/reales/images/prop/1-1.png',
+    key: '3',
+    src: 'http://mariusn.com/themes/reales/images/prop/3-1.png',
   },
 ];
 
@@ -92,8 +109,11 @@ class AdsDetailForm extends PureComponent {
           lat: '',
           lng: '',
         },
+        commonCommission: '10000000',
+        ourCommission: '1000000',
       },
       toggleProperties: false,
+      toggleMainProperties: false,
       toggleStatistics: false,
     };
     this.getAdsInfo = this.getAdsInfo.bind(this);
@@ -124,6 +144,8 @@ class AdsDetailForm extends PureComponent {
             lat: 51.34379364705882,
             lng: 35.74109568627451,
           },
+          commonCommission: '10000000',
+          ourCommission: '1000000',
         },
       });
     }, 1000);
@@ -156,17 +178,19 @@ class AdsDetailForm extends PureComponent {
 
   render() {
     const info = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(i => (
-      <Col lg={3} md={6} sm={4} xs={6} className="text-center">
+      <Col lg={3} md={6} sm={4} xs={6} className="text-center" key={i.toString()}>
         <Label>نام مشخصه{i}</Label>
         <span className="span-info">12</span>
       </Col>
     ));
 
     const properties = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(i => (
-      <Col lg={2} md={2} sm={3} xs={4}>
+      <Col lg={2} md={2} sm={3} xs={4} key={i.toString()}>
         <h2 className=" text-center btn-ads">ویژگی {i}</h2>
       </Col>
     ));
+
+    const nf = new Intl.NumberFormat();
 
     return (
       <div>
@@ -186,18 +210,19 @@ class AdsDetailForm extends PureComponent {
           <div className="ads-detail-container">
             <h4 className="text-center">{this.state.adsInfo.title}</h4>
             <Row className="ads-detail-height">
-              <Col lg={5} md={6} sm={12} xs={12}>
+              <Col lg={8} md={7} sm={12} xs={12}>
                 <UncontrolledCarousel autoPlay={false} indicators={false} items={items} />
               </Col>
-              <Col lg={7} md={6} sm={12} xs={12}>
+              <Col lg={4} md={5} sm={12} xs={12}>
                 <Card className="text-center">
                   <CardBody>
                     {this.state.adsInfo.type === 1
                       && (
                       <Row className="ads-price-card">
                         <Col>
-                          <Label>قیمت (تومان)</Label>
-                          <span className="bold-text">{this.state.adsInfo.price}</span>
+                          <Label className="pull-right">قیمت</Label>
+                          <span className="bold-text">{nf.format(this.state.adsInfo.price)}</span>
+                          <Label className="pull-left">تومان</Label>
                         </Col>
                       </Row>
                       )
@@ -207,30 +232,59 @@ class AdsDetailForm extends PureComponent {
                       <div className="ads-price-card">
                         <Row>
                           <Col>
-                            <Label>ودیعه (تومان)</Label>
-                            <span className="bold-text">{this.state.adsInfo.deposit}</span>
+                            <Label className="pull-right">ودیعه</Label>
+                            <span className="bold-text">{nf.format(this.state.adsInfo.deposit)}</span>
+                            <Label className="pull-left">تومان</Label>
                           </Col>
                         </Row>
                         <Row>
                           <Col>
-                            <Label>اجاره (تومان)</Label>
-                            <span className="bold-text">{this.state.adsInfo.rent}</span>
+                            <Label className="pull-right">اجاره</Label>
+                            <span className="bold-text">{nf.format(this.state.adsInfo.rent)}</span>
+                            <Label className="pull-left">تومان</Label>
                           </Col>
                         </Row>
                       </div>
                     )
                     }
-                    <Row>
-                      {info}
+                    <Row className="ads-main-info">
+                      <Col xs={6} sm={6} md={6} lg={6} xl={6}>
+                        <MdBorderStyle className="chart-icon" />
+                        <span>۹۰ متر</span>
+                      </Col>
+                      <Col xs={6} sm={6} md={6} lg={6} xl={6}>
+                        <MdAirlineSeatIndividualSuite className="chart-icon" />
+                        <span>۲ خواب</span>
+                      </Col>
+                      <Col xs={6} sm={6} md={6} lg={6} xl={6}>
+                        <MdDomain className="chart-icon" />
+                        <span>۲ ساله</span>
+                      </Col>
+                      <Col xs={6} sm={6} md={6} lg={6} xl={6}>
+                        <MdClearAll className="chart-icon" />
+                        <span>طبقه ۳</span>
+                      </Col>
+                    </Row>
+                    <Row className="ads-commission-card">
+                      <Col xs={12} md={12} sm={12}>
+                        <Label className="pull-right">تعرفه عادی</Label>
+                        <span className="bold-text">{nf.format(this.state.adsInfo.commonCommission)}</span>
+                        <Label className="pull-left">تومان</Label>
+                      </Col>
+                      <Col xs={12} md={12} sm={12}>
+                        <Label className="pull-right">تعرفه املاک ما</Label>
+                        <span className="bold-text">{nf.format(this.state.adsInfo.ourCommission)}</span>
+                        <Label className="pull-left">تومان</Label>
+                      </Col>
                     </Row>
                     <Row>
-                      <Col md={4}>
+                      <Col md={4} className="ads-col-btn">
                         <Button className="btn-ads btn-success" onClick={this.handleCall}>تماس</Button>
                       </Col>
-                      <Col md={4}>
+                      <Col md={4} className="ads-col-btn">
                         <Button className="btn-ads btn-success" onClick={this.handleMessage}>پیام</Button>
                       </Col>
-                      <Col md={4}>
+                      <Col md={4} className="ads-col-btn">
                         <Button className="btn-ads btn-success" onClick={this.handleEmail}>ایمیل</Button>
                       </Col>
                     </Row>
@@ -242,11 +296,43 @@ class AdsDetailForm extends PureComponent {
               <Button
                 outline
                 color="link"
-                onClick={(e) => { this.toggle(e, 'toggleProperties'); }}
+                onClick={(e) => { this.toggle(e, 'toggleMainProperties'); }}
+                className="full-width text-right"
               >
                 ویژگی های اصلی
+                {this.state.toggleMainProperties
+                && (
+                  <FaAngleUp className="ads-detail-angle" />
+                )}
+                {!this.state.toggleMainProperties
+                && (
+                  <FaAngleDown className="ads-detail-angle" />
+                )}
               </Button>
-              <Collapse isOpen={this.state.toggleProperties}>
+              <Collapse className="collapse-container" isOpen={this.state.toggleMainProperties}>
+                <Row>
+                  {info}
+                </Row>
+              </Collapse>
+            </Card>
+            <Card>
+              <Button
+                outline
+                color="link"
+                onClick={(e) => { this.toggle(e, 'toggleProperties'); }}
+                className="full-width text-right"
+              >
+                سایر ویژگی ها
+                {this.state.toggleProperties
+                && (
+                  <FaAngleUp className="ads-detail-angle" />
+                )}
+                {!this.state.toggleProperties
+                && (
+                  <FaAngleDown className="ads-detail-angle" />
+                )}
+              </Button>
+              <Collapse className="collapse-container" isOpen={this.state.toggleProperties}>
                 <Row>
                   {properties}
                 </Row>
@@ -259,10 +345,20 @@ class AdsDetailForm extends PureComponent {
                   outline
                   color="link"
                   onClick={(e) => { this.toggle(e, 'toggleStatistics'); }}
+                  className="full-width text-right"
                 >
                   آمار آگهی
+                  {this.state.toggleStatistics
+                  && (
+                    <FaAngleUp className="ads-detail-angle" />
+                  )}
+                  {!this.state.toggleStatistics
+                  && (
+                    <FaAngleDown className="ads-detail-angle" />
+                  )}
+                  <GiChart className="chart-icon" />
                 </Button>
-                <Collapse isOpen={this.state.toggleStatistics}>
+                <Collapse className="collapse-container" isOpen={this.state.toggleStatistics}>
                   <Row>
                     <Line data={data} />
                   </Row>
