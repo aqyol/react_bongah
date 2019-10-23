@@ -498,22 +498,22 @@ class SearchForm extends PureComponent {
       return '';
     }
     if (value > 0 && value <= 9) {
-      return (`میلیون تومان${value * 100}`);
+      return (`${value * 100}میلیون تومان`);
     }
     if (value >= 10 && value <= 22) {
-      return (`میلیارد تومان${1 + (value - 10) * 0.25}`);
+      return (`${1 + (value - 10) * 0.25}میلیارد تومان`);
     }
     if (value >= 23 && value <= 30) {
-      return (`میلیارد تومان${4 + (value - 22) * 0.5}`);
+      return (`${4 + (value - 22) * 0.5}میلیارد تومان`);
     }
     if (value >= 31 && value <= 32) {
-      return (`میلیارد تومان${8 + (value - 30)}`);
+      return (`${8 + (value - 30)}میلیارد تومان`);
     }
     if (value >= 33 && value <= 34) {
-      return (`میلیارد تومان${10 + (value - 32) * 5}`);
+      return (`${10 + (value - 32) * 5}میلیارد تومان`);
     }
     if (value >= 35 && value <= 38) {
-      return (`میلیارد تومان${(value - 34) * 50}`);
+      return (`${(value - 34) * 50}میلیارد تومان`);
     }
 
     return value;
@@ -525,25 +525,25 @@ class SearchForm extends PureComponent {
       return '';
     }
     if (value > 0 && value <= 1) {
-      return (`هزار تومان${value * 100}`);
+      return (`${value * 100}هزار تومان`);
     }
     if (value === 2) {
-      return (`هزار تومان${500}`);
+      return (`${500}هزار تومان`);
     }
     if (value >= 3 && value <= 13) {
-      return (`میلیون تومان${1 + (value - 3) * 0.5}`);
+      return (`${1 + (value - 3) * 0.5}میلیون تومان`);
     }
     if (value >= 14 && value <= 17) {
-      return (`میلیون تومان${6 + (value - 13)}`);
+      return (`${6 + (value - 13)}میلیون تومان`);
     }
     if (value >= 18 && value <= 19) {
-      return (`میلیون تومان${10 + (value - 17) * 2.5}`);
+      return (`${10 + (value - 17) * 2.5}میلیون تومان`);
     }
     if (value >= 20 && value <= 23) {
-      return (`میلیون تومان${(value - 18) * 10}`);
+      return (`${(value - 18) * 10}میلیون تومان`);
     }
     if (value >= 24 && value <= 28) {
-      return (`میلیون تومان${(value - 23) * 100}`);
+      return (`${(value - 23) * 100}میلیون تومان`);
     }
 
     return value;
@@ -555,10 +555,10 @@ class SearchForm extends PureComponent {
       return '';
     }
     if (value > 0 && value <= 19) {
-      return (`هزار تومان${value * 50}`);
+      return (`${value * 50}هزار تومان`);
     }
     if (value > 19 && value <= 28) {
-      return (`میلیون تومان${1 + (value - 20) * 0.5}`);
+      return (`${1 + (value - 20) * 0.5}میلیون تومان`);
     }
     return value;
   }
