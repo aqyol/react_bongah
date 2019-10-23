@@ -20,9 +20,14 @@ import {
   ModalBody,
   ModalFooter,
   ModalHeader,
+  Nav,
+  NavItem,
+  NavLink,
 } from 'reactstrap';
+import classnames from 'classnames';
 import AsyncSelect from 'react-select/async';
 import { PropTypes } from 'prop-types';
+import StickyBox from 'react-sticky-box';
 import SingleHouse from '../../../../../shared/components/SingleHouse';
 import SearchMap from '../SearchMap';
 import renderSelectField from '../../../../../shared/components/form/Select';
@@ -394,28 +399,40 @@ class SearchForm extends PureComponent {
   constructor() {
     super();
     this.state = {
+      sortTab: 1,
       resultTab: 'list',
       rooms: '',
       area_from: '',
       area_to: '',
       age_from: '',
       age_to: '',
+      resultSize: 23,
       searchSelect: [],
       price: {
         min: 0,
+        minLabel: '',
         max: 38,
+        maxLabel: '',
       },
+      priceHigh: 0,
+      priceHighLabel: '',
       deposit: {
         min: 0,
+        minLabel: '',
         max: 38,
+        maxLabel: '',
       },
       rent: {
         min: 0,
+        minLabel: '',
         max: 28,
+        maxLabel: '',
       },
       dailyRent: {
         min: 0,
+        minLabel: '',
         max: 28,
+        maxLabel: '',
       },
       type: 0,
       openModal: false,
@@ -433,13 +450,11 @@ class SearchForm extends PureComponent {
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleRoomNumSelect = this.handleRoomNumSelect.bind(this);
     this.searchRegion = this.searchRegion.bind(this);
+    this.toggle = this.toggle.bind(this);
   }
 
   componentDidMount() {
     // search data from server using searchParams
-    console.group('props in search page');
-    console.log(this.props);
-    console.groupEnd();
     let typeVal = 0;
     switch (this.props.type) {
       case 'sell':
@@ -492,79 +507,85 @@ class SearchForm extends PureComponent {
     </div>
   );
 
-  handlePriceLabel = (value, type) => {
-    // type have => min, value, value, max
-    if (type === 'min' || type === 'max') {
-      return '';
-    }
+  handlePriceLabel = (value) => {
+    let label = '';
+    let price = 0;
     if (value > 0 && value <= 9) {
-      return (`${value * 100}میلیون تومان`);
+      label = `${value * 100}میلیون تومان`;
+      price = value * 100;
     }
     if (value >= 10 && value <= 22) {
-      return (`${1 + (value - 10) * 0.25}میلیارد تومان`);
+      label = `${1 + (value - 10) * 0.25}میلیارد تومان`;
+      price = 1 + (value - 10) * 0.25;
     }
     if (value >= 23 && value <= 30) {
-      return (`${4 + (value - 22) * 0.5}میلیارد تومان`);
+      label = `${4 + (value - 22) * 0.5}میلیارد تومان`;
+      price = 4 + (value - 22) * 0.5;
     }
     if (value >= 31 && value <= 32) {
-      return (`${8 + (value - 30)}میلیارد تومان`);
+      label = `${8 + (value - 30)}میلیارد تومان`;
+      price = 8 + (value - 30);
     }
     if (value >= 33 && value <= 34) {
-      return (`${10 + (value - 32) * 5}میلیارد تومان`);
+      label = `${10 + (value - 32) * 5}میلیارد تومان`;
+      price = 10 + (value - 32) * 5;
     }
     if (value >= 35 && value <= 38) {
-      return (`${(value - 34) * 50}میلیارد تومان`);
+      label = `${(value - 34) * 50}میلیارد تومان`;
+      price = (value - 34) * 50;
     }
 
-    return value;
+    return [label, price];
   }
 
-  handleRentLabel = (value, type) => {
-    // type have => min, value, value, max
-    if (type === 'min' || type === 'max') {
-      return '';
-    }
+  handleRentLabel = (value) => {
+    let label = '';
+    let price = 0;
     if (value > 0 && value <= 1) {
-      return (`${value * 100}هزار تومان`);
+      label = `${value * 100}هزار تومان`;
+      price = value * 100;
     }
     if (value === 2) {
-      return (`${500}هزار تومان`);
+      label = `${500}هزار تومان`;
+      price = 500;
     }
     if (value >= 3 && value <= 13) {
-      return (`${1 + (value - 3) * 0.5}میلیون تومان`);
+      label = `${1 + (value - 3) * 0.5}میلیون تومان`;
+      price = 1 + (value - 3) * 0.5;
     }
     if (value >= 14 && value <= 17) {
-      return (`${6 + (value - 13)}میلیون تومان`);
+      label = `${6 + (value - 13)}میلیون تومان`;
+      price = 6 + (value - 13);
     }
     if (value >= 18 && value <= 19) {
-      return (`${10 + (value - 17) * 2.5}میلیون تومان`);
+      label = `${10 + (value - 17) * 2.5}میلیون تومان`;
+      price = 10 + (value - 17) * 2.5;
     }
     if (value >= 20 && value <= 23) {
-      return (`${(value - 18) * 10}میلیون تومان`);
+      label = `${(value - 18) * 10}میلیون تومان`;
+      price = (value - 18) * 10;
     }
     if (value >= 24 && value <= 28) {
-      return (`${(value - 23) * 100}میلیون تومان`);
+      label = `${(value - 23) * 100}میلیون تومان`;
+      price = (value - 23) * 100;
     }
 
-    return value;
+    return [label, price];
   }
 
-  handleDailyRentLabel = (value, type) => {
-    // type have => min, value, value, max
-    if (type === 'min' || type === 'max') {
-      return '';
-    }
+  handleDailyRentLabel = (value) => {
+    let label = '';
+    let rent = 0;
     if (value > 0 && value <= 19) {
-      return (`${value * 50}هزار تومان`);
+      label = `${value * 50}هزار تومان`;
+      rent = value * 50;
     }
     if (value > 19 && value <= 28) {
-      return (`${1 + (value - 20) * 0.5}میلیون تومان`);
+      label = `${1 + (value - 20) * 0.5}میلیون تومان`;
+      rent = 1 + (value - 20) * 0.5;
     }
-    return value;
+    return [label, rent];
   }
-
-  filterColors = inputValue => (
-    zones.filter(i => i.label.toLowerCase().includes(inputValue.toLowerCase())));
 
   promiseOptions = (inputValue, callback) => (
     new Promise((resolve) => {
@@ -589,7 +610,36 @@ class SearchForm extends PureComponent {
   }
 
   handleRangeChange(name, value) {
-    this.setState({ [name]: { min: value.min, max: value.max } });
+    let min;
+    let minLabel;
+    let max;
+    let maxLabel;
+    switch (name) {
+      case ('price'):
+        [minLabel, min] = this.handlePriceLabel(value.min);
+        [maxLabel, max] = this.handlePriceLabel(value.max);
+        break;
+      case ('deposit'):
+        [minLabel, min] = this.handlePriceLabel(value.min);
+        [maxLabel, max] = this.handlePriceLabel(value.max);
+        break;
+      case 'rent':
+        [minLabel, min] = this.handleRentLabel(value.min);
+        [maxLabel, max] = this.handleRentLabel(value.max);
+        break;
+      case 'dailyRent':
+        [minLabel, min] = this.handleDailyRentLabel(value.min);
+        [maxLabel, max] = this.handleDailyRentLabel(value.max);
+        break;
+      default:
+        break;
+    }
+    console.log(min, max);
+    this.setState({
+      [name]: {
+        min: value.min, minLabel, max: value.max, maxLabel,
+      },
+    });
   }
 
   handleTypeSelect(index, name) {
@@ -651,6 +701,17 @@ class SearchForm extends PureComponent {
   handleInputChange(e) {
     const { name, value } = e.target;
     this.setState({ [name]: value });
+    // search ads based on new parameters
+    console.log(this.state);
+  }
+
+  toggle(tab) {
+    const { sortTab } = this.state;
+    if (sortTab !== tab) {
+      this.setState({
+        sortTab: tab,
+      });
+    }
   }
 
   render() {
@@ -681,15 +742,27 @@ class SearchForm extends PureComponent {
                 && (
                   <Col lg={12} md={12} sm={12} xs={12} style={{ direction: 'ltr' }} className="range-price">
                     <FormGroup>
-                      <Col md={2} lg={2} sm={2} xs={2}>قیمت</Col>
-                      <Col md={10} lg={10} sm={10} xs={10}>
+                      <Col lg={12} md={12} sm={12} xs={12}>قیمت</Col>
+                      <Col lg={12} md={12} sm={12} xs={12}>
+                        <p>
+                          {this.state.price.min > 0
+                          && (
+                            <span>از {this.state.price.minLabel}</span>
+                          )}
+                          {this.state.price.maxLabel.length > 0
+                          && (
+                            <span>تا {this.state.price.maxLabel}</span>
+                          )}
+                        </p>
+                      </Col>
+                      <Col lg={12} md={12} sm={12} xs={12}>
                         <InputRange
                           name="price"
                           maxValue={38}
                           minValue={0}
                           step={1}
                           value={this.state.price}
-                          formatLabel={(value, type) => this.handlePriceLabel(value, type)}
+                          formatLabel={() => ''}
                           onChange={(value) => { this.handleRangeChange('price', value); }}
                         />
                       </Col>
@@ -701,15 +774,27 @@ class SearchForm extends PureComponent {
                   <>
                     <Col lg={12} md={12} sm={12} xs={12} style={{ direction: 'ltr' }} className="range-price">
                       <FormGroup>
-                        <Col md={2} lg={2} sm={2} xs={2}>رهن</Col>
-                        <Col md={10} lg={10} sm={10} xs={10}>
+                        <Col lg={12} md={12} sm={12} xs={12}>رهن</Col>
+                        <Col lg={12} md={12} sm={12} xs={12}>
+                          <p>
+                            {this.state.deposit.min > 0
+                            && (
+                              <span>از {this.state.deposit.minLabel}</span>
+                            )}
+                            {this.state.deposit.maxLabel.length > 0
+                            && (
+                              <span>تا {this.state.deposit.maxLabel}</span>
+                            )}
+                          </p>
+                        </Col>
+                        <Col lg={12} md={12} sm={12} xs={12}>
                           <InputRange
                             name="deposit"
                             maxValue={38}
                             minValue={0}
                             step={1}
                             value={this.state.deposit}
-                            formatLabel={(value, type) => this.handlePriceLabel(value, type)}
+                            formatLabel={() => ''}
                             onChange={(value) => { this.handleRangeChange('deposit', value); }}
                           />
                         </Col>
@@ -717,15 +802,27 @@ class SearchForm extends PureComponent {
                     </Col>
                     <Col lg={12} md={12} sm={12} xs={12} style={{ direction: 'ltr' }} className="range-price">
                       <FormGroup>
-                        <Col md={2} lg={2} sm={2} xs={2}>اجاره</Col>
-                        <Col md={10} lg={10} sm={10} xs={10}>
+                        <Col lg={12} md={12} sm={12} xs={12}>اجاره</Col>
+                        <Col lg={12} md={12} sm={12} xs={12}>
+                          <p>
+                            {this.state.rent.min > 0
+                            && (
+                              <span>از {this.state.rent.minLabel}</span>
+                            )}
+                            {this.state.rent.maxLabel.length > 0
+                            && (
+                              <span>تا {this.state.rent.maxLabel}</span>
+                            )}
+                          </p>
+                        </Col>
+                        <Col lg={12} md={12} sm={12} xs={12}>
                           <InputRange
                             name="rent"
                             maxValue={28}
                             minValue={0}
                             step={1}
                             value={this.state.rent}
-                            formatLabel={(value, type) => this.handleRentLabel(value, type)}
+                            formatLabel={() => ''}
                             onChange={(value) => { this.handleRangeChange('rent', value); }}
                           />
                         </Col>
@@ -738,15 +835,27 @@ class SearchForm extends PureComponent {
                   <>
                     <Col lg={12} md={12} sm={12} xs={12} style={{ direction: 'ltr' }} className="range-price">
                       <FormGroup>
-                        <Col md={2} lg={2} sm={2} xs={2}>اجاره روزانه</Col>
-                        <Col md={10} lg={10} sm={10} xs={10}>
+                        <Col lg={12} md={12} sm={12} xs={12}>اجاره روزانه</Col>
+                        <Col lg={12} md={12} sm={12} xs={12}>
+                          <p>
+                            {this.state.dailyRent.min > 0
+                            && (
+                              <span>از {this.state.dailyRent.minLabel}</span>
+                            )}
+                            {this.state.dailyRent.maxLabel.length > 0
+                            && (
+                              <span>تا {this.state.dailyRent.maxLabel}</span>
+                            )}
+                          </p>
+                        </Col>
+                        <Col lg={12} md={12} sm={12} xs={12}>
                           <InputRange
                             name="dailyRent"
                             maxValue={28}
                             minValue={0}
                             step={1}
                             value={this.state.dailyRent}
-                            formatLabel={(value, type) => this.handleDailyRentLabel(value, type)}
+                            formatLabel={() => ''}
                             onChange={(value) => { this.handleRangeChange('dailyRent', value); }}
                           />
                         </Col>
@@ -914,276 +1023,380 @@ class SearchForm extends PureComponent {
             )}
           </Modal>
         </div>
-        <div className="searchForm">
-          <Form>
-            <Row form className="search-input">
-              <Col lg={8} md={8} sm={8} xs={12}>
-                <FormGroup>
-                  <AsyncSelect
-                    isMulti
-                    cacheOptions
-                    defaultOptions
-                    placeholder="نام شهر، منطقه و .. خود را وارد کنید"
-                    loadOptions={(input, callback) => { this.promiseOptions(input, callback); }}
-                    onChange={(e) => { this.handleSearchSelect(e); }}
-                    value={this.state.city}
-                    loadingMessage={() => ('درحال بارگزاری...')}
-                    theme={theme => selectTheme(theme)}
-                    noOptionsMessage={() => ('نتیجه ای یافت نشد')}
-                    styles={customStyles}
-                  />
-                </FormGroup>
-              </Col>
-              <Col lg={2} md={2} sm={2} xs={12}>
-                <Button
-                  style={{ margin: '0px 2px 5px 2px' }}
-                  onClick={() => { this.handleSearch(); }}
-                  className="btn-success volume"
-                >تغییر جستجو
-                </Button>
-              </Col>
-              <Col lg={2} md={2} sm={2} xs={12}>
-                <Button
-                  style={{ margin: '0px 2px 5px 2px' }}
-                  color="success"
-                  onClick={() => { this.saveAsRequest(); }}
-                  className="volume"
-                >
-                  درخواست
-                </Button>
-              </Col>
-            </Row>
-            <Row form className="search-input search-advanced">
-              <Col lg={2} md={3} sm={4} xs={12}>
-                <FormGroup>
-                  {renderSelectField({
-                    input: {
-                      onChange: (e) => { this.handleTypeSelect(Number(e.value), 'type'); },
-                      isMulti: false,
-                      name: 'type',
-                      value: types[this.state.type],
-                      clearable: true,
-                    },
-                    placeholder: 'نوع',
-                    options: types,
-                    name: 'select',
-                    type: 'text',
-                  })}
-                </FormGroup>
-              </Col>
-              {(this.state.type !== 1 && this.state.type !== 2)
-              && (
-                <Col lg={3} md={4} sm={6} xs={12} style={{ direction: 'ltr' }} className="range-price">
-                  <FormGroup>
-                    <Col md={2} lg={2} sm={2} xs={2}>قیمت</Col>
-                    <Col md={10} lg={10} sm={10} xs={10}>
-                      <InputRange
-                        name="price"
-                        maxValue={38}
-                        minValue={0}
-                        step={1}
-                        value={this.state.price}
-                        formatLabel={(value, type) => this.handlePriceLabel(value, type)}
-                        onChange={(value) => { this.handleRangeChange('price', value); }}
-                      />
+        <div className="search-container">
+          <StickyBox bottom={false} offsetTop={10} offsetBottom={10} className="search-advanced search-sidebar">
+            <div>
+              <Form>
+                <Row form className="search-input">
+                  <Col lg={12} md={12} sm={12} xs={12}>
+                    <Label style={{ paddingTop: '6px' }}>فیلترها</Label>
+                    <Button color="success" className="pull-left" outline>لغو فیلترها</Button>
+                  </Col>
+                  <div className="search-bar-divider" />
+                  <Col lg={12} md={12} sm={12} xs={12}>
+                    <FormGroup>
+                      {renderSelectField({
+                        input: {
+                          onChange: (e) => { this.handleTypeSelect(Number(e.value), 'type'); },
+                          isMulti: false,
+                          name: 'type',
+                          value: types[this.state.type],
+                          clearable: true,
+                        },
+                        placeholder: 'نوع',
+                        options: types,
+                        name: 'select',
+                        type: 'text',
+                      })}
+                    </FormGroup>
+                  </Col>
+                  {(this.state.type !== 1 && this.state.type !== 2)
+                  && (
+                    <Col lg={12} md={12} sm={12} xs={12} style={{ direction: 'ltr' }} className="range-price">
+                      <FormGroup>
+                        <Col lg={12} md={12} sm={12} xs={12}>قیمت</Col>
+                        <Col lg={12} md={12} sm={12} xs={12}>
+                          <p>
+                            {this.state.price.min > 0
+                            && (
+                              <span>از {this.state.price.minLabel}</span>
+                            )}
+                            {this.state.price.maxLabel !== ''
+                            && (
+                              <span>تا {this.state.price.maxLabel}</span>
+                            )}
+                          </p>
+                        </Col>
+                        <Col lg={12} md={12} sm={12} xs={12}>
+                          <InputRange
+                            name="price"
+                            maxValue={38}
+                            minValue={0}
+                            step={1}
+                            value={this.state.price}
+                            formatLabel={() => ''}
+                            onChange={(value) => { this.handleRangeChange('price', value); }}
+                          />
+                        </Col>
+                      </FormGroup>
                     </Col>
-                  </FormGroup>
-                </Col>
-              )}
-              {this.state.type === 1
-              && (
-                <>
-                  <Col lg={3} md={4} sm={6} xs={12} style={{ direction: 'ltr' }} className="range-price">
-                    <FormGroup>
-                      <Col md={2} lg={2} sm={2} xs={2}>رهن</Col>
-                      <Col md={10} lg={10} sm={10} xs={10}>
-                        <InputRange
-                          name="deposit"
-                          maxValue={38}
-                          minValue={0}
-                          step={1}
-                          value={this.state.deposit}
-                          formatLabel={(value, type) => this.handlePriceLabel(value, type)}
-                          onChange={(value) => { this.handleRangeChange('deposit', value); }}
-                        />
+                  )}
+                  {this.state.type === 1
+                  && (
+                    <>
+                      <Col lg={12} md={12} sm={12} xs={12} style={{ direction: 'ltr' }} className="range-price">
+                        <FormGroup>
+                          <Col lg={12} md={12} sm={12} xs={12}>رهن</Col>
+                          <Col lg={12} md={12} sm={12} xs={12}>
+                            <p>
+                              {this.state.deposit.min > 0
+                              && (
+                                <span>از {this.state.deposit.minLabel}</span>
+                              )}
+                              {this.state.deposit.maxLabel.length > 0
+                              && (
+                                <span>تا {this.state.deposit.maxLabel}</span>
+                              )}
+                            </p>
+                          </Col>
+                          <Col lg={12} md={12} sm={12} xs={12}>
+                            <InputRange
+                              name="deposit"
+                              maxValue={38}
+                              minValue={0}
+                              step={1}
+                              value={this.state.deposit}
+                              formatLabel={() => ''}
+                              onChange={(value) => { this.handleRangeChange('deposit', value); }}
+                            />
+                          </Col>
+                        </FormGroup>
                       </Col>
-                    </FormGroup>
-                  </Col>
-                  <Col lg={3} md={4} sm={6} xs={12} style={{ direction: 'ltr' }} className="range-price">
-                    <FormGroup>
-                      <Col md={2} lg={2} sm={2} xs={2}>اجاره</Col>
-                      <Col md={10} lg={10} sm={10} xs={10}>
-                        <InputRange
-                          name="rent"
-                          maxValue={28}
-                          minValue={0}
-                          step={1}
-                          value={this.state.rent}
-                          formatLabel={(value, type) => this.handleRentLabel(value, type)}
-                          onChange={(value) => { this.handleRangeChange('rent', value); }}
-                        />
+                      <Col lg={12} md={12} sm={12} xs={12} style={{ direction: 'ltr' }} className="range-price">
+                        <FormGroup>
+                          <Col lg={12} md={12} sm={12} xs={12}>اجاره</Col>
+                          <Col lg={12} md={12} sm={12} xs={12}>
+                            <p>
+                              {this.state.rent.min > 0
+                              && (
+                                <span>از {this.state.rent.minLabel}</span>
+                              )}
+                              {this.state.rent.maxLabel.length > 0
+                              && (
+                                <span>تا {this.state.rent.maxLabel}</span>
+                              )}
+                            </p>
+                          </Col>
+                          <Col lg={12} md={12} sm={12} xs={12}>
+                            <InputRange
+                              name="rent"
+                              maxValue={28}
+                              minValue={0}
+                              step={1}
+                              value={this.state.rent}
+                              formatLabel={() => ''}
+                              onChange={(value) => { this.handleRangeChange('rent', value); }}
+                            />
+                          </Col>
+                        </FormGroup>
                       </Col>
-                    </FormGroup>
-                  </Col>
-                </>
-              )}
-              {this.state.type === 2
-              && (
-                <>
-                  <Col lg={3} md={4} sm={6} xs={12} style={{ direction: 'ltr' }} className="range-price">
-                    <FormGroup>
-                      <Col md={2} lg={2} sm={2} xs={2}>اجاره روزانه</Col>
-                      <Col md={10} lg={10} sm={10} xs={10}>
-                        <InputRange
-                          name="dailyRent"
-                          maxValue={28}
-                          minValue={0}
-                          step={1}
-                          value={this.state.dailyRent}
-                          formatLabel={(value, type) => this.handleDailyRentLabel(value, type)}
-                          onChange={(value) => { this.handleRangeChange('dailyRent', value); }}
-                        />
+                    </>
+                  )}
+                  {this.state.type === 2
+                  && (
+                    <>
+                      <Col lg={12} md={12} sm={12} xs={12} style={{ direction: 'ltr' }} className="range-price">
+                        <FormGroup>
+                          <Col lg={12} md={12} sm={12} xs={12}>اجاره روزانه</Col>
+                          <Col lg={12} md={12} sm={12} xs={12}>
+                            <p>
+                              {this.state.dailyRent.min > 0
+                              && (
+                                <span>از {this.state.dailyRent.minLabel}</span>
+                              )}
+                              {this.state.dailyRent.maxLabel.length > 0
+                              && (
+                                <span>تا {this.state.dailyRent.maxLabel}</span>
+                              )}
+                            </p>
+                          </Col>
+                          <Col lg={12} md={12} sm={12} xs={12}>
+                            <InputRange
+                              name="dailyRent"
+                              maxValue={28}
+                              minValue={0}
+                              step={1}
+                              value={this.state.dailyRent}
+                              formatLabel={() => ''}
+                              onChange={(value) => { this.handleRangeChange('dailyRent', value); }}
+                            />
+                          </Col>
+                        </FormGroup>
                       </Col>
-                    </FormGroup>
-                  </Col>
-                </>
-              )}
-              <Col md={4} sm={4} xs={12}>
-                <FormGroup>
-                  {renderSelectField({
-                    input: {
-                      onChange: (e) => { this.handleRoomNumSelect(e); },
-                      isMulti: true,
-                      name: 'rooms',
-                      value: nums[() => {
-                        const { rooms: value } = this.state;
-                        return {
-                          value,
-                        };
-                      }],
-                    },
-                    placeholder: 'تعداد اتاق',
-                    options: nums,
-                    name: 'select',
-                    type: 'text',
-                  })}
-                </FormGroup>
-              </Col>
-              <Col md={4} xs={12} sm={6}>
-                <Row>
-                  <Col>
+                    </>
+                  )}
+                  <Col lg={12} md={12} sm={12} xs={12}>
                     <FormGroup>
                       {renderSelectField({
                         input: {
-                          onChange: (e) => { this.handleTypeSelect(Number(e.value), 'area_from'); },
-                          isMulti: false,
-                          name: 'area_from',
-                          value: area[() => {
-                            const { area_from: value } = this.state;
+                          onChange: (e) => { this.handleRoomNumSelect(e); },
+                          isMulti: true,
+                          name: 'rooms',
+                          value: nums[() => {
+                            const { rooms: value } = this.state;
                             return {
                               value,
                             };
                           }],
                         },
-                        placeholder: 'متراژ از',
-                        options: area,
+                        placeholder: 'تعداد اتاق',
+                        options: nums,
                         name: 'select',
                         type: 'text',
                       })}
                     </FormGroup>
                   </Col>
-                  <Col>
-                    <FormGroup>
-                      {renderSelectField({
-                        input: {
-                          onChange: (e) => { this.handleTypeSelect(Number(e.value), 'area_to'); },
-                          isMulti: false,
-                          name: 'area_to',
-                          value: area[() => {
-                            const { area_to: value } = this.state;
-                            return {
-                              value,
-                            };
-                          }],
-                        },
-                        placeholder: 'متراژ تا',
-                        options: area,
-                        name: 'select',
-                        type: 'text',
-                      })}
-                    </FormGroup>
+                  <Col lg={12} md={12} sm={12} xs={12}>
+                    <Row>
+                      <Col>
+                        <FormGroup>
+                          {renderSelectField({
+                            input: {
+                              onChange: (e) => { this.handleTypeSelect(Number(e.value), 'area_from'); },
+                              isMulti: false,
+                              name: 'area_from',
+                              value: area[() => {
+                                const { area_from: value } = this.state;
+                                return {
+                                  value,
+                                };
+                              }],
+                            },
+                            placeholder: 'متراژ از',
+                            options: area,
+                            name: 'select',
+                            type: 'text',
+                          })}
+                        </FormGroup>
+                      </Col>
+                      <Col>
+                        <FormGroup>
+                          {renderSelectField({
+                            input: {
+                              onChange: (e) => { this.handleTypeSelect(Number(e.value), 'area_to'); },
+                              isMulti: false,
+                              name: 'area_to',
+                              value: area[() => {
+                                const { area_to: value } = this.state;
+                                return {
+                                  value,
+                                };
+                              }],
+                            },
+                            placeholder: 'متراژ تا',
+                            options: area,
+                            name: 'select',
+                            type: 'text',
+                          })}
+                        </FormGroup>
+                      </Col>
+                    </Row>
+                  </Col>
+                  <Col lg={12} md={12} sm={12} xs={12}>
+                    <Row>
+                      <Col>
+                        <FormGroup>
+                          {renderSelectField({
+                            input: {
+                              onChange: (e) => { this.handleTypeSelect(Number(e.value), 'age_from'); },
+                              isMulti: false,
+                              name: 'age_from',
+                              value: age[() => {
+                                const { age_from: value } = this.state;
+                                return {
+                                  value,
+                                };
+                              }],
+                            },
+                            placeholder: 'سن از',
+                            options: age,
+                            name: 'select',
+                            type: 'text',
+                          })}
+                        </FormGroup>
+                      </Col>
+                      <Col>
+                        <FormGroup>
+                          {renderSelectField({
+                            input: {
+                              onChange: (e) => { this.handleTypeSelect(Number(e.value), 'age_to'); },
+                              isMulti: false,
+                              name: 'age_to',
+                              value: age[() => {
+                                const { age_to: value } = this.state;
+                                return {
+                                  value,
+                                };
+                              }],
+                            },
+                            placeholder: 'تا',
+                            options: age,
+                            name: 'select',
+                            type: 'text',
+                          })}
+                        </FormGroup>
+                      </Col>
+                    </Row>
                   </Col>
                 </Row>
-              </Col>
-              <Col md={4} xs={12} sm={6}>
-                <Row>
-                  <Col>
-                    <FormGroup>
-                      {renderSelectField({
-                        input: {
-                          onChange: (e) => { this.handleTypeSelect(Number(e.value), 'age_from'); },
-                          isMulti: false,
-                          name: 'age_from',
-                          value: age[() => {
-                            const { age_from: value } = this.state;
-                            return {
-                              value,
-                            };
-                          }],
-                        },
-                        placeholder: 'سن از',
-                        options: age,
-                        name: 'select',
-                        type: 'text',
-                      })}
-                    </FormGroup>
-                  </Col>
-                  <Col>
-                    <FormGroup>
-                      {renderSelectField({
-                        input: {
-                          onChange: (e) => { this.handleTypeSelect(Number(e.value), 'age_to'); },
-                          isMulti: false,
-                          name: 'age_to',
-                          value: age[() => {
-                            const { age_to: value } = this.state;
-                            return {
-                              value,
-                            };
-                          }],
-                        },
-                        placeholder: 'تا',
-                        options: age,
-                        name: 'select',
-                        type: 'text',
-                      })}
-                    </FormGroup>
-                  </Col>
-                </Row>
-              </Col>
-            </Row>
-          </Form>
-          <div className="fab">
-            <FaFilter className="fab-icon" onClick={this.handleFilter} />
-          </div>
-          <div>
-            <div className="resultTable">
-              <div className="resultTab">
-                <ul>
-                  <li
-                    className={this.state.resultTab === 'list' ? 'active' : ''}
-                  >
-                    <a href="#1" onClick={() => { this.changeResultTab('list'); }}><FaThList /> نمایش لیست </a>
-                  </li>
-                  <li
-                    className={this.state.resultTab === 'map' ? 'active' : ''}
-                  >
-                    <a href="#1" onClick={() => { this.changeResultTab('map'); }}><FaMap /> نمایش روی نقشه </a>
-                  </li>
-                </ul>
+              </Form>
+            </div>
+          </StickyBox>
+          <div className="searchForm">
+            <div>
+              <StickyBox bottom={false} offsetTop={0} offsetBottom={10} className="search-form-top">
+                <Form>
+                  <Row form className="search-input">
+                    <Col lg={8} md={8} sm={8} xs={12}>
+                      <FormGroup>
+                        <AsyncSelect
+                          isMulti
+                          cacheOptions
+                          defaultOptions
+                          placeholder="نام شهر، منطقه و .. خود را وارد کنید"
+                          loadOptions={(input, callback) => { this.promiseOptions(input, callback); }}
+                          onChange={(e) => { this.handleSearchSelect(e); }}
+                          value={this.state.city}
+                          loadingMessage={() => ('درحال بارگزاری...')}
+                          theme={theme => selectTheme(theme)}
+                          noOptionsMessage={() => ('نتیجه ای یافت نشد')}
+                          styles={customStyles}
+                        />
+                      </FormGroup>
+                    </Col>
+                    <Col lg={2} md={2} sm={2} xs={12}>
+                      <Button
+                        style={{ margin: '0px 2px 5px 2px' }}
+                        onClick={() => { this.handleSearch(); }}
+                        className="btn-success volume"
+                      >تغییر جستجو
+                      </Button>
+                    </Col>
+                    <Col lg={2} md={2} sm={2} xs={12}>
+                      <Button
+                        style={{ margin: '0px 2px 5px 2px' }}
+                        color="success"
+                        onClick={() => { this.saveAsRequest(); }}
+                        className="volume"
+                      >
+                        درخواست
+                      </Button>
+                    </Col>
+                  </Row>
+                </Form>
+              </StickyBox>
+              <div className="fab">
+                <FaFilter className="fab-icon" onClick={this.handleFilter} />
               </div>
-              <div className="resultBody">
-                {this.state.resultTab === 'list' ? this.resultList() : this.resultMap()}
+              <div className="sort-panel">
+                <span className="sort-title">مرتب سازی:</span>
+                <Nav tabs className="sort-tabs">
+                  <NavItem>
+                    <NavLink
+                      className={classnames({ active: this.state.sortTab === 1 })}
+                      onClick={() => {
+                        this.toggle(1);
+                      }}
+                    >
+                      جدیدترین
+                    </NavLink>
+                  </NavItem>
+                  <NavItem>
+                    <NavLink
+                      className={classnames({ active: this.state.sortTab === 2 })}
+                      onClick={() => {
+                        this.toggle(2);
+                      }}
+                    >
+                      گران ترین
+                    </NavLink>
+                  </NavItem>
+                  <NavItem>
+                    <NavLink
+                      className={classnames({ active: this.state.sortTab === 3 })}
+                      onClick={() => {
+                        this.toggle(3);
+                      }}
+                    >
+                      ارزان ترین
+                    </NavLink>
+                  </NavItem>
+                </Nav>
+                <span className="pull-left span-result-size">
+                  <span className="red-text bold-text">{this.state.resultSize}</span>
+                  مورد یافت شد
+                </span>
+              </div>
+              <div>
+                <div className="result-table">
+                  <div className="resultTab">
+                    <ul>
+                      <li
+                        className={this.state.resultTab === 'list' ? 'active' : ''}
+                      >
+                        <a href="#1" onClick={() => { this.changeResultTab('list'); }}><FaThList /> نمایش لیست </a>
+                      </li>
+                      <li
+                        className={this.state.resultTab === 'map' ? 'active' : ''}
+                      >
+                        <a href="#1" onClick={() => { this.changeResultTab('map'); }}><FaMap /> نمایش روی نقشه </a>
+                      </li>
+                    </ul>
+                  </div>
+                  <div className="resultBody">
+                    {this.state.resultTab === 'list' ? this.resultList() : this.resultMap()}
+                  </div>
+                </div>
               </div>
             </div>
           </div>
