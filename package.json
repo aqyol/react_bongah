@@ -49,6 +49,7 @@
     "react-select": "^3.0.4",
     "react-smooth-scrollbar": "^8.0.6",
     "react-star-ratings": "^2.3.0",
+    "react-sticky-box": "^0.8.0",
     "react-text-mask": "^5.4.3",
     "react-web-tabs": "^1.0.1",
     "reactstrap": "^7.1.0",
