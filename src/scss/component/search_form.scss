@@ -12,6 +12,10 @@
   direction: rtl;
 }
 
+.search-filter {
+  width: 35%;
+}
+
 .search-form-top{
   z-index: 11;
   background: white;
@@ -41,35 +45,8 @@
   text-align: right;
 }
 
-.search-sidebar{
-  margin-right: 0;
-  width: 30%;
-  float: right;
-  height: 500px;
-  background-color: aliceblue;
-  padding: 5px 5px;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
-}
-
-.search-bar-divider{
-  width: 100%;
-  background-color: black;
-  height: 1px;
-  margin: 5% 3%;
-}
-
-.search-input {
-  padding: 2%;
-  text-align: right;
-}
-
 .input-range__label {
   direction: rtl;
-}
-
-.range-price {
-  padding: 1%;
-  margin: 1%;
 }
 
 .btn-search {
@@ -189,12 +166,6 @@
   .searchForm {
     padding: 15px 5px;
   }
-  .search-advanced {
-    display: none !important;
-  }
-  .fab {
-    display: block !important;
-  }
   .search-container{
     margin: 0 5px;
   }
@@ -215,5 +186,8 @@
   }
   .sort-title {
     display: none;
+  }
+  .fab {
+    display: block !important;
   }
 }
