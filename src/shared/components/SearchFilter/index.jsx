@@ -1,5 +1,4 @@
 import React, { PureComponent } from 'react';
-import InputRange from 'react-input-range';
 import 'react-input-range/lib/css/index.css';
 import PropTypes from 'prop-types';
 import {
@@ -8,8 +7,10 @@ import {
   Form,
   FormGroup,
   Button,
+  Label,
 } from 'reactstrap';
 import renderSelectField from '../form/Select';
+import RangeSlider from '../RangeSlider/RangeSlider';
 
 
 const types = [
@@ -244,6 +245,7 @@ class SearchFilter extends PureComponent {
     this.handleRoomNumSelect = this.handleRoomNumSelect.bind(this);
     this.handleSearch = this.handleSearch.bind(this);
     this.handleDismiss = this.handleDismiss.bind(this);
+    this.clearFilter = this.clearFilter.bind(this);
   }
 
   componentDidMount() {
@@ -336,20 +338,20 @@ class SearchFilter extends PureComponent {
     let maxLabel;
     switch (name) {
       case ('price'):
-        [minLabel, min] = this.handlePriceLabel(value.min);
-        [maxLabel, max] = this.handlePriceLabel(value.max);
+        [minLabel, min] = this.handlePriceLabel(value[1]);
+        [maxLabel, max] = this.handlePriceLabel(value[0]);
         break;
       case ('deposit'):
-        [minLabel, min] = this.handlePriceLabel(value.min);
-        [maxLabel, max] = this.handlePriceLabel(value.max);
+        [minLabel, min] = this.handlePriceLabel(value[1]);
+        [maxLabel, max] = this.handlePriceLabel(value[0]);
         break;
       case 'rent':
-        [minLabel, min] = this.handleRentLabel(value.min);
-        [maxLabel, max] = this.handleRentLabel(value.max);
+        [minLabel, min] = this.handleRentLabel(value[1]);
+        [maxLabel, max] = this.handleRentLabel(value[0]);
         break;
       case 'dailyRent':
-        [minLabel, min] = this.handleDailyRentLabel(value.min);
-        [maxLabel, max] = this.handleDailyRentLabel(value.max);
+        [minLabel, min] = this.handleDailyRentLabel(value[1]);
+        [maxLabel, max] = this.handleDailyRentLabel(value[0]);
         break;
       default:
         break;
@@ -357,7 +359,7 @@ class SearchFilter extends PureComponent {
     console.log(min, max);
     this.setState({
       [name]: {
-        min: value.min, minLabel, max: value.max, maxLabel,
+        min: value[1], minLabel, max: value[0], maxLabel,
       },
     });
     this.handleSearch(false);
@@ -399,10 +401,60 @@ class SearchFilter extends PureComponent {
     this.props.handleDissmiss();
   }
 
+  clearFilter() {
+    this.setState({
+      rooms: '',
+      area_from: '',
+      area_to: '',
+      age_from: '',
+      age_to: '',
+      price: {
+        min: 0,
+        minLabel: '',
+        max: 38,
+        maxLabel: '',
+      },
+      deposit: {
+        min: 0,
+        minLabel: '',
+        max: 38,
+        maxLabel: '',
+      },
+      rent: {
+        min: 0,
+        minLabel: '',
+        max: 28,
+        maxLabel: '',
+      },
+      dailyRent: {
+        min: 0,
+        minLabel: '',
+        max: 28,
+        maxLabel: '',
+      },
+      type: 0,
+    });
+  }
+
   render() {
     return (
       <div>
         <Form>
+          <Row>
+            <Col lg={12} md={12} sm={12} xs={12}>
+              <Label style={{ paddingTop: '6px', paddingRight: '4%', float: 'right' }}>فیلترها</Label>
+              <Button
+                color="success"
+                className="pull-left"
+                outline
+                style={{ marginLeft: '4%' }}
+                onClick={() => { this.clearFilter(); }}
+              >
+                لغو فیلترها
+              </Button>
+            </Col>
+          </Row>
+          <div className="search-bar-divider" />
           <Row form className="search-input">
             <Col lg={12} md={12} sm={12} xs={12}>
               <FormGroup>
@@ -428,7 +480,7 @@ class SearchFilter extends PureComponent {
                   <Col lg={12} md={12} sm={12} xs={12}>قیمت</Col>
                   <Col lg={12} md={12} sm={12} xs={12}>
                     <p>
-                      {this.state.price.min > 0
+                      {this.state.price.minLabel !== ''
                       && (
                         <span>از {this.state.price.minLabel}</span>
                       )}
@@ -439,13 +491,10 @@ class SearchFilter extends PureComponent {
                     </p>
                   </Col>
                   <Col lg={12} md={12} sm={12} xs={12}>
-                    <InputRange
-                      name="price"
-                      maxValue={38}
+                    <RangeSlider
                       minValue={0}
-                      step={1}
-                      value={this.state.price}
-                      formatLabel={() => ''}
+                      maxValue={38}
+                      values={[this.state.price.min, this.state.price.max]}
                       onChange={(value) => { this.handleRangeChange('price', value); }}
                     />
                   </Col>
@@ -460,7 +509,7 @@ class SearchFilter extends PureComponent {
                     <Col lg={12} md={12} sm={12} xs={12}>رهن</Col>
                     <Col lg={12} md={12} sm={12} xs={12}>
                       <p>
-                        {this.state.deposit.min > 0
+                        {this.state.deposit.minLabel !== ''
                         && (
                           <span>از {this.state.deposit.minLabel}</span>
                         )}
@@ -471,13 +520,10 @@ class SearchFilter extends PureComponent {
                       </p>
                     </Col>
                     <Col lg={12} md={12} sm={12} xs={12}>
-                      <InputRange
-                        name="deposit"
-                        maxValue={38}
+                      <RangeSlider
                         minValue={0}
-                        step={1}
-                        value={this.state.deposit}
-                        formatLabel={() => ''}
+                        maxValue={38}
+                        values={[this.state.deposit.min, this.state.deposit.max]}
                         onChange={(value) => { this.handleRangeChange('deposit', value); }}
                       />
                     </Col>
@@ -488,7 +534,7 @@ class SearchFilter extends PureComponent {
                     <Col lg={12} md={12} sm={12} xs={12}>اجاره</Col>
                     <Col lg={12} md={12} sm={12} xs={12}>
                       <p>
-                        {this.state.rent.min > 0
+                        {this.state.rent.minLabel !== ''
                         && (
                           <span>از {this.state.rent.minLabel}</span>
                         )}
@@ -499,13 +545,10 @@ class SearchFilter extends PureComponent {
                       </p>
                     </Col>
                     <Col lg={12} md={12} sm={12} xs={12}>
-                      <InputRange
-                        name="rent"
-                        maxValue={28}
+                      <RangeSlider
                         minValue={0}
-                        step={1}
-                        value={this.state.rent}
-                        formatLabel={() => ''}
+                        maxValue={28}
+                        values={[this.state.rent.min, this.state.rent.max]}
                         onChange={(value) => { this.handleRangeChange('rent', value); }}
                       />
                     </Col>
@@ -521,7 +564,7 @@ class SearchFilter extends PureComponent {
                     <Col lg={12} md={12} sm={12} xs={12}>اجاره روزانه</Col>
                     <Col lg={12} md={12} sm={12} xs={12}>
                       <p>
-                        {this.state.dailyRent.min > 0
+                        {this.state.dailyRent.minLabel !== ''
                         && (
                           <span>از {this.state.dailyRent.minLabel}</span>
                         )}
@@ -532,13 +575,10 @@ class SearchFilter extends PureComponent {
                       </p>
                     </Col>
                     <Col lg={12} md={12} sm={12} xs={12}>
-                      <InputRange
-                        name="dailyRent"
-                        maxValue={28}
+                      <RangeSlider
                         minValue={0}
-                        step={1}
-                        value={this.state.dailyRent}
-                        formatLabel={() => ''}
+                        maxValue={28}
+                        values={[this.state.dailyRent.min, this.state.dailyRent.max]}
                         onChange={(value) => { this.handleRangeChange('dailyRent', value); }}
                       />
                     </Col>
