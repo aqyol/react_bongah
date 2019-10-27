@@ -1,7 +1,6 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import Header from './components/Header';
-import LeftSide from './components/LeftSide';
 
 
 class Dashboard extends PureComponent {
@@ -16,21 +15,14 @@ class Dashboard extends PureComponent {
     };
   }
 
-  toggleLeftSide = () => {
-    this.setState(prevState => ({
-      isExpand: !prevState.isExpand,
-    }));
-  }
-
 
   render() {
     return (
       <div className="dashboard">
         <div className="headerWrapper">
-          <Header clickToggle={this.toggleLeftSide} />
+          <Header />
         </div>
         <div className="bodyWrapper">
-          <LeftSide isExpand={this.state.isExpand} />
           <div
             role="none"
             className={`contentWrapper${(this.state.isExpand ? ' smallSize' : '')}`}
