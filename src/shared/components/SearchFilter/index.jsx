@@ -36,130 +36,6 @@ const types = [
   },
 ];
 
-const nums = [
-  {
-    value: '0',
-    label: '0',
-  },
-  {
-    value: '1',
-    label: '1',
-  }, {
-    value: '2',
-    label: '2',
-  },
-  {
-    value: '3',
-    label: '3',
-  },
-  {
-    value: '4',
-    label: '4',
-  },
-  {
-    value: '5',
-    label: '5',
-  },
-  {
-    value: '6',
-    label: '6',
-  },
-  {
-    value: '7',
-    label: '7',
-  },
-];
-
-const area = [
-  {
-    value: '0',
-    label: '30',
-  },
-  {
-    value: '1',
-    label: '50',
-  }, {
-    value: '2',
-    label: '70',
-  },
-  {
-    value: '3',
-    label: '90',
-  },
-  {
-    value: '4',
-    label: '120',
-  },
-  {
-    value: '5',
-    label: '150',
-  },
-  {
-    value: '6',
-    label: '180',
-  },
-  {
-    value: '7',
-    label: '200',
-  },
-  {
-    value: '8',
-    label: '220',
-  },
-  {
-    value: '9',
-    label: '250',
-  },
-  {
-    value: '10',
-    label: '300',
-  },
-  {
-    value: '11',
-    label: '400',
-  },
-  {
-    value: '12',
-    label: '500',
-  },
-  {
-    value: '13',
-    label: '600',
-  },
-  {
-    value: '14',
-    label: '700',
-  },
-  {
-    value: '15',
-    label: '800',
-  },
-  {
-    value: '16',
-    label: '900',
-  },
-  {
-    value: '17',
-    label: '1000',
-  },
-  {
-    value: '18',
-    label: '1500',
-  },
-  {
-    value: '19',
-    label: '2000',
-  },
-  {
-    value: '20',
-    label: '2500',
-  },
-  {
-    value: '21',
-    label: '5000',
-  },
-];
-
 const age = [
   {
     value: '0',
@@ -198,6 +74,17 @@ const age = [
   },
 ];
 
+const applicationType = [
+  {
+    value: '0',
+    label: 'اداری',
+  },
+  {
+    value: '1',
+    label: 'تجاری',
+  },
+];
+
 class SearchFilter extends PureComponent {
   static propTypes = {
     handleSearch: PropTypes.func.isRequired,
@@ -209,6 +96,34 @@ class SearchFilter extends PureComponent {
     super();
     this.state = {
       rooms: '',
+      beds: [
+        {
+          label: '0',
+          value: false,
+        },
+        {
+          label: '1',
+          value: false,
+        },
+        {
+          label: '2',
+          value: false,
+        },
+        {
+          label: '3',
+          value: false,
+        },
+        {
+          label: '+4',
+          value: false,
+        },
+      ],
+      area: {
+        min: 0,
+        max: 85,
+        minLabel: '',
+        maxLabel: 12000,
+      },
       area_from: '',
       area_to: '',
       age_from: '',
@@ -217,35 +132,36 @@ class SearchFilter extends PureComponent {
         min: 0,
         minLabel: '',
         max: 38,
-        maxLabel: '',
+        maxLabel: '200 میلیارد تومان',
       },
       deposit: {
         min: 0,
         minLabel: '',
         max: 38,
-        maxLabel: '',
+        maxLabel: '200 میلیارد تومان',
       },
       rent: {
         min: 0,
         minLabel: '',
         max: 28,
-        maxLabel: '',
+        maxLabel: '500 میلیون تومان',
       },
       dailyRent: {
         min: 0,
         minLabel: '',
         max: 28,
-        maxLabel: '',
+        maxLabel: '5 میلیون تومان',
       },
       type: 0,
+      applicationType: '',
     };
     this.handleRangeChange = this.handleRangeChange.bind(this);
     this.handleTypeSelect = this.handleTypeSelect.bind(this);
-    this.handleInputChange = this.handleInputChange.bind(this);
-    this.handleRoomNumSelect = this.handleRoomNumSelect.bind(this);
     this.handleSearch = this.handleSearch.bind(this);
     this.handleDismiss = this.handleDismiss.bind(this);
     this.clearFilter = this.clearFilter.bind(this);
+    this.selectRooms = this.selectRooms.bind(this);
+    this.handleAreaRangeChange = this.handleAreaRangeChange.bind(this);
   }
 
   componentDidMount() {
@@ -331,6 +247,23 @@ class SearchFilter extends PureComponent {
     return [label, rent];
   }
 
+  handleArea = (value) => {
+    let label = 0;
+    if (value > 0 && value <= 50) {
+      label = value * 5;
+    }
+    if (value > 50 && value <= 65) {
+      label = 250 + (value - 50) * 50;
+    }
+    if (value > 65 && value <= 75) {
+      label = 1000 + (value - 65) * 100;
+    }
+    if (value > 75 && value <= 85) {
+      label = 2000 + (value - 75) * 1000;
+    }
+    return label;
+  }
+
   handleRangeChange(name, value) {
     let min;
     let minLabel;
@@ -361,29 +294,38 @@ class SearchFilter extends PureComponent {
       [name]: {
         min: value[1], minLabel, max: value[0], maxLabel,
       },
+    }, function () {
+      this.handleSearch(false);
     });
-    this.handleSearch(false);
+  }
+
+  handleAreaRangeChange(name, value) {
+    let min;
+    let max;
+    if (name === 'area') {
+      min = this.handleArea(value[1]);
+      max = this.handleArea(value[0]);
+    }
+    console.log(min, max);
+    this.setState({
+      [name]: {
+        min: value[1], minLabel: min, max: value[0], maxLabel: max,
+      },
+    }, function () {
+      this.handleSearch(false);
+    });
   }
 
   handleTypeSelect(index, name) {
-    this.setState({ [name]: index });
-    this.handleSearch(false);
+    this.setState({ [name]: index }, function () {
+      this.handleSearch(false);
+    });
   }
 
-  handleRoomNumSelect(rooms) {
-    if (rooms === null) {
-      this.setState({ rooms: [] });
-      return;
-    }
-    this.setState({ rooms });
-    this.handleSearch(false);
-  }
-
-  handleInputChange(e) {
-    const { name, value } = e.target;
-    this.setState({ [name]: value });
-    // search ads based on new parameters
-    this.handleSearch(false);
+  handleApplicationSelect(type) {
+    this.setState({ applicationType: type }, function () {
+      this.handleSearch(false);
+    });
   }
 
   handleSearch(clickEvent) {
@@ -404,35 +346,87 @@ class SearchFilter extends PureComponent {
   clearFilter() {
     this.setState({
       rooms: '',
+      beds: [
+        {
+          label: '0',
+          value: false,
+        },
+        {
+          label: '1',
+          value: false,
+        },
+        {
+          label: '2',
+          value: false,
+        },
+        {
+          label: '3',
+          value: false,
+        },
+        {
+          label: '+4',
+          value: false,
+        },
+      ],
       area_from: '',
       area_to: '',
       age_from: '',
       age_to: '',
+      area: {
+        min: 0,
+        max: 85,
+        minLabel: '',
+        maxLabel: 12000,
+      },
       price: {
         min: 0,
         minLabel: '',
         max: 38,
-        maxLabel: '',
+        maxLabel: '200 میلیارد تومان',
       },
       deposit: {
         min: 0,
         minLabel: '',
         max: 38,
-        maxLabel: '',
+        maxLabel: '200 میلیارد تومان',
       },
       rent: {
         min: 0,
         minLabel: '',
         max: 28,
-        maxLabel: '',
+        maxLabel: '500 میلیون تومان',
       },
       dailyRent: {
         min: 0,
         minLabel: '',
         max: 28,
-        maxLabel: '',
+        maxLabel: '5 میلیون تومان',
       },
+      applicationType: '',
       type: 0,
+    });
+  }
+
+  selectRooms(num) {
+    this.setState((prevState) => {
+      const { beds } = prevState;
+      const newBeds = beds.map((item, index) => {
+        if (index === num) {
+          return {
+            label: item.label,
+            value: !item.value,
+          };
+        }
+        return {
+          label: item.label,
+          value: item.value,
+        };
+      });
+      return {
+        beds: newBeds,
+      };
+    }, function () {
+      this.handleSearch(false);
     });
   }
 
@@ -480,7 +474,7 @@ class SearchFilter extends PureComponent {
                   <Col lg={12} md={12} sm={12} xs={12}>قیمت</Col>
                   <Col lg={12} md={12} sm={12} xs={12}>
                     <p>
-                      {this.state.price.minLabel !== ''
+                      {this.state.price.min > 0
                       && (
                         <span>از {this.state.price.minLabel}</span>
                       )}
@@ -509,7 +503,7 @@ class SearchFilter extends PureComponent {
                     <Col lg={12} md={12} sm={12} xs={12}>رهن</Col>
                     <Col lg={12} md={12} sm={12} xs={12}>
                       <p>
-                        {this.state.deposit.minLabel !== ''
+                        {this.state.deposit.min > 0
                         && (
                           <span>از {this.state.deposit.minLabel}</span>
                         )}
@@ -534,7 +528,7 @@ class SearchFilter extends PureComponent {
                     <Col lg={12} md={12} sm={12} xs={12}>اجاره</Col>
                     <Col lg={12} md={12} sm={12} xs={12}>
                       <p>
-                        {this.state.rent.minLabel !== ''
+                        {this.state.rent.min > 0
                         && (
                           <span>از {this.state.rent.minLabel}</span>
                         )}
@@ -564,7 +558,7 @@ class SearchFilter extends PureComponent {
                     <Col lg={12} md={12} sm={12} xs={12}>اجاره روزانه</Col>
                     <Col lg={12} md={12} sm={12} xs={12}>
                       <p>
-                        {this.state.dailyRent.minLabel !== ''
+                        {this.state.dailyRent.min > 0
                         && (
                           <span>از {this.state.dailyRent.minLabel}</span>
                         )}
@@ -588,70 +582,72 @@ class SearchFilter extends PureComponent {
             )}
             <Col lg={12} md={12} sm={12} xs={12}>
               <FormGroup>
-                {renderSelectField({
-                  input: {
-                    onChange: (e) => { this.handleRoomNumSelect(e); },
-                    isMulti: true,
-                    name: 'rooms',
-                    value: nums[() => {
-                      const { rooms: value } = this.state;
-                      return {
-                        value,
-                      };
-                    }],
-                  },
-                  placeholder: 'تعداد اتاق',
-                  options: nums,
-                  name: 'select',
-                  type: 'text',
-                })}
+                <Label>تعداد اتاق</Label>
+                <FormGroup>
+                  <div className="bed-container">
+                    <div
+                      role="none"
+                      className={`${(this.state.beds[0].value ? 'beds-active' : '')}`}
+                      onClick={() => { this.selectRooms(0); }}
+                    >
+                      0
+                    </div>
+                    <div
+                      role="none"
+                      className={`${(this.state.beds[1].value ? 'beds-active' : '')}`}
+                      onClick={() => { this.selectRooms(1); }}
+                    >
+                      1
+                    </div>
+                    <div
+                      role="none"
+                      className={`${(this.state.beds[2].value ? 'beds-active' : '')}`}
+                      onClick={() => { this.selectRooms(2); }}
+                    >
+                      2
+                    </div>
+                    <div
+                      role="none"
+                      className={`${this.state.beds[3].value ? 'beds-active' : ''}`}
+                      onClick={() => { this.selectRooms(3); }}
+                    >
+                      3
+                    </div>
+                    <div
+                      role="none"
+                      className={`${(this.state.beds[4].value ? 'beds-active' : '')}`}
+                      onClick={() => { this.selectRooms(4); }}
+                    >
+                      +4
+                    </div>
+                  </div>
+                </FormGroup>
               </FormGroup>
             </Col>
-            <Col lg={12} md={12} sm={12} xs={12}>
-              <Row>
-                <Col>
-                  <FormGroup>
-                    {renderSelectField({
-                      input: {
-                        onChange: (e) => { this.handleTypeSelect(Number(e.value), 'area_from'); },
-                        isMulti: false,
-                        name: 'area_from',
-                        value: area[() => {
-                          const { area_from: value } = this.state;
-                          return {
-                            value,
-                          };
-                        }],
-                      },
-                      placeholder: 'متراژ از',
-                      options: area,
-                      name: 'select',
-                      type: 'text',
-                    })}
-                  </FormGroup>
+            <Col lg={12} md={12} sm={12} xs={12} style={{ direction: 'ltr' }} className="range-price">
+              <FormGroup>
+                <Col lg={12} md={12} sm={12} xs={12}>متراژ</Col>
+                <Col lg={12} md={12} sm={12} xs={12}>
+                  <p>
+                    {this.state.area.min > 0
+                    && (
+                      <span>از {this.state.area.minLabel}</span>
+                    )}
+                    {this.state.area.maxLabel !== ''
+                    && (
+                      <span>تا {this.state.area.maxLabel}</span>
+                    )}
+                  </p>
                 </Col>
-                <Col>
-                  <FormGroup>
-                    {renderSelectField({
-                      input: {
-                        onChange: (e) => { this.handleTypeSelect(Number(e.value), 'area_to'); },
-                        isMulti: false,
-                        name: 'area_to',
-                        value: area[() => {
-                          const { area_to: value } = this.state;
-                          return {
-                            value,
-                          };
-                        }],
-                      },
-                      placeholder: 'متراژ تا',
-                      options: area,
-                      name: 'select',
-                      type: 'text',
-                    })}
-                  </FormGroup>
+                <Col lg={12} md={12} sm={12} xs={12}>
+                  <RangeSlider
+                    minValue={0}
+                    maxValue={85}
+                    values={[this.state.area.min, this.state.area.max]}
+                    onChange={(value) => { this.handleAreaRangeChange('area', value); }}
+                  />
                 </Col>
-              </Row>
+              </FormGroup>
             </Col>
             <Col lg={12} md={12} sm={12} xs={12}>
               <Row>
@@ -698,6 +694,21 @@ class SearchFilter extends PureComponent {
                   </FormGroup>
                 </Col>
               </Row>
+            </Col>
+            <Col lg={12} md={12} sm={12} xs={12}>
+              <FormGroup>
+                {renderSelectField({
+                  input: {
+                    onChange: (e) => { this.handleApplicationSelect(e); },
+                    isMulti: false,
+                    name: 'applicationType',
+                    value: this.state.applicationType,
+                  },
+                  placeholder: 'نوع کاربری',
+                  options: applicationType,
+                  type: 'text',
+                })}
+              </FormGroup>
             </Col>
           </Row>
           <Row className="filter-modal-btn">

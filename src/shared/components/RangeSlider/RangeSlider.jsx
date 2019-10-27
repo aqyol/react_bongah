@@ -12,7 +12,7 @@ const sliderStyle = {
   width: '100%',
 };
 
-const domain = [0, 100];
+// const domain = [0, 100];
 // const defaultValues = [0, 100];
 const initialValues = [125, 150, 175, 250];
 
@@ -85,7 +85,7 @@ class RangeSlider extends PureComponent {
                     <Handle
                       key={handle.id}
                       handle={handle}
-                      domain={domain}
+                      domain={[this.props.minValue, this.props.maxValue]}
                       getHandleProps={getHandleProps}
                     />
                   ))}

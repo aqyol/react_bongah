@@ -87,7 +87,7 @@ export function Handle({
 }
 
 Handle.propTypes = {
-  domain: PropTypes.objectOf(PropTypes.object).isRequired,
+  domain: PropTypes.arrayOf(PropTypes.number).isRequired,
   handle: PropTypes.shape({
     id: PropTypes.string.isRequired,
     value: PropTypes.number.isRequired,
