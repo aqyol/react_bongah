@@ -122,7 +122,13 @@ class SearchFilter extends PureComponent {
         min: 0,
         max: 85,
         minLabel: '',
-        maxLabel: 12000,
+        maxLabel: 'نوساز',
+      },
+      age: {
+        min: 0,
+        max: 30,
+        minLabel: '',
+        maxLabel: '30 سال و بیشتر',
       },
       area_from: '',
       area_to: '',
@@ -264,6 +270,17 @@ class SearchFilter extends PureComponent {
     return label;
   }
 
+  handleAge = (value) => {
+    let label = 'نوساز';
+    if (value > 0 && value <= 30) {
+      label = value;
+    }
+    if (value === 0) {
+      label = '30 سال و بیشتر';
+    }
+    return label;
+  }
+
   handleRangeChange(name, value) {
     let min;
     let minLabel;
@@ -305,6 +322,9 @@ class SearchFilter extends PureComponent {
     if (name === 'area') {
       min = this.handleArea(value[1]);
       max = this.handleArea(value[0]);
+    } else if (name === 'age') {
+      min = this.handleAge(value[1]);
+      max = this.handleAge(value[0]);
     }
     console.log(min, max);
     this.setState({
@@ -694,6 +714,31 @@ class SearchFilter extends PureComponent {
                   </FormGroup>
                 </Col>
               </Row>
+            </Col>
+            <Col lg={12} md={12} sm={12} xs={12} style={{ direction: 'ltr' }} className="range-price">
+              <FormGroup>
+                <Col lg={12} md={12} sm={12} xs={12}>سن</Col>
+                <Col lg={12} md={12} sm={12} xs={12}>
+                  <p>
+                    {this.state.age.min > 0
+                    && (
+                      <span>از {this.state.age.minLabel}</span>
+                    )}
+                    {this.state.age.maxLabel !== ''
+                    && (
+                      <span>تا {this.state.age.maxLabel}</span>
+                    )}
+                  </p>
+                </Col>
+                <Col lg={12} md={12} sm={12} xs={12}>
+                  <RangeSlider
+                    minValue={0}
+                    maxValue={30}
+                    values={[this.state.area.min, this.state.area.max]}
+                    onChange={(value) => { this.handleAreaRangeChange('age', value); }}
+                  />
+                </Col>
+              </FormGroup>
             </Col>
             <Col lg={12} md={12} sm={12} xs={12}>
               <FormGroup>
