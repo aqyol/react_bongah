@@ -45,6 +45,10 @@ const applicationType = [
     value: '1',
     label: 'تجاری',
   },
+  {
+    value: '2',
+    label: 'صنعتی',
+  },
 ];
 
 class SearchFilter extends PureComponent {
@@ -445,9 +449,24 @@ class SearchFilter extends PureComponent {
                     value: types[this.state.type],
                     clearable: true,
                   },
-                  placeholder: 'نوع',
+                  placeholder: 'نوع آگهی',
                   options: types,
                   name: 'select',
+                  type: 'text',
+                })}
+              </FormGroup>
+            </Col>
+            <Col lg={12} md={12} sm={12} xs={12}>
+              <FormGroup>
+                {renderSelectField({
+                  input: {
+                    onChange: (e) => { this.handleApplicationSelect(e); },
+                    isMulti: false,
+                    name: 'applicationType',
+                    value: this.state.applicationType,
+                  },
+                  placeholder: 'نوع کاربری',
+                  options: applicationType,
                   type: 'text',
                 })}
               </FormGroup>
@@ -657,21 +676,6 @@ class SearchFilter extends PureComponent {
                     onChange={(value, isCompleted) => { this.handleAreaRangeChange('age', value, isCompleted); }}
                   />
                 </Col>
-              </FormGroup>
-            </Col>
-            <Col lg={12} md={12} sm={12} xs={12}>
-              <FormGroup>
-                {renderSelectField({
-                  input: {
-                    onChange: (e) => { this.handleApplicationSelect(e); },
-                    isMulti: false,
-                    name: 'applicationType',
-                    value: this.state.applicationType,
-                  },
-                  placeholder: 'نوع کاربری',
-                  options: applicationType,
-                  type: 'text',
-                })}
               </FormGroup>
             </Col>
           </Row>
