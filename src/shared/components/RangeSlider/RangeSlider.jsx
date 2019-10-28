@@ -14,7 +14,7 @@ const sliderStyle = {
 
 // const domain = [0, 100];
 // const defaultValues = [0, 100];
-const initialValues = [125, 150, 175, 250];
+// const initialValues = [125, 150, 175, 250];
 
 class RangeSlider extends PureComponent {
   static propTypes = {
@@ -33,28 +33,21 @@ class RangeSlider extends PureComponent {
     super(props);
     this.state = {
       reversed: true,
-      values: [...initialValues],
-      update: [...initialValues],
     };
-    console.log('ppppppp');
-    console.log(props);
   }
 
   onUpdate = (update) => {
-    this.setState({ update });
+    const { onChange } = this.props;
+    onChange(update, false);
   }
 
   onChange = (values) => {
-    this.setState({ values });
     const { onChange } = this.props;
-    console.log(this.state.update);
-    console.log(this.state.values);
-    onChange(values);
+    onChange(values, true);
   }
 
   toggleReverse = () => {
     this.setState(prev => ({ reversed: !prev.reversed }));
-    console.log(this.state.reversed);
   }
 
   render() {

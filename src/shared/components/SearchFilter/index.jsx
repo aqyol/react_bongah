@@ -36,44 +36,6 @@ const types = [
   },
 ];
 
-const age = [
-  {
-    value: '0',
-    label: 'نوساز',
-  },
-  {
-    value: '1',
-    label: '۳ سال',
-  }, {
-    value: '2',
-    label: '۵ سال',
-  },
-  {
-    value: '3',
-    label: '۱۰ سال',
-  },
-  {
-    value: '4',
-    label: '۱۵ سال',
-  },
-  {
-    value: '5',
-    label: '۲۰ سال',
-  },
-  {
-    value: '6',
-    label: '۳۰ سال',
-  },
-  {
-    value: '7',
-    label: '۴۰ سال',
-  },
-  {
-    value: '8',
-    label: '۵۰ سال',
-  },
-];
-
 const applicationType = [
   {
     value: '0',
@@ -95,7 +57,6 @@ class SearchFilter extends PureComponent {
   constructor() {
     super();
     this.state = {
-      rooms: '',
       beds: [
         {
           label: '0',
@@ -122,18 +83,14 @@ class SearchFilter extends PureComponent {
         min: 0,
         max: 85,
         minLabel: '',
-        maxLabel: 'نوساز',
+        maxLabel: 12000,
       },
       age: {
         min: 0,
         max: 30,
-        minLabel: '',
+        minLabel: 'نوساز',
         maxLabel: '30 سال و بیشتر',
       },
-      area_from: '',
-      area_to: '',
-      age_from: '',
-      age_to: '',
       price: {
         min: 0,
         minLabel: '',
@@ -166,7 +123,7 @@ class SearchFilter extends PureComponent {
     this.handleSearch = this.handleSearch.bind(this);
     this.handleDismiss = this.handleDismiss.bind(this);
     this.clearFilter = this.clearFilter.bind(this);
-    this.selectRooms = this.selectRooms.bind(this);
+    this.selectBeds = this.selectBeds.bind(this);
     this.handleAreaRangeChange = this.handleAreaRangeChange.bind(this);
   }
 
@@ -272,16 +229,16 @@ class SearchFilter extends PureComponent {
 
   handleAge = (value) => {
     let label = 'نوساز';
-    if (value > 0 && value <= 30) {
+    if (value > 0 && value < 30) {
       label = value;
     }
-    if (value === 0) {
+    if (value >= 30) {
       label = '30 سال و بیشتر';
     }
     return label;
   }
 
-  handleRangeChange(name, value) {
+  handleRangeChange(name, value, isComplete) {
     let min;
     let minLabel;
     let max;
@@ -311,12 +268,14 @@ class SearchFilter extends PureComponent {
       [name]: {
         min: value[1], minLabel, max: value[0], maxLabel,
       },
-    }, function () {
-      this.handleSearch(false);
+    }, () => {
+      if (isComplete) {
+        this.handleSearch(false);
+      }
     });
   }
 
-  handleAreaRangeChange(name, value) {
+  handleAreaRangeChange(name, value, isComplete) {
     let min;
     let max;
     if (name === 'area') {
@@ -331,19 +290,21 @@ class SearchFilter extends PureComponent {
       [name]: {
         min: value[1], minLabel: min, max: value[0], maxLabel: max,
       },
-    }, function () {
-      this.handleSearch(false);
+    }, () => {
+      if (isComplete) {
+        this.handleSearch(false);
+      }
     });
   }
 
   handleTypeSelect(index, name) {
-    this.setState({ [name]: index }, function () {
+    this.setState({ [name]: index }, () => {
       this.handleSearch(false);
     });
   }
 
   handleApplicationSelect(type) {
-    this.setState({ applicationType: type }, function () {
+    this.setState({ applicationType: type }, () => {
       this.handleSearch(false);
     });
   }
@@ -365,7 +326,6 @@ class SearchFilter extends PureComponent {
 
   clearFilter() {
     this.setState({
-      rooms: '',
       beds: [
         {
           label: '0',
@@ -388,15 +348,17 @@ class SearchFilter extends PureComponent {
           value: false,
         },
       ],
-      area_from: '',
-      area_to: '',
-      age_from: '',
-      age_to: '',
       area: {
         min: 0,
         max: 85,
         minLabel: '',
         maxLabel: 12000,
+      },
+      age: {
+        min: 0,
+        max: 30,
+        minLabel: 'نوساز',
+        maxLabel: '30 سال و بیشتر',
       },
       price: {
         min: 0,
@@ -424,10 +386,13 @@ class SearchFilter extends PureComponent {
       },
       applicationType: '',
       type: 0,
+    }, () => {
+      const { handleSearch } = this.props;
+      handleSearch(this.state);
     });
   }
 
-  selectRooms(num) {
+  selectBeds(num) {
     this.setState((prevState) => {
       const { beds } = prevState;
       const newBeds = beds.map((item, index) => {
@@ -445,7 +410,7 @@ class SearchFilter extends PureComponent {
       return {
         beds: newBeds,
       };
-    }, function () {
+    }, () => {
       this.handleSearch(false);
     });
   }
@@ -489,9 +454,9 @@ class SearchFilter extends PureComponent {
             </Col>
             {(this.state.type !== 1 && this.state.type !== 2)
             && (
-              <Col lg={12} md={12} sm={12} xs={12} style={{ direction: 'ltr' }} className="range-price">
+              <Col lg={12} md={12} sm={12} xs={12} className="range-price">
                 <FormGroup>
-                  <Col lg={12} md={12} sm={12} xs={12}>قیمت</Col>
+                  <Col lg={12} md={12} sm={12} xs={12} className="bold-text text-black-50">قیمت</Col>
                   <Col lg={12} md={12} sm={12} xs={12}>
                     <p>
                       {this.state.price.min > 0
@@ -509,7 +474,7 @@ class SearchFilter extends PureComponent {
                       minValue={0}
                       maxValue={38}
                       values={[this.state.price.min, this.state.price.max]}
-                      onChange={(value) => { this.handleRangeChange('price', value); }}
+                      onChange={(value, isCompleted) => { this.handleRangeChange('price', value, isCompleted); }}
                     />
                   </Col>
                 </FormGroup>
@@ -518,7 +483,7 @@ class SearchFilter extends PureComponent {
             {this.state.type === 1
             && (
               <>
-                <Col lg={12} md={12} sm={12} xs={12} style={{ direction: 'ltr' }} className="range-price">
+                <Col lg={12} md={12} sm={12} xs={12} className="range-price">
                   <FormGroup>
                     <Col lg={12} md={12} sm={12} xs={12}>رهن</Col>
                     <Col lg={12} md={12} sm={12} xs={12}>
@@ -538,12 +503,12 @@ class SearchFilter extends PureComponent {
                         minValue={0}
                         maxValue={38}
                         values={[this.state.deposit.min, this.state.deposit.max]}
-                        onChange={(value) => { this.handleRangeChange('deposit', value); }}
+                        onChange={(value, isCompleted) => { this.handleRangeChange('deposit', value, isCompleted); }}
                       />
                     </Col>
                   </FormGroup>
                 </Col>
-                <Col lg={12} md={12} sm={12} xs={12} style={{ direction: 'ltr' }} className="range-price">
+                <Col lg={12} md={12} sm={12} xs={12} className="range-price">
                   <FormGroup>
                     <Col lg={12} md={12} sm={12} xs={12}>اجاره</Col>
                     <Col lg={12} md={12} sm={12} xs={12}>
@@ -563,7 +528,7 @@ class SearchFilter extends PureComponent {
                         minValue={0}
                         maxValue={28}
                         values={[this.state.rent.min, this.state.rent.max]}
-                        onChange={(value) => { this.handleRangeChange('rent', value); }}
+                        onChange={(value, isCompleted) => { this.handleRangeChange('rent', value, isCompleted); }}
                       />
                     </Col>
                   </FormGroup>
@@ -573,7 +538,7 @@ class SearchFilter extends PureComponent {
             {this.state.type === 2
             && (
               <>
-                <Col lg={12} md={12} sm={12} xs={12} style={{ direction: 'ltr' }} className="range-price">
+                <Col lg={12} md={12} sm={12} xs={12} className="range-price">
                   <FormGroup>
                     <Col lg={12} md={12} sm={12} xs={12}>اجاره روزانه</Col>
                     <Col lg={12} md={12} sm={12} xs={12}>
@@ -593,7 +558,7 @@ class SearchFilter extends PureComponent {
                         minValue={0}
                         maxValue={28}
                         values={[this.state.dailyRent.min, this.state.dailyRent.max]}
-                        onChange={(value) => { this.handleRangeChange('dailyRent', value); }}
+                        onChange={(value, isCompleted) => { this.handleRangeChange('dailyRent', value, isCompleted); }}
                       />
                     </Col>
                   </FormGroup>
@@ -608,35 +573,35 @@ class SearchFilter extends PureComponent {
                     <div
                       role="none"
                       className={`${(this.state.beds[0].value ? 'beds-active' : '')}`}
-                      onClick={() => { this.selectRooms(0); }}
+                      onClick={() => { this.selectBeds(0); }}
                     >
                       0
                     </div>
                     <div
                       role="none"
                       className={`${(this.state.beds[1].value ? 'beds-active' : '')}`}
-                      onClick={() => { this.selectRooms(1); }}
+                      onClick={() => { this.selectBeds(1); }}
                     >
                       1
                     </div>
                     <div
                       role="none"
                       className={`${(this.state.beds[2].value ? 'beds-active' : '')}`}
-                      onClick={() => { this.selectRooms(2); }}
+                      onClick={() => { this.selectBeds(2); }}
                     >
                       2
                     </div>
                     <div
                       role="none"
                       className={`${this.state.beds[3].value ? 'beds-active' : ''}`}
-                      onClick={() => { this.selectRooms(3); }}
+                      onClick={() => { this.selectBeds(3); }}
                     >
                       3
                     </div>
                     <div
                       role="none"
                       className={`${(this.state.beds[4].value ? 'beds-active' : '')}`}
-                      onClick={() => { this.selectRooms(4); }}
+                      onClick={() => { this.selectBeds(4); }}
                     >
                       +4
                     </div>
@@ -644,7 +609,7 @@ class SearchFilter extends PureComponent {
                 </FormGroup>
               </FormGroup>
             </Col>
-            <Col lg={12} md={12} sm={12} xs={12} style={{ direction: 'ltr' }} className="range-price">
+            <Col lg={12} md={12} sm={12} xs={12} className="range-price">
               <FormGroup>
                 <Col lg={12} md={12} sm={12} xs={12}>متراژ</Col>
                 <Col lg={12} md={12} sm={12} xs={12}>
@@ -664,65 +629,19 @@ class SearchFilter extends PureComponent {
                     minValue={0}
                     maxValue={85}
                     values={[this.state.area.min, this.state.area.max]}
-                    onChange={(value) => { this.handleAreaRangeChange('area', value); }}
+                    onChange={(value, isCompleted) => { this.handleAreaRangeChange('area', value, isCompleted); }}
                   />
                 </Col>
               </FormGroup>
             </Col>
-            <Col lg={12} md={12} sm={12} xs={12}>
-              <Row>
-                <Col>
-                  <FormGroup>
-                    {renderSelectField({
-                      input: {
-                        onChange: (e) => { this.handleTypeSelect(Number(e.value), 'age_from'); },
-                        isMulti: false,
-                        name: 'age_from',
-                        value: age[() => {
-                          const { age_from: value } = this.state;
-                          return {
-                            value,
-                          };
-                        }],
-                      },
-                      placeholder: 'سن از',
-                      options: age,
-                      name: 'select',
-                      type: 'text',
-                    })}
-                  </FormGroup>
-                </Col>
-                <Col>
-                  <FormGroup>
-                    {renderSelectField({
-                      input: {
-                        onChange: (e) => { this.handleTypeSelect(Number(e.value), 'age_to'); },
-                        isMulti: false,
-                        name: 'age_to',
-                        value: age[() => {
-                          const { age_to: value } = this.state;
-                          return {
-                            value,
-                          };
-                        }],
-                      },
-                      placeholder: 'تا',
-                      options: age,
-                      name: 'select',
-                      type: 'text',
-                    })}
-                  </FormGroup>
-                </Col>
-              </Row>
-            </Col>
-            <Col lg={12} md={12} sm={12} xs={12} style={{ direction: 'ltr' }} className="range-price">
+            <Col lg={12} md={12} sm={12} xs={12} className="range-price">
               <FormGroup>
                 <Col lg={12} md={12} sm={12} xs={12}>سن</Col>
                 <Col lg={12} md={12} sm={12} xs={12}>
                   <p>
-                    {this.state.age.min > 0
+                    {this.state.age.min >= 0
                     && (
-                      <span>از {this.state.age.minLabel}</span>
+                      <span> {this.state.age.minLabel}</span>
                     )}
                     {this.state.age.maxLabel !== ''
                     && (
@@ -734,8 +653,8 @@ class SearchFilter extends PureComponent {
                   <RangeSlider
                     minValue={0}
                     maxValue={30}
-                    values={[this.state.area.min, this.state.area.max]}
-                    onChange={(value) => { this.handleAreaRangeChange('age', value); }}
+                    values={[this.state.age.min, this.state.age.max]}
+                    onChange={(value, isCompleted) => { this.handleAreaRangeChange('age', value, isCompleted); }}
                   />
                 </Col>
               </FormGroup>
