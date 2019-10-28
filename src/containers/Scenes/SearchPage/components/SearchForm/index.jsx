@@ -20,6 +20,9 @@ import {
   Nav,
   NavItem,
   NavLink,
+  PaginationLink,
+  PaginationItem,
+  Pagination,
 } from 'reactstrap';
 import classnames from 'classnames';
 import AsyncSelect from 'react-select/async';
@@ -205,14 +208,22 @@ class SearchForm extends PureComponent {
   constructor() {
     super();
     this.state = {
-      sortTab: 1,
+      sortBy: 1,
       resultTab: 'list',
       resultSize: 23,
       searchSelect: [],
-      openModal: false,
+      filterModal: false,
       requestModal: false,
       requestModalLoading: false,
       requestTitle: '',
+      filterData: '',
+      result: {
+        list: [],
+        size: 22,
+        pages: 3,
+        currPagination: 1,
+        pagination: 1,
+      },
     };
     this.handleTypeSelect = this.handleTypeSelect.bind(this);
     this.handleToggleModal = this.handleToggleModal.bind(this);
@@ -225,6 +236,8 @@ class SearchForm extends PureComponent {
     this.toggleSort = this.toggleSort.bind(this);
     this.handleSearchSelect = this.handleSearchSelect.bind(this);
     this.handleFilter = this.handleFilter.bind(this);
+    this.changePagination = this.changePagination.bind(this);
+    this.isItemValid = this.isItemValid.bind(this);
   }
 
   componentDidMount() {
@@ -262,10 +275,36 @@ class SearchForm extends PureComponent {
   promiseOptions = (inputValue, callback) => (
     new Promise((resolve) => {
       resolve(this.searchRegion(inputValue, callback));
-      // setTimeout(() => {
-      //   resolve(this.filterColors(inputValue));
-      // }, 1000);
     }));
+
+  createPagination = () => {
+    const pagination = [];
+    for (let i = 0; i < this.state.result.pages; i += 1) {
+      pagination.push(
+        <PaginationItem>
+          <PaginationLink
+            className={`text-dark ${(this.state.result.currPagination === i) ? 'bg-success' : ''}`}
+            onClick={() => { this.changePagination(i); }}
+          >
+            {i + 1}
+          </PaginationLink>
+        </PaginationItem>,
+      );
+    }
+    return pagination;
+  }
+
+  changePagination(page) {
+    this.setState((prevState) => {
+      const { pagination: pageVal, ...other } = prevState.result;
+      const newResult = { pagination: page, ...other };
+      return {
+        result: newResult,
+      };
+    }, () => {
+      this.handleSearch();
+    });
+  }
 
   searchRegion(name, callback) {
     console.log(this.state.region);
@@ -286,20 +325,32 @@ class SearchForm extends PureComponent {
   }
 
   handleToggleModal() {
-    this.setState(prevState => ({ openModal: !prevState.openModal }));
+    this.setState(prevState => ({ filterModal: !prevState.filterModal }));
   }
 
   handleSearch() {
+    // search from server using filterData, selectedSearch, pagination and sortBy
     console.group('handle search in search form (Search page)');
-    console.log(this.state);
+    console.log(
+      this.state.filterData,
+      this.state.searchSelect,
+      this.state.result.pagination,
+      this.state.sortBy,
+    );
     console.groupEnd();
   }
 
   handleFilter(data) {
-    console.group('handle search in search form (Search page)');
-    console.log(data);
-    console.log(this.state);
-    console.groupEnd();
+    this.setState((prevState) => {
+      const { pagination: pageVal, ...other } = prevState.result;
+      const newResult = { pagination: 1, ...other };
+      return {
+        result: newResult,
+        filterData: data,
+      };
+    }, () => {
+      this.handleSearch();
+    });
   }
 
   saveAsRequest() {
@@ -307,8 +358,7 @@ class SearchForm extends PureComponent {
   }
 
   handleCreateRequest() {
-    if (this.state.requestTitle.length <= 0) {
-      console.log('enter title for request');
+    if (this.state.requestTitle.trim().length <= 0) {
       return;
     }
     this.setState({ requestModalLoading: true });
@@ -316,6 +366,7 @@ class SearchForm extends PureComponent {
       this.setState({
         requestModalLoading: false,
         requestModal: false,
+        requestTitle: '',
       });
     }, 1000);
   }
@@ -332,16 +383,23 @@ class SearchForm extends PureComponent {
   }
 
   toggleSort(tab) {
-    const { sortTab } = this.state;
-    if (sortTab !== tab) {
+    const { sortBy } = this.state;
+    if (sortBy !== tab) {
       this.setState({
-        sortTab: tab,
+        sortBy: tab,
+      }, () => {
+        this.handleSearch();
       });
     }
   }
 
   handleSearchSelect(searchSelect) {
     this.setState({ searchSelect });
+  }
+
+  isItemValid(name) {
+    const { [name]: val } = this.state;
+    return val.trim().length > 0;
   }
 
   render() {
@@ -378,14 +436,20 @@ class SearchForm extends PureComponent {
                           type="text"
                           value={this.state.requestTitle}
                           onChange={this.handleInputChange}
-                          className="text-right"
+                          className={`text-right ${this.isItemValid('requestTitle') ? '' : 'border-danger'}`}
                         />
                       </FormGroup>
                     </Col>
+                    {!this.isItemValid('requestTitle')
+                    && (
+                      <Col lg={12} md={12} sm={12} xs={12} className="text-danger">
+                        <p>وارد کردن عنوان درخواست الزامی است</p>
+                      </Col>
+                    )}
                   </Row>
                 </ModalBody>
                 <ModalFooter>
-                  <Button color="primary" onClick={this.handleCreateRequest}>نمایش نتیجه</Button>{' '}
+                  <Button color="primary" onClick={this.handleCreateRequest}>ذخیره درخواست</Button>{' '}
                   <Button color="secondary" onClick={() => { this.handleDismissModal('requestModal'); }}>بازگشت</Button>
                 </ModalFooter>
               </>
@@ -393,12 +457,12 @@ class SearchForm extends PureComponent {
           </Modal>
           <Modal
             fade={false}
-            isOpen={this.state.openModal}
-            toggle={() => { this.handleDismissModal('openModal'); }}
+            isOpen={this.state.filterModal}
+            toggle={() => { this.handleDismissModal('filterModal'); }}
           >
             <ModalHeader className="modal-title">فیلتر جستجو</ModalHeader>
             <SearchFilter
-              handleDissmiss={() => { this.handleDismissModal('openModal'); }}
+              handleDissmiss={() => { this.handleDismissModal('filterModal'); }}
               isModal
               handleSearch={(data) => { this.handleFilter(data); }}
             />
@@ -440,7 +504,7 @@ class SearchForm extends PureComponent {
                     <Col lg={2} md={2} sm={2} xs={12}>
                       <Button
                         style={{ margin: '0px 2px 5px 2px' }}
-                        onClick={() => { this.handleSearch(); }}
+                        onClick={() => { this.handleFilter(); }}
                         className="btn-success volume"
                       >تغییر جستجو
                       </Button>
@@ -466,7 +530,7 @@ class SearchForm extends PureComponent {
                 <Nav tabs className="sort-tabs">
                   <NavItem>
                     <NavLink
-                      className={classnames({ active: this.state.sortTab === 1 })}
+                      className={classnames({ active: this.state.sortBy === 1 })}
                       onClick={() => {
                         this.toggleSort(1);
                       }}
@@ -476,7 +540,7 @@ class SearchForm extends PureComponent {
                   </NavItem>
                   <NavItem>
                     <NavLink
-                      className={classnames({ active: this.state.sortTab === 2 })}
+                      className={classnames({ active: this.state.sortBy === 2 })}
                       onClick={() => {
                         this.toggleSort(2);
                       }}
@@ -486,7 +550,7 @@ class SearchForm extends PureComponent {
                   </NavItem>
                   <NavItem>
                     <NavLink
-                      className={classnames({ active: this.state.sortTab === 3 })}
+                      className={classnames({ active: this.state.sortBy === 3 })}
                       onClick={() => {
                         this.toggleSort(3);
                       }}
@@ -520,6 +584,23 @@ class SearchForm extends PureComponent {
                     {this.state.resultTab === 'list' ? this.resultList() : this.resultMap()}
                   </div>
                 </div>
+                <Row>
+                  <Pagination aria-label="Page navigation example">
+                    <PaginationItem>
+                      <PaginationLink
+                        previous
+                        onClick={() => { this.changePagination(this.state.result.currPagination - 1); }}
+                      />
+                    </PaginationItem>
+                    {this.createPagination()}
+                    <PaginationItem>
+                      <PaginationLink
+                        next
+                        onClick={() => { this.changePagination(this.state.result.currPagination + 1); }}
+                      />
+                    </PaginationItem>
+                  </Pagination>
+                </Row>
               </div>
             </div>
           </div>
