@@ -1,6 +1,6 @@
 import React from 'react';
 import { API_BASE_URL, ACCESS_TOKEN, REFFERENCE } from '../constants';
-// import { BasicNotification } from '../../shared/components/Notification';
+import { BasicNotification } from '../../shared/components/Notification';
 
 
 const request = (options) => {
@@ -24,6 +24,23 @@ const request = (options) => {
         }
         return json;
       }));
+};
+
+export const showNotification = (notificationLU, title, message, color) => {
+  notificationLU.notice({
+    content: <BasicNotification
+      title={title}
+      message={message}
+      color={color}
+    />,
+    duration: 5,
+    closable: true,
+    style: {
+      top: 0,
+      left: 0,
+    },
+    className: 'left-up',
+  });
 };
 
 // export function getAllPolls(page, size) {
@@ -133,6 +150,13 @@ export function getUserProfile(partnerId) {
 export function getAccountInfo(id) {
   return request({
     url: `${API_BASE_URL}/accountInfo/${id}`,
+    method: 'GET',
+  });
+}
+
+export function getUserAdsList(type) {
+  return request({
+    url: `${API_BASE_URL}/ads/${type}/list`,
     method: 'GET',
   });
 }

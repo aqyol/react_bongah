@@ -1,13 +1,68 @@
+.search-container{
+  display: flex;
+  direction: rtl;
+  margin: 0 50px;
+}
+
 .searchForm {
   margin: 0 auto;
   width: 100%;
-  padding: 20px 30px;
+  padding: 20px 15px;
   max-width: 1400px;
   direction: rtl;
 }
 
+.search-filter {
+  width: 35%;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+  margin-top: 20px;
+  padding-top: 15px;
+}
+
+.search-form-top{
+  z-index: 11;
+  background: white;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+  margin-bottom: 15px;
+}
+
+.result-table{
+  box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+  margin-top: 15px;
+}
+
+.sort-panel {
+  display: flex;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+  padding-top: 5px;
+
+  span{
+    padding-top: 12px;
+    margin-right: 20px;
+    font-size: 15px;
+    margin-left: 5px;
+  }
+}
+
+.resultTab {
+  text-align: right;
+}
+
+.input-range__label {
+  direction: rtl;
+}
+
+.btn-search {
+  background-color: deeppink;
+  width: 100%;
+}
+
 .volume {
   width: 100%;
+}
+
+.request-modal {
+  height: 50vh !important;
 }
 
 .volume a, .volume input {
@@ -72,7 +127,7 @@
 }
 
 .resultTab li:hover, .resultTab li.active {
-  border-color: #0eaaa6;
+  border-color: #28a745 !important;
   text-decoration: none;
 }
 
@@ -88,6 +143,22 @@
   max-height: 700px;
 }
 
+.fab {
+  position: fixed;
+  bottom: 15px;
+  right: 15px;
+  z-index: 10;
+  background-color: #0d908d;
+  padding: 15px;
+  border-radius: 50%;
+  display: none !important;
+
+  .fab-icon {
+    width: 30px;
+    height: 30px;
+  }
+}
+
 @media screen and (max-width: 767px) {
   .resultTab ul {
     padding-left: 10px;
@@ -97,5 +168,29 @@
   }
   .searchForm {
     padding: 15px 5px;
+  }
+  .search-container{
+    margin: 0 5px;
+  }
+  .sort-tabs {
+    padding: 0;
+  }
+}
+
+@media screen and (max-width: 1080px) {
+  .search-container{
+    margin: 0 5px;
+  }
+  .span-result-size {
+    display: none;
+  }
+  .nav-tabs {
+    width: 100%;
+  }
+  .sort-title {
+    display: none;
+  }
+  .fab {
+    display: block !important;
   }
 }

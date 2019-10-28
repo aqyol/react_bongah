@@ -19,6 +19,18 @@ body {
   box-sizing: inherit;
 }
 
+input, textarea{
+  box-shadow: none !important;
+}
+
+input:focus, textarea:focus{
+  border-color: $color-accent !important;
+}
+
+span{
+  font-family: "B Yekan" !important;
+}
+
 ul, ol {
   padding-left: 15px;
   margin-bottom: 0;

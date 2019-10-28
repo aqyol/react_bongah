@@ -18,6 +18,9 @@ import WalletPage from '../Scenes/WalletPage';
 import Commission from '../Scenes/CommissionPage';
 import Promise from '../Scenes/PromisePage';
 import EditPromise from '../Scenes/EditPromise';
+import AdsDetail from '../Scenes/AdsDetail';
+import Request from '../Scenes/Request';
+import CreateAgency from '../Scenes/Agency/Create';
 
 const Pages = () => (
   <Switch>
@@ -40,10 +43,11 @@ const Router = () => (
     <main>
       <Switch>
         <Route exact path="/home" component={HomePage} />
-        <Route exact path="/search" component={SearchPage} />
-        <Route exact path="/newproperty/:action" component={NewPropertyPage} />
-        <Route exact path="/property/:id?" component={MyhousePage} />
+        <Route path="/search" component={SearchPage} />
+        <Route exact path="/newproperty" component={NewPropertyPage} />
+        <Route exact path="/property/:id" component={MyhousePage} />
         <Route exact path="/agent/:action" component={AgentPage} />
+        <Route exact path="/agency/create" component={CreateAgency} />
         <Route exact path="/advice/:type" component={AdvicePage} />
         <Route exact path="/projects" component={NewsPage} />
         <Route exact path="/myprofile" component={PageInfo} />
@@ -52,6 +56,8 @@ const Router = () => (
         <Route exact path="/promise" component={Promise} />
         <Route exact path="/promise/edit/:id" component={EditPromise} />
         <Route exact path="/promise/edit" component={EditPromise} />
+        <Route exact path="/ads/detail/:id" component={AdsDetail} />
+        <Route exact path="/request" component={Request} />
         <Route exact path="/" component={HomePage} />
         <Route exact path="/log_in" component={LogIn} />
         <Route path="/" component={wrappedRoutes} />

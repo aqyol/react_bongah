@@ -12,11 +12,21 @@ class RLForm extends PureComponent {
     close: PropTypes.func.isRequired,
   }
 
-  clickOutside = (e) => {
+  constructor(props) {
+    super(props);
+    this.clickOutside = this.clickOutside.bind(this);
+    this.closeModal = this.closeModal.bind(this);
+  }
+
+  clickOutside(e) {
     const { target } = e;
     if (target.className.indexOf(`${this.props.type}Form`) !== -1) {
       this.props.close();
     }
+  }
+
+  closeModal() {
+    this.props.close();
   }
 
   render() {
@@ -26,8 +36,16 @@ class RLForm extends PureComponent {
         onClick={(e) => { this.clickOutside(e); }}
         role="presentation"
       >
-        <RegisterForm active={this.props.type === 'register'} openLoginForm={this.props.openLoginForm} />
-        <LoginForm active={this.props.type === 'login'} openRegisterForm={this.props.openRegisterForm} />
+        <RegisterForm
+          active={this.props.type === 'register'}
+          openLoginForm={this.props.openLoginForm}
+          handleClose={this.closeModal}
+        />
+        <LoginForm
+          active={this.props.type === 'login'}
+          openRegisterForm={this.props.openRegisterForm}
+          handleClose={this.closeModal}
+        />
         <div className={`modal-backdrop fade${(this.props.type ? ' in' : '')}`} />
       </div>
     );

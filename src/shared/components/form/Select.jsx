@@ -2,11 +2,41 @@ import React, { PureComponent } from 'react';
 import Select from 'react-select';
 import PropTypes from 'prop-types';
 
+
+const customStyles = {
+  option: provided => ({
+    ...provided,
+  }),
+  container: () => ({
+    width: '100%',
+  }),
+  menu: provided => ({
+    ...provided,
+    zIndex: 5,
+    marginTop: 0,
+  }),
+  menuList: () => ({
+    width: '100%',
+  }),
+};
+
+const selectTheme = theme => ({
+  ...theme,
+  colors: {
+    ...theme.colors,
+    primary25: '#98EAD3',
+    primary: '#54E1B9',
+    primary50: '#B4EEDD',
+  },
+});
+
 class SelectField extends PureComponent {
   static propTypes = {
     onChange: PropTypes.func.isRequired,
     name: PropTypes.string.isRequired,
     isMulti: PropTypes.bool.isRequired,
+    isDisabled: PropTypes.bool.isRequired,
+    isClearable: PropTypes.bool,
     placeholder: PropTypes.string,
     options: PropTypes.arrayOf(PropTypes.shape({
       value: PropTypes.number,
@@ -21,6 +51,7 @@ class SelectField extends PureComponent {
   static defaultProps = {
     placeholder: '',
     options: [],
+    isClearable: false,
   };
 
   handleChange = (selectedOption) => {
@@ -30,7 +61,7 @@ class SelectField extends PureComponent {
 
   render() {
     const {
-      value, name, placeholder, options, isMulti,
+      value, name, placeholder, options, isMulti, isClearable, isDisabled,
     } = this.props;
 
     return (
@@ -40,10 +71,15 @@ class SelectField extends PureComponent {
         value={value}
         onChange={this.handleChange}
         options={options}
-        clearable={false}
+        clearable={isClearable}
         className="react-select"
         placeholder={placeholder}
         classNamePrefix="react-select"
+        pageSize={5}
+        isRtl
+        isDisabled={isDisabled}
+        styles={customStyles}
+        theme={theme => selectTheme(theme)}
       />
     );
   }

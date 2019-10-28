@@ -33,13 +33,13 @@
   padding: 5%;
   //border: 2px solid #0d908d;
   border-radius: 5%;
-  background-color: #5cb85c;
+  background-color: #5cb85c !important;
   color: white;
   font-size: 30px;
 }
 
 .other-comm {
-  background-color: #4885ed;
+  background-color: #4885ed !important;
 }
 
 .card-content {
@@ -56,6 +56,16 @@
 
 .submit-btn {
   margin-bottom: 20px;
+}
+.input-commission {
+  width: 100%;
+  line-height: 1.5rem;
+  font-size: 2rem !important;
+}
+
+.commission-row {
+  width: 100%;
+  padding: 2%;
 }
 
 @media screen and (max-width: 767px) {

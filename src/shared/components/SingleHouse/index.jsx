@@ -13,8 +13,8 @@ import {
   CardImg,
   CardText,
   CardTitle,
-  NavLink,
 } from 'reactstrap';
+import { Link } from 'react-router-dom';
 
 const SingleHouse = ({ data }) => (
   <div className="singleHouse">
@@ -41,13 +41,13 @@ const SingleHouse = ({ data }) => (
             <li><span className="icon-drop"><FaRegHeart /></span> 54</li>
           </ul>
           <small className="text-muted">{data.beds} دقیقه پیش</small>
-          <NavLink
-            href="/order/buy/undefined"
+          <Link
+            to={`/ads/detail/${data.beds}`}
             className="btn-success"
             style={{ width: '30%', float: 'left', textAlign: 'center' }}
           >
-            خرید
-          </NavLink>
+            مشاهده
+          </Link>
         </CardText>
       </CardBody>
     </Card>

@@ -8,8 +8,8 @@ import {
   FaAngleDown,
   FaCircleNotch,
   FaHome,
-  FaComments,
   FaUser,
+  FaHandshake,
 } from 'react-icons/fa';
 
 
@@ -33,39 +33,17 @@ class LeftSide extends PureComponent {
       <div className={`leftSide slimScroll${this.props.isExpand ? ' expanded' : ' minimized'}`}>
         <nav className="leftNav scrollable bigNav">
           <ul>
+            <li className="hasSub hasSubActive">
+              <Link to="/newproperty">
+                <span className="navIcon"><FaPlusCircle /></span>
+                <span className="navLabel">افزودن آگهی</span>
+              </Link>
+            </li>
             <li>
               <Link to="/search">
                 <span className="navIcon"><FaCompass className="navIcon" /></span>
                 <span className="navLabel">جستجو</span>
               </Link>
-            </li>
-            <li className="hasSub hasSubActive">
-              <Link to="/newproperty/sell" onClick={this.toggleActive}>
-                <span className="navIcon"><FaPlusCircle /></span>
-                <span className="navLabel">افزودن آگهی</span>
-                <span className="closeIcon arrowRight"><FaAngleLeft /></span>
-                <span className="openIcon arrowRight"><FaAngleDown /></span>
-              </Link>
-              <ul className="colors secondUl">
-                <li>
-                  <Link to="/newproperty/sell">
-                    <span className="span-right">فروش</span>
-                    <span className="icon-right"><FaCircleNotch /></span>
-                  </Link>
-                </li>
-                <li>
-                  <Link to="/newproperty/rent">
-                    <span className="span-right">رهن و اجاره</span>
-                    <span className="icon-right"><FaCircleNotch /></span>
-                  </Link>
-                </li>
-                <li>
-                  <Link to="/newproperty/renovation">
-                    <span className="span-right">نوسازی</span>
-                    <span className="icon-right"><FaCircleNotch /></span>
-                  </Link>
-                </li>
-              </ul>
             </li>
             <li className="hasSub hasSubActive">
               <Link to="/property/mylisting" onClick={this.toggleActive}>
@@ -77,19 +55,19 @@ class LeftSide extends PureComponent {
               <ul className="colors secondUl">
                 <li>
                   <Link to="/property/mylisting">
-                    <span className="span-right">لیست من</span>
+                    <span className="span-right">آگهی های من</span>
                     <span className="icon-right"><FaCircleNotch /></span>
                   </Link>
                 </li>
                 <li>
                   <Link to="/property/mywishlist">
-                    <span className="span-right">مورد علاقه</span>
+                    <span className="span-right">آگهی های مورد علاقه</span>
                     <span className="icon-right"><FaCircleNotch /></span>
                   </Link>
                 </li>
                 <li>
-                  <Link to="/property/myviewing">
-                    <span className="span-right">بازدید شده</span>
+                  <Link to="/request">
+                    <span className="span-right">سوابق درخواست ها</span>
                     <span className="icon-right"><FaCircleNotch /></span>
                   </Link>
                 </li>
@@ -98,58 +76,36 @@ class LeftSide extends PureComponent {
             <li className="hasSub hasSubActive">
               <Link to="/agent/myagents" onClick={this.toggleActive}>
                 <span className="navIcon"><FaUser /></span>
-                <span className="navLabel">بنگاه املاک</span>
+                <span className="navLabel">همکاران</span>
                 <span className="closeIcon arrowRight"><FaAngleLeft /></span>
                 <span className="openIcon arrowRight"><FaAngleDown /></span>
               </Link>
               <ul className="colors secondUl">
                 <li>
-                  <Link to="/agent/myagents">
-                    <span className="span-right">بنگاه های من</span>
+                  <Link to="/agent/list">
+                    <span className="span-right">لیست مشاوران</span>
                     <span className="icon-right"><FaCircleNotch /></span>
                   </Link>
                 </li>
                 <li>
-                  <Link to="/agent/search">
-                    <span className="span-right">جستجوی بنگاه</span>
+                  <Link to="/agent/myagents">
+                    <span className="span-right">لیست املاک</span>
+                    <span className="icon-right"><FaCircleNotch /></span>
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/agency/create">
+                    <span className="span-right">همکاری</span>
                     <span className="icon-right"><FaCircleNotch /></span>
                   </Link>
                 </li>
               </ul>
             </li>
             <li className="hasSub hasSubActive">
-              <Link to="/advice/buying" onClick={this.toggleActive}>
-                <span className="navIcon"><FaComments /></span>
-                <span className="navLabel">توصیه ها</span>
-                <span className="closeIcon arrowRight"><FaAngleLeft /></span>
-                <span className="openIcon arrowRight"><FaAngleDown /></span>
+              <Link to="/promise">
+                <span className="navIcon"><FaHandshake style={{ width: '22px', height: '22px' }} /></span>
+                <span className="navLabel">قول نامه</span>
               </Link>
-              <ul className="colors secondUl">
-                <li>
-                  <Link to="/advice/buying">
-                    <span className="span-right">خرید</span>
-                    <span className="icon-right"><FaCircleNotch /></span>
-                  </Link>
-                </li>
-                <li>
-                  <Link to="/advice/selling">
-                    <span className="span-right">فروش</span>
-                    <span className="icon-right"><FaCircleNotch /></span>
-                  </Link>
-                </li>
-                <li>
-                  <Link to="/advice/design">
-                    <span className="span-right">طراحی</span>
-                    <span className="icon-right"><FaCircleNotch /></span>
-                  </Link>
-                </li>
-                <li>
-                  <Link to="/advice/renovations">
-                    <span className="span-right">نوسازی</span>
-                    <span className="icon-right"><FaCircleNotch /></span>
-                  </Link>
-                </li>
-              </ul>
             </li>
           </ul>
         </nav>
