@@ -12,7 +12,8 @@ const SearchBar = () => (
   <div className="search-panel">
     <Form style={{ width: '80%', margin: 'auto' }}>
       <Row style={{ textAlign: 'center' }}>
-        <Col md={12} sm={12} xs={12}>
+        <Col md={2} sm={2} xs={0} />
+        <Col md={4} sm={4} xs={6}>
           <Link
             to="/newproperty"
           >
@@ -20,9 +21,7 @@ const SearchBar = () => (
             <p className="text-white">افزودن آگهی</p>
           </Link>
         </Col>
-      </Row>
-      <Row style={{ textAlign: 'center' }}>
-        <Col md={12} sm={12} xs={12}>
+        <Col md={4} sm={4} xs={6}>
           <Link
             to="/search"
           >
@@ -30,6 +29,7 @@ const SearchBar = () => (
             <p className="text-white">جستجو و درخواست</p>
           </Link>
         </Col>
+        <Col md={2} sm={2} xs={0} />
       </Row>
     </Form>
   </div>
