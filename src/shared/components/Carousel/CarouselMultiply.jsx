@@ -20,7 +20,7 @@ export default class CarouselMultiply extends PureComponent {
       slidesToScroll: 1,
       responsive: [
         { breakpoint: 768, settings: { slidesToShow: 1 } },
-        { breakpoint: 992, settings: { slidesToShow: 2 } },
+        { breakpoint: 1150, settings: { slidesToShow: 2 } },
         { breakpoint: 1200, settings: { slidesToShow: 3 } },
         { breakpoint: 100000, settings: { slidesToShow: 4 } },
       ],
