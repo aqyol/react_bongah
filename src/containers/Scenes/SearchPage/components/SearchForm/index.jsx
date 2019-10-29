@@ -259,7 +259,7 @@ class SearchForm extends PureComponent {
     <div className="resultsList">
       <Row>
         {houseData.map((data, index) => (
-          <Col xs={12} sm={6} md={6} lg={4} key={index.toString()}>
+          <Col xs={12} sm={6} md={6} lg={6} xl={4} key={index.toString()}>
             <SingleHouse data={data} />
           </Col>
         ))}
