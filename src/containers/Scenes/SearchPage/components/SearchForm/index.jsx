@@ -4,7 +4,6 @@ import {
   FaThList,
   FaFilter,
 } from 'react-icons/fa';
-import InputRange from 'react-input-range';
 import 'react-input-range/lib/css/index.css';
 import {
   Row,
@@ -14,18 +13,23 @@ import {
   Label,
   Input,
   Button,
-  // Collapse,
-  // CustomInput,
   Modal,
   ModalBody,
   ModalFooter,
   ModalHeader,
+  Nav,
+  NavItem,
+  NavLink,
+  PaginationLink,
+  PaginationItem,
+  Pagination,
 } from 'reactstrap';
+import classnames from 'classnames';
 import AsyncSelect from 'react-select/async';
-import { PropTypes } from 'prop-types';
+import StickyBox from 'react-sticky-box';
 import SingleHouse from '../../../../../shared/components/SingleHouse';
 import SearchMap from '../SearchMap';
-import renderSelectField from '../../../../../shared/components/form/Select';
+import SearchFilter from '../../../../../shared/components/SearchFilter/index';
 
 
 const houseData = [
@@ -127,191 +131,6 @@ const houseData = [
   },
 ];
 
-const types = [
-  {
-    value: '0',
-    label: 'فروش',
-  },
-  {
-    value: '1',
-    label: 'رهن و اجاره',
-  },
-  {
-    value: '2',
-    label: 'اقامتی، تفریحی',
-  },
-  {
-    value: '3',
-    label: 'پیش فروش',
-  },
-  {
-    value: '4',
-    label: 'مشارکت',
-  },
-];
-
-const nums = [
-  {
-    value: '0',
-    label: '0',
-  },
-  {
-    value: '1',
-    label: '1',
-  }, {
-    value: '2',
-    label: '2',
-  },
-  {
-    value: '3',
-    label: '3',
-  },
-  {
-    value: '4',
-    label: '4',
-  },
-  {
-    value: '5',
-    label: '5',
-  },
-  {
-    value: '6',
-    label: '6',
-  },
-  {
-    value: '7',
-    label: '7',
-  },
-];
-
-const area = [
-  {
-    value: '0',
-    label: '30',
-  },
-  {
-    value: '1',
-    label: '50',
-  }, {
-    value: '2',
-    label: '70',
-  },
-  {
-    value: '3',
-    label: '90',
-  },
-  {
-    value: '4',
-    label: '120',
-  },
-  {
-    value: '5',
-    label: '150',
-  },
-  {
-    value: '6',
-    label: '180',
-  },
-  {
-    value: '7',
-    label: '200',
-  },
-  {
-    value: '8',
-    label: '220',
-  },
-  {
-    value: '9',
-    label: '250',
-  },
-  {
-    value: '10',
-    label: '300',
-  },
-  {
-    value: '11',
-    label: '400',
-  },
-  {
-    value: '12',
-    label: '500',
-  },
-  {
-    value: '13',
-    label: '600',
-  },
-  {
-    value: '14',
-    label: '700',
-  },
-  {
-    value: '15',
-    label: '800',
-  },
-  {
-    value: '16',
-    label: '900',
-  },
-  {
-    value: '17',
-    label: '1000',
-  },
-  {
-    value: '18',
-    label: '1500',
-  },
-  {
-    value: '19',
-    label: '2000',
-  },
-  {
-    value: '20',
-    label: '2500',
-  },
-  {
-    value: '21',
-    label: '5000',
-  },
-];
-
-const age = [
-  {
-    value: '0',
-    label: 'نوساز',
-  },
-  {
-    value: '1',
-    label: '۳ سال',
-  }, {
-    value: '2',
-    label: '۵ سال',
-  },
-  {
-    value: '3',
-    label: '۱۰ سال',
-  },
-  {
-    value: '4',
-    label: '۱۵ سال',
-  },
-  {
-    value: '5',
-    label: '۲۰ سال',
-  },
-  {
-    value: '6',
-    label: '۳۰ سال',
-  },
-  {
-    value: '7',
-    label: '۴۰ سال',
-  },
-  {
-    value: '8',
-    label: '۵۰ سال',
-  },
-];
-
 const zones = [
   {
     value: 0,
@@ -386,82 +205,44 @@ const selectTheme = theme => ({
 });
 
 class SearchForm extends PureComponent {
-  static propTypes = {
-    searchParams: PropTypes.objectOf(PropTypes.object).isRequired,
-    type: PropTypes.objectOf(PropTypes.object).isRequired,
-  };
-
   constructor() {
     super();
     this.state = {
+      sortBy: 1,
       resultTab: 'list',
-      rooms: '',
-      area_from: '',
-      area_to: '',
-      age_from: '',
-      age_to: '',
+      resultSize: 23,
       searchSelect: [],
-      price: {
-        min: 0,
-        max: 38,
-      },
-      deposit: {
-        min: 0,
-        max: 38,
-      },
-      rent: {
-        min: 0,
-        max: 28,
-      },
-      dailyRent: {
-        min: 0,
-        max: 28,
-      },
-      type: 0,
-      openModal: false,
+      filterModal: false,
       requestModal: false,
       requestModalLoading: false,
+      searchLoading: false,
       requestTitle: '',
+      filterData: undefined,
+      result: {
+        list: [],
+        size: 22,
+        pages: 3,
+        currPagination: 1,
+        pagination: 1,
+      },
     };
-    this.handleRangeChange = this.handleRangeChange.bind(this);
     this.handleTypeSelect = this.handleTypeSelect.bind(this);
-    this.handleFilter = this.handleFilter.bind(this);
+    this.handleToggleModal = this.handleToggleModal.bind(this);
     this.handleSearch = this.handleSearch.bind(this);
     this.saveAsRequest = this.saveAsRequest.bind(this);
     this.handleCreateRequest = this.handleCreateRequest.bind(this);
-    this.handleDismissRequestModal = this.handleDismissRequestModal.bind(this);
+    this.handleDismissModal = this.handleDismissModal.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
-    this.handleRoomNumSelect = this.handleRoomNumSelect.bind(this);
     this.searchRegion = this.searchRegion.bind(this);
+    this.toggleSort = this.toggleSort.bind(this);
+    this.handleSearchSelect = this.handleSearchSelect.bind(this);
+    this.handleFilter = this.handleFilter.bind(this);
+    this.changePagination = this.changePagination.bind(this);
+    this.isItemValid = this.isItemValid.bind(this);
   }
 
   componentDidMount() {
     // search data from server using searchParams
-    console.group('props in search page');
-    console.log(this.props);
-    console.groupEnd();
-    let typeVal = 0;
-    switch (this.props.type) {
-      case 'sell':
-        typeVal = 0;
-        break;
-      case 'rent':
-        typeVal = 1;
-        break;
-      case 'preSell':
-        typeVal = 3;
-        break;
-      case 'partnership':
-        typeVal = 4;
-        break;
-      default:
-        break;
-    }
-    this.setState({
-      searchSelect: (this.props.searchParams !== undefined) ? this.props.searchParams : undefined,
-      type: typeVal,
-    });
-    this.handleSearch();
   }
 
   changeResultTab = (tab) => {
@@ -492,87 +273,39 @@ class SearchForm extends PureComponent {
     </div>
   );
 
-  handlePriceLabel = (value, type) => {
-    // type have => min, value, value, max
-    if (type === 'min' || type === 'max') {
-      return '';
-    }
-    if (value > 0 && value <= 9) {
-      return (`میلیون تومان${value * 100}`);
-    }
-    if (value >= 10 && value <= 22) {
-      return (`میلیارد تومان${1 + (value - 10) * 0.25}`);
-    }
-    if (value >= 23 && value <= 30) {
-      return (`میلیارد تومان${4 + (value - 22) * 0.5}`);
-    }
-    if (value >= 31 && value <= 32) {
-      return (`میلیارد تومان${8 + (value - 30)}`);
-    }
-    if (value >= 33 && value <= 34) {
-      return (`میلیارد تومان${10 + (value - 32) * 5}`);
-    }
-    if (value >= 35 && value <= 38) {
-      return (`میلیارد تومان${(value - 34) * 50}`);
-    }
-
-    return value;
-  }
-
-  handleRentLabel = (value, type) => {
-    // type have => min, value, value, max
-    if (type === 'min' || type === 'max') {
-      return '';
-    }
-    if (value > 0 && value <= 1) {
-      return (`هزار تومان${value * 100}`);
-    }
-    if (value === 2) {
-      return (`هزار تومان${500}`);
-    }
-    if (value >= 3 && value <= 13) {
-      return (`میلیون تومان${1 + (value - 3) * 0.5}`);
-    }
-    if (value >= 14 && value <= 17) {
-      return (`میلیون تومان${6 + (value - 13)}`);
-    }
-    if (value >= 18 && value <= 19) {
-      return (`میلیون تومان${10 + (value - 17) * 2.5}`);
-    }
-    if (value >= 20 && value <= 23) {
-      return (`میلیون تومان${(value - 18) * 10}`);
-    }
-    if (value >= 24 && value <= 28) {
-      return (`میلیون تومان${(value - 23) * 100}`);
-    }
-
-    return value;
-  }
-
-  handleDailyRentLabel = (value, type) => {
-    // type have => min, value, value, max
-    if (type === 'min' || type === 'max') {
-      return '';
-    }
-    if (value > 0 && value <= 19) {
-      return (`هزار تومان${value * 50}`);
-    }
-    if (value > 19 && value <= 28) {
-      return (`میلیون تومان${1 + (value - 20) * 0.5}`);
-    }
-    return value;
-  }
-
-  filterColors = inputValue => (
-    zones.filter(i => i.label.toLowerCase().includes(inputValue.toLowerCase())));
-
   promiseOptions = (inputValue, callback) => (
     new Promise((resolve) => {
       resolve(this.searchRegion(inputValue, callback));
-      // setTimeout(() => {
-      //   resolve(this.filterColors(inputValue));
-      // }, 1000);
     }));
+
+  createPagination = () => {
+    const pagination = [];
+    for (let i = 0; i < this.state.result.pages; i += 1) {
+      pagination.push(
+        <PaginationItem>
+          <PaginationLink
+            className={`text-dark ${(this.state.result.currPagination === i) ? 'bg-success' : ''}`}
+            onClick={() => { this.changePagination(i); }}
+          >
+            {i + 1}
+          </PaginationLink>
+        </PaginationItem>,
+      );
+    }
+    return pagination;
+  }
+
+  changePagination(page) {
+    this.setState((prevState) => {
+      const { pagination: pageVal, ...other } = prevState.result;
+      const newResult = { pagination: page, ...other };
+      return {
+        result: newResult,
+      };
+    }, () => {
+      this.handleSearch();
+    });
+  }
 
   searchRegion(name, callback) {
     console.log(this.state.region);
@@ -588,38 +321,41 @@ class SearchForm extends PureComponent {
     //     .catch(() => (null));
   }
 
-  handleRangeChange(name, value) {
-    this.setState({ [name]: { min: value.min, max: value.max } });
-  }
-
   handleTypeSelect(index, name) {
     this.setState({ [name]: index });
   }
 
-  handleRoomNumSelect(rooms) {
-    if (rooms === null) {
-      this.setState({ rooms: [] });
-      return;
-    }
-    this.setState({ rooms });
-  }
-
-  handleSearchSelect(searchSelect) {
-    if (searchSelect === null) {
-      this.setState({ searchSelect: [] });
-      return;
-    }
-    this.setState({ searchSelect });
-  }
-
-  handleFilter() {
-    this.setState(prevState => ({ openModal: !prevState.openModal }));
+  handleToggleModal() {
+    this.setState(prevState => ({ filterModal: !prevState.filterModal }));
   }
 
   handleSearch() {
+    // search from server using filterData, selectedSearch, pagination and sortBy
     console.group('handle search in search form (Search page)');
-    console.log(this.state.searchSelect);
+    console.log(
+      this.state.filterData,
+      this.state.searchSelect,
+      this.state.result.pagination,
+      this.state.sortBy,
+    );
     console.groupEnd();
+    this.setState({ searchLoading: true });
+    setTimeout(() => {
+      this.setState({ searchLoading: false });
+    }, 1000);
+  }
+
+  handleFilter(data) {
+    this.setState((prevState) => {
+      const { pagination: pageVal, ...other } = prevState.result;
+      const newResult = { pagination: 1, ...other };
+      return {
+        result: newResult,
+        filterData: data,
+      };
+    }, () => {
+      this.handleSearch();
+    });
   }
 
   saveAsRequest() {
@@ -627,8 +363,7 @@ class SearchForm extends PureComponent {
   }
 
   handleCreateRequest() {
-    if (this.state.requestTitle.length <= 0) {
-      console.log('enter title for request');
+    if (this.state.requestTitle.trim().length <= 0) {
       return;
     }
     this.setState({ requestModalLoading: true });
@@ -636,15 +371,14 @@ class SearchForm extends PureComponent {
       this.setState({
         requestModalLoading: false,
         requestModal: false,
+        requestTitle: '',
       });
     }, 1000);
   }
 
-  handleDismissRequestModal() {
+  handleDismissModal(name) {
     this.setState({
-      requestModalLoading: false,
-      requestModal: false,
-      requestTitle: '',
+      [name]: false,
     });
   }
 
@@ -653,228 +387,35 @@ class SearchForm extends PureComponent {
     this.setState({ [name]: value });
   }
 
+  toggleSort(tab) {
+    const { sortBy } = this.state;
+    if (sortBy !== tab) {
+      this.setState({
+        sortBy: tab,
+      }, () => {
+        this.handleSearch();
+      });
+    }
+  }
+
+  handleSearchSelect(searchSelect) {
+    this.setState({ searchSelect });
+  }
+
+  isItemValid(name) {
+    const { [name]: val } = this.state;
+    return val.trim().length > 0;
+  }
+
   render() {
     return (
       <div>
         <div>
-          <Modal fade={false} isOpen={this.state.openModal} toggle={this.handleFilter}>
-            <ModalHeader toggle={this.handleFilter}>فیلتر جستجو</ModalHeader>
-            <ModalBody>
-              <Row className="search-input">
-                <Col lg={12} md={12} sm={12} xs={12}>
-                  <FormGroup>
-                    {renderSelectField({
-                      input: {
-                        onChange: (e) => { this.handleTypeSelect(Number(e.value), 'type'); },
-                        isMulti: false,
-                        name: 'type',
-                        value: types[this.state.type],
-                      },
-                      placeholder: 'نوع',
-                      options: types,
-                      name: 'select',
-                      type: 'text',
-                    })}
-                  </FormGroup>
-                </Col>
-                {(this.state.type !== 1 && this.state.type !== 2)
-                && (
-                  <Col lg={12} md={12} sm={12} xs={12} style={{ direction: 'ltr' }} className="range-price">
-                    <FormGroup>
-                      <Col md={2} lg={2} sm={2} xs={2}>قیمت</Col>
-                      <Col md={10} lg={10} sm={10} xs={10}>
-                        <InputRange
-                          name="price"
-                          maxValue={38}
-                          minValue={0}
-                          step={1}
-                          value={this.state.price}
-                          formatLabel={(value, type) => this.handlePriceLabel(value, type)}
-                          onChange={(value) => { this.handleRangeChange('price', value); }}
-                        />
-                      </Col>
-                    </FormGroup>
-                  </Col>
-                )}
-                {this.state.type === 1
-                && (
-                  <>
-                    <Col lg={12} md={12} sm={12} xs={12} style={{ direction: 'ltr' }} className="range-price">
-                      <FormGroup>
-                        <Col md={2} lg={2} sm={2} xs={2}>رهن</Col>
-                        <Col md={10} lg={10} sm={10} xs={10}>
-                          <InputRange
-                            name="deposit"
-                            maxValue={38}
-                            minValue={0}
-                            step={1}
-                            value={this.state.deposit}
-                            formatLabel={(value, type) => this.handlePriceLabel(value, type)}
-                            onChange={(value) => { this.handleRangeChange('deposit', value); }}
-                          />
-                        </Col>
-                      </FormGroup>
-                    </Col>
-                    <Col lg={12} md={12} sm={12} xs={12} style={{ direction: 'ltr' }} className="range-price">
-                      <FormGroup>
-                        <Col md={2} lg={2} sm={2} xs={2}>اجاره</Col>
-                        <Col md={10} lg={10} sm={10} xs={10}>
-                          <InputRange
-                            name="rent"
-                            maxValue={28}
-                            minValue={0}
-                            step={1}
-                            value={this.state.rent}
-                            formatLabel={(value, type) => this.handleRentLabel(value, type)}
-                            onChange={(value) => { this.handleRangeChange('rent', value); }}
-                          />
-                        </Col>
-                      </FormGroup>
-                    </Col>
-                  </>
-                )}
-                {this.state.type === 2
-                && (
-                  <>
-                    <Col lg={12} md={12} sm={12} xs={12} style={{ direction: 'ltr' }} className="range-price">
-                      <FormGroup>
-                        <Col md={2} lg={2} sm={2} xs={2}>اجاره روزانه</Col>
-                        <Col md={10} lg={10} sm={10} xs={10}>
-                          <InputRange
-                            name="dailyRent"
-                            maxValue={28}
-                            minValue={0}
-                            step={1}
-                            value={this.state.dailyRent}
-                            formatLabel={(value, type) => this.handleDailyRentLabel(value, type)}
-                            onChange={(value) => { this.handleRangeChange('dailyRent', value); }}
-                          />
-                        </Col>
-                      </FormGroup>
-                    </Col>
-                  </>
-                )}
-                <Col lg={12} md={12} sm={12} xs={12}>
-                  <FormGroup>
-                    {renderSelectField({
-                      input: {
-                        onChange: (e) => { this.handleRoomNumSelect(e); },
-                        isMulti: true,
-                        name: 'rooms',
-                        value: nums[() => {
-                          const { rooms: value } = this.state;
-                          return {
-                            value,
-                          };
-                        }],
-                      },
-                      placeholder: 'تعداد اتاق',
-                      options: nums,
-                      name: 'select',
-                      type: 'text',
-                    })}
-                  </FormGroup>
-                </Col>
-                <Col lg={12} md={12} sm={12} xs={12}>
-                  <Row>
-                    <Col>
-                      <FormGroup>
-                        {renderSelectField({
-                          input: {
-                            onChange: (e) => { this.handleTypeSelect(Number(e.value), 'area_from'); },
-                            isMulti: false,
-                            name: 'area_from',
-                            value: area[() => {
-                              const { area_from: value } = this.state;
-                              return {
-                                value,
-                              };
-                            }],
-                          },
-                          placeholder: 'متراژ از',
-                          options: area,
-                          name: 'select',
-                          type: 'text',
-                        })}
-                      </FormGroup>
-                    </Col>
-                    <Col>
-                      <FormGroup>
-                        {renderSelectField({
-                          input: {
-                            onChange: (e) => { this.handleTypeSelect(Number(e.value), 'area_to'); },
-                            isMulti: false,
-                            name: 'area_to',
-                            value: area[() => {
-                              const { area_to: value } = this.state;
-                              return {
-                                value,
-                              };
-                            }],
-                          },
-                          placeholder: 'متراژ تا',
-                          options: area,
-                          name: 'select',
-                          type: 'text',
-                        })}
-                      </FormGroup>
-                    </Col>
-                  </Row>
-                </Col>
-                <Col lg={12} md={12} sm={12} xs={12}>
-                  <Row>
-                    <Col>
-                      <FormGroup>
-                        {renderSelectField({
-                          input: {
-                            onChange: (e) => { this.handleTypeSelect(Number(e.value), 'age_from'); },
-                            isMulti: false,
-                            name: 'age_from',
-                            value: age[() => {
-                              const { age_from: value } = this.state;
-                              return {
-                                value,
-                              };
-                            }],
-                          },
-                          placeholder: 'سن از',
-                          options: age,
-                          name: 'select',
-                          type: 'text',
-                        })}
-                      </FormGroup>
-                    </Col>
-                    <Col>
-                      <FormGroup>
-                        {renderSelectField({
-                          input: {
-                            onChange: (e) => { this.handleTypeSelect(Number(e.value), 'age_to'); },
-                            isMulti: false,
-                            name: 'age_to',
-                            value: age[() => {
-                              const { age_to: value } = this.state;
-                              return {
-                                value,
-                              };
-                            }],
-                          },
-                          placeholder: 'تا',
-                          options: age,
-                          name: 'select',
-                          type: 'text',
-                        })}
-                      </FormGroup>
-                    </Col>
-                  </Row>
-                </Col>
-              </Row>
-            </ModalBody>
-            <ModalFooter>
-              <Button color="primary" onClick={this.handleFilter}>نمایش نتیجه</Button>{' '}
-              <Button color="secondary" onClick={this.handleFilter}>بازگشت</Button>
-            </ModalFooter>
-          </Modal>
-          <Modal fade={false} isOpen={this.state.requestModal} toggle={this.handleDismissRequestModal}>
+          <Modal
+            fade={false}
+            isOpen={this.state.requestModal}
+            toggle={() => { this.handleDismissModal('requestModal'); }}
+          >
             <ModalHeader toggle={this.handleDismissRequestModal}>درخواست جدید</ModalHeader>
             {this.state.requestModalLoading
             && (
@@ -900,290 +441,190 @@ class SearchForm extends PureComponent {
                           type="text"
                           value={this.state.requestTitle}
                           onChange={this.handleInputChange}
-                          className="text-right"
+                          className={`text-right ${this.isItemValid('requestTitle') ? '' : 'border-danger'}`}
                         />
                       </FormGroup>
                     </Col>
+                    {!this.isItemValid('requestTitle')
+                    && (
+                      <Col lg={12} md={12} sm={12} xs={12} className="text-danger">
+                        <p>وارد کردن عنوان درخواست الزامی است</p>
+                      </Col>
+                    )}
                   </Row>
                 </ModalBody>
                 <ModalFooter>
-                  <Button color="primary" onClick={this.handleCreateRequest}>نمایش نتیجه</Button>{' '}
-                  <Button color="secondary" onClick={this.handleDismissRequestModal}>بازگشت</Button>
+                  <Button color="primary" onClick={this.handleCreateRequest}>ذخیره درخواست</Button>{' '}
+                  <Button color="secondary" onClick={() => { this.handleDismissModal('requestModal'); }}>بازگشت</Button>
                 </ModalFooter>
               </>
             )}
           </Modal>
+          <Modal
+            fade={false}
+            isOpen={this.state.filterModal}
+            toggle={() => { this.handleDismissModal('filterModal'); }}
+          >
+            <ModalHeader className="modal-title">فیلتر جستجو</ModalHeader>
+            <SearchFilter
+              filterData={this.state.filterData}
+              handleDissmiss={() => { this.handleDismissModal('filterModal'); }}
+              isModal
+              handleSearch={(data) => { this.handleDismissModal('filterModal'); this.handleFilter(data); }}
+            />
+          </Modal>
         </div>
-        <div className="searchForm">
-          <Form>
-            <Row form className="search-input">
-              <Col lg={8} md={8} sm={8} xs={12}>
-                <FormGroup>
-                  <AsyncSelect
-                    isMulti
-                    cacheOptions
-                    defaultOptions
-                    placeholder="نام شهر، منطقه و .. خود را وارد کنید"
-                    loadOptions={(input, callback) => { this.promiseOptions(input, callback); }}
-                    onChange={(e) => { this.handleSearchSelect(e); }}
-                    value={this.state.city}
-                    loadingMessage={() => ('درحال بارگزاری...')}
-                    theme={theme => selectTheme(theme)}
-                    noOptionsMessage={() => ('نتیجه ای یافت نشد')}
-                    styles={customStyles}
-                  />
-                </FormGroup>
-              </Col>
-              <Col lg={2} md={2} sm={2} xs={12}>
-                <Button
-                  style={{ margin: '0px 2px 5px 2px' }}
-                  onClick={() => { this.handleSearch(); }}
-                  className="btn-success volume"
-                >تغییر جستجو
-                </Button>
-              </Col>
-              <Col lg={2} md={2} sm={2} xs={12}>
-                <Button
-                  style={{ margin: '0px 2px 5px 2px' }}
-                  color="success"
-                  onClick={() => { this.saveAsRequest(); }}
-                  className="volume"
-                >
-                  درخواست
-                </Button>
-              </Col>
-            </Row>
-            <Row form className="search-input search-advanced">
-              <Col lg={2} md={3} sm={4} xs={12}>
-                <FormGroup>
-                  {renderSelectField({
-                    input: {
-                      onChange: (e) => { this.handleTypeSelect(Number(e.value), 'type'); },
-                      isMulti: false,
-                      name: 'type',
-                      value: types[this.state.type],
-                      clearable: true,
-                    },
-                    placeholder: 'نوع',
-                    options: types,
-                    name: 'select',
-                    type: 'text',
-                  })}
-                </FormGroup>
-              </Col>
-              {(this.state.type !== 1 && this.state.type !== 2)
-              && (
-                <Col lg={3} md={4} sm={6} xs={12} style={{ direction: 'ltr' }} className="range-price">
-                  <FormGroup>
-                    <Col md={2} lg={2} sm={2} xs={2}>قیمت</Col>
-                    <Col md={10} lg={10} sm={10} xs={10}>
-                      <InputRange
-                        name="price"
-                        maxValue={38}
-                        minValue={0}
-                        step={1}
-                        value={this.state.price}
-                        formatLabel={(value, type) => this.handlePriceLabel(value, type)}
-                        onChange={(value) => { this.handleRangeChange('price', value); }}
-                      />
-                    </Col>
-                  </FormGroup>
-                </Col>
-              )}
-              {this.state.type === 1
-              && (
-                <>
-                  <Col lg={3} md={4} sm={6} xs={12} style={{ direction: 'ltr' }} className="range-price">
-                    <FormGroup>
-                      <Col md={2} lg={2} sm={2} xs={2}>رهن</Col>
-                      <Col md={10} lg={10} sm={10} xs={10}>
-                        <InputRange
-                          name="deposit"
-                          maxValue={38}
-                          minValue={0}
-                          step={1}
-                          value={this.state.deposit}
-                          formatLabel={(value, type) => this.handlePriceLabel(value, type)}
-                          onChange={(value) => { this.handleRangeChange('deposit', value); }}
-                        />
-                      </Col>
-                    </FormGroup>
-                  </Col>
-                  <Col lg={3} md={4} sm={6} xs={12} style={{ direction: 'ltr' }} className="range-price">
-                    <FormGroup>
-                      <Col md={2} lg={2} sm={2} xs={2}>اجاره</Col>
-                      <Col md={10} lg={10} sm={10} xs={10}>
-                        <InputRange
-                          name="rent"
-                          maxValue={28}
-                          minValue={0}
-                          step={1}
-                          value={this.state.rent}
-                          formatLabel={(value, type) => this.handleRentLabel(value, type)}
-                          onChange={(value) => { this.handleRangeChange('rent', value); }}
-                        />
-                      </Col>
-                    </FormGroup>
-                  </Col>
-                </>
-              )}
-              {this.state.type === 2
-              && (
-                <>
-                  <Col lg={3} md={4} sm={6} xs={12} style={{ direction: 'ltr' }} className="range-price">
-                    <FormGroup>
-                      <Col md={2} lg={2} sm={2} xs={2}>اجاره روزانه</Col>
-                      <Col md={10} lg={10} sm={10} xs={10}>
-                        <InputRange
-                          name="dailyRent"
-                          maxValue={28}
-                          minValue={0}
-                          step={1}
-                          value={this.state.dailyRent}
-                          formatLabel={(value, type) => this.handleDailyRentLabel(value, type)}
-                          onChange={(value) => { this.handleRangeChange('dailyRent', value); }}
-                        />
-                      </Col>
-                    </FormGroup>
-                  </Col>
-                </>
-              )}
-              <Col md={4} sm={4} xs={12}>
-                <FormGroup>
-                  {renderSelectField({
-                    input: {
-                      onChange: (e) => { this.handleRoomNumSelect(e); },
-                      isMulti: true,
-                      name: 'rooms',
-                      value: nums[() => {
-                        const { rooms: value } = this.state;
-                        return {
-                          value,
-                        };
-                      }],
-                    },
-                    placeholder: 'تعداد اتاق',
-                    options: nums,
-                    name: 'select',
-                    type: 'text',
-                  })}
-                </FormGroup>
-              </Col>
-              <Col md={4} xs={12} sm={6}>
-                <Row>
-                  <Col>
-                    <FormGroup>
-                      {renderSelectField({
-                        input: {
-                          onChange: (e) => { this.handleTypeSelect(Number(e.value), 'area_from'); },
-                          isMulti: false,
-                          name: 'area_from',
-                          value: area[() => {
-                            const { area_from: value } = this.state;
-                            return {
-                              value,
-                            };
-                          }],
-                        },
-                        placeholder: 'متراژ از',
-                        options: area,
-                        name: 'select',
-                        type: 'text',
-                      })}
-                    </FormGroup>
-                  </Col>
-                  <Col>
-                    <FormGroup>
-                      {renderSelectField({
-                        input: {
-                          onChange: (e) => { this.handleTypeSelect(Number(e.value), 'area_to'); },
-                          isMulti: false,
-                          name: 'area_to',
-                          value: area[() => {
-                            const { area_to: value } = this.state;
-                            return {
-                              value,
-                            };
-                          }],
-                        },
-                        placeholder: 'متراژ تا',
-                        options: area,
-                        name: 'select',
-                        type: 'text',
-                      })}
-                    </FormGroup>
-                  </Col>
-                </Row>
-              </Col>
-              <Col md={4} xs={12} sm={6}>
-                <Row>
-                  <Col>
-                    <FormGroup>
-                      {renderSelectField({
-                        input: {
-                          onChange: (e) => { this.handleTypeSelect(Number(e.value), 'age_from'); },
-                          isMulti: false,
-                          name: 'age_from',
-                          value: age[() => {
-                            const { age_from: value } = this.state;
-                            return {
-                              value,
-                            };
-                          }],
-                        },
-                        placeholder: 'سن از',
-                        options: age,
-                        name: 'select',
-                        type: 'text',
-                      })}
-                    </FormGroup>
-                  </Col>
-                  <Col>
-                    <FormGroup>
-                      {renderSelectField({
-                        input: {
-                          onChange: (e) => { this.handleTypeSelect(Number(e.value), 'age_to'); },
-                          isMulti: false,
-                          name: 'age_to',
-                          value: age[() => {
-                            const { age_to: value } = this.state;
-                            return {
-                              value,
-                            };
-                          }],
-                        },
-                        placeholder: 'تا',
-                        options: age,
-                        name: 'select',
-                        type: 'text',
-                      })}
-                    </FormGroup>
-                  </Col>
-                </Row>
-              </Col>
-            </Row>
-          </Form>
-          <div className="fab">
-            <FaFilter className="fab-icon" onClick={this.handleFilter} />
+        <div className="search-container">
+          <div className="search-filter search-advanced">
+            <StickyBox>
+              <SearchFilter
+                filterData={this.state.filterData}
+                handleSave={this.handleToggleModal}
+                handleDissmiss={this.handleToggleModal}
+                isModal={false}
+                handleSearch={(data) => { this.handleFilter(data); }}
+              />
+            </StickyBox>
           </div>
-          <div>
-            <div className="resultTable">
-              <div className="resultTab">
-                <ul>
-                  <li
-                    className={this.state.resultTab === 'list' ? 'active' : ''}
-                  >
-                    <a href="#1" onClick={() => { this.changeResultTab('list'); }}><FaThList /> نمایش لیست </a>
-                  </li>
-                  <li
-                    className={this.state.resultTab === 'map' ? 'active' : ''}
-                  >
-                    <a href="#1" onClick={() => { this.changeResultTab('map'); }}><FaMap /> نمایش روی نقشه </a>
-                  </li>
-                </ul>
+          <div className="searchForm">
+            <div>
+              <StickyBox bottom={false} offsetTop={0} offsetBottom={10} className="search-form-top">
+                <Form>
+                  <Row form className="search-input">
+                    <Col lg={8} md={8} sm={8} xs={12}>
+                      <FormGroup>
+                        <AsyncSelect
+                          isMulti
+                          cacheOptions
+                          defaultOptions
+                          placeholder="نام شهر، منطقه و .. خود را وارد کنید"
+                          loadOptions={(input, callback) => { this.promiseOptions(input, callback); }}
+                          onChange={(e) => { this.handleSearchSelect(e); }}
+                          value={this.state.city}
+                          loadingMessage={() => ('درحال بارگزاری...')}
+                          theme={theme => selectTheme(theme)}
+                          noOptionsMessage={() => ('نتیجه ای یافت نشد')}
+                          styles={customStyles}
+                        />
+                      </FormGroup>
+                    </Col>
+                    <Col lg={2} md={2} sm={2} xs={12}>
+                      <Button
+                        style={{ margin: '0px 2px 5px 2px' }}
+                        onClick={() => { this.handleFilter(); }}
+                        className="btn-success volume"
+                      >تغییر جستجو
+                      </Button>
+                    </Col>
+                    <Col lg={2} md={2} sm={2} xs={12}>
+                      <Button
+                        style={{ margin: '0px 2px 5px 2px' }}
+                        color="success"
+                        onClick={() => { this.saveAsRequest(); }}
+                        className="volume"
+                      >
+                        درخواست
+                      </Button>
+                    </Col>
+                  </Row>
+                </Form>
+              </StickyBox>
+              <div className="fab">
+                <FaFilter className="fab-icon" onClick={this.handleToggleModal} />
               </div>
-              <div className="resultBody">
-                {this.state.resultTab === 'list' ? this.resultList() : this.resultMap()}
+              <div className="sort-panel">
+                <span className="sort-title">مرتب سازی:</span>
+                <Nav tabs className="sort-tabs">
+                  <NavItem>
+                    <NavLink
+                      className={classnames({ active: this.state.sortBy === 1 })}
+                      onClick={() => {
+                        this.toggleSort(1);
+                      }}
+                    >
+                      جدیدترین
+                    </NavLink>
+                  </NavItem>
+                  <NavItem>
+                    <NavLink
+                      className={classnames({ active: this.state.sortBy === 2 })}
+                      onClick={() => {
+                        this.toggleSort(2);
+                      }}
+                    >
+                      گران ترین
+                    </NavLink>
+                  </NavItem>
+                  <NavItem>
+                    <NavLink
+                      className={classnames({ active: this.state.sortBy === 3 })}
+                      onClick={() => {
+                        this.toggleSort(3);
+                      }}
+                    >
+                      ارزان ترین
+                    </NavLink>
+                  </NavItem>
+                </Nav>
+                <span className="pull-left span-result-size">
+                  <span className="red-text bold-text">{this.state.resultSize}</span>
+                  مورد یافت شد
+                </span>
+              </div>
+              <div>
+                {this.state.searchLoading
+                && (
+                  <div className={`relative-load${this.state.searchLoading ? '' : ' loaded'}`}>
+                    <div className="load__icon-wrap">
+                      <svg className="load__icon">
+                        <path fill="#4ce1b6" d="M12,4V2A10,10 0 0,0 2,12H4A8,8 0 0,1 12,4Z" />
+                      </svg>
+                    </div>
+                  </div>
+                )
+                }
+                {!this.state.searchLoading
+                && (
+                  <div>
+                    <div className="result-table">
+                      <div className="resultTab">
+                        <ul>
+                          <li
+                            className={this.state.resultTab === 'list' ? 'active' : ''}
+                          >
+                            <a href="#1" onClick={() => { this.changeResultTab('list'); }}><FaThList /> نمایش لیست </a>
+                          </li>
+                          <li
+                            className={this.state.resultTab === 'map' ? 'active' : ''}
+                          >
+                            <a href="#1" onClick={() => { this.changeResultTab('map'); }}><FaMap /> نمایش روی نقشه </a>
+                          </li>
+                        </ul>
+                      </div>
+                      <div className="resultBody">
+                        {this.state.resultTab === 'list' ? this.resultList() : this.resultMap()}
+                      </div>
+                    </div>
+                    <Row>
+                      <Pagination aria-label="Page navigation example">
+                        <PaginationItem>
+                          <PaginationLink
+                            previous
+                            onClick={() => { this.changePagination(this.state.result.currPagination - 1); }}
+                          />
+                        </PaginationItem>
+                        {this.createPagination()}
+                        <PaginationItem>
+                          <PaginationLink
+                            next
+                            onClick={() => { this.changePagination(this.state.result.currPagination + 1); }}
+                          />
+                        </PaginationItem>
+                      </Pagination>
+                    </Row>
+                  </div>
+                )
+                }
               </div>
             </div>
           </div>

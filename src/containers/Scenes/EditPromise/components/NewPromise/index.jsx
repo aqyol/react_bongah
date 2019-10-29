@@ -265,7 +265,7 @@ class NewPromise extends PureComponent {
   }
 
   closeModal() {
-    this.setState({ openModal: false });
+    this.setState({ closeModal: false });
   }
 
   handleRatePromise() {
