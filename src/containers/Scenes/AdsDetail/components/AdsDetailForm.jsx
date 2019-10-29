@@ -4,6 +4,7 @@ import {
   Row,
   Col,
   Card,
+  CardTitle,
   CardBody,
   Label,
   Button,
@@ -30,6 +31,8 @@ import {
   FaAngleDown,
 } from 'react-icons/fa';
 import renderSelectField from '../../../../shared/components/form/Select';
+import CarouselMultiply from '../../../../shared/components/Carousel/CarouselMultiply';
+import SingleHouse from '../../../../shared/components/SingleHouse';
 
 
 const data = {
@@ -92,6 +95,53 @@ const items = [
     src: 'http://mariusn.com/themes/reales/images/prop/3-1.png',
   },
 ];
+
+const houseData = [
+  {
+    name: 'خانه آپارتمانی در نارمک',
+    address: 'خیابان آزادی، کوچه ۳۹، پلاک ۲۳۱، واحد ۵',
+    beds: 2,
+    toilets: 1,
+    square: 20,
+    img: 'http://mariusn.com/themes/reales/images/prop/1-1.png',
+  }, {
+    name: 'خانه آپارتمانی در نارمک',
+    address: 'خیابان آزادی، کوچه ۳۹، پلاک ۲۳۱، واحد ۵',
+    beds: 3,
+    toilets: 2,
+    square: 20,
+    img: 'http://mariusn.com/themes/reales/images/prop/2-1.png',
+  }, {
+    name: 'خانه آپارتمانی در نارمک',
+    address: 'خیابان آزادی، کوچه ۳۹، پلاک ۲۳۱، واحد ۵',
+    beds: 3,
+    toilets: 2,
+    square: 20,
+    img: 'http://mariusn.com/themes/reales/images/prop/1-1.png',
+  }, {
+    name: 'خانه آپارتمانی در نارمک',
+    address: 'خیابان آزادی، کوچه ۳۹، پلاک ۲۳۱، واحد ۵',
+    beds: 3,
+    toilets: 2,
+    square: 20,
+    img: 'http://mariusn.com/themes/reales/images/prop/2-1.png',
+  }, {
+    name: 'خانه آپارتمانی در نارمک',
+    address: 'خیابان آزادی، کوچه ۳۹، پلاک ۲۳۱، واحد ۵',
+    beds: 3,
+    toilets: 2,
+    square: 20,
+    img: 'http://mariusn.com/themes/reales/images/prop/1-1.png',
+  }, {
+    name: 'خانه آپارتمانی در نارمک',
+    address: 'خیابان آزادی، کوچه ۳۹، پلاک ۲۳۱، واحد ۵',
+    beds: 3,
+    toilets: 2,
+    square: 20,
+    img: 'http://mariusn.com/themes/reales/images/prop/2-1.png',
+  },
+];
+
 
 const {
   Marker,
@@ -270,6 +320,12 @@ class AdsDetailForm extends PureComponent {
       </Col>
     ));
 
+    const similarItems = houseData.map(item => (
+      <div>
+        <SingleHouse data={item} />
+      </div>
+    ));
+
     const nf = new Intl.NumberFormat();
 
     return (
@@ -287,263 +343,273 @@ class AdsDetailForm extends PureComponent {
         }
         {!this.state.isLoading
         && (
-          <div className="ads-detail-container">
-            <Modal
-              fade={false}
-              isOpen={this.state.reportModal}
-              toggle={() => { this.handleToggleModal('reportModal'); }}
-            >
-              <ModalHeader>درخواست جدید</ModalHeader>
-              {this.state.reportModalLoading
-              && (
-                <div className={`relative-load${this.state.isLoading ? '' : ' loaded'}`}>
-                  <div className="load__icon-wrap">
-                    <svg className="load__icon">
-                      <path fill="#4ce1b6" d="M12,4V2A10,10 0 0,0 2,12H4A8,8 0 0,1 12,4Z" />
-                    </svg>
+          <div>
+            <div className="ads-detail-container">
+              <Modal
+                fade={false}
+                isOpen={this.state.reportModal}
+                toggle={() => { this.handleToggleModal('reportModal'); }}
+              >
+                <ModalHeader>درخواست جدید</ModalHeader>
+                {this.state.reportModalLoading
+                && (
+                  <div className={`relative-load${this.state.isLoading ? '' : ' loaded'}`}>
+                    <div className="load__icon-wrap">
+                      <svg className="load__icon">
+                        <path fill="#4ce1b6" d="M12,4V2A10,10 0 0,0 2,12H4A8,8 0 0,1 12,4Z" />
+                      </svg>
+                    </div>
                   </div>
-                </div>
-              )
-              }
-              {!this.state.reportModalLoading
-              && (
-                <>
-                  <ModalBody>
-                    <Row className="search-input">
-                      <Col lg={12} md={12} sm={12} xs={12}>
-                        <FormGroup>
-                          {renderSelectField({
-                            input: {
-                              onChange: (e) => { this.handleSelect('reportType', e); },
-                              isMulti: false,
-                              name: 'reportType',
-                              value: this.state.reportType,
-                              clearable: true,
-                            },
-                            placeholder: 'علت گزارش',
-                            options: reportTypes,
-                            name: 'select',
-                            type: 'text',
-                          })}
-                        </FormGroup>
-                      </Col>
-                      {!this.isItemValid('reportType')
-                      && (
-                        <Col lg={12} md={12} sm={12} xs={12} className="text-danger">
-                          <p>انتخاب علت گزارش الزامی است</p>
+                )
+                }
+                {!this.state.reportModalLoading
+                && (
+                  <>
+                    <ModalBody>
+                      <Row className="search-input">
+                        <Col lg={12} md={12} sm={12} xs={12}>
+                          <FormGroup>
+                            {renderSelectField({
+                              input: {
+                                onChange: (e) => { this.handleSelect('reportType', e); },
+                                isMulti: false,
+                                name: 'reportType',
+                                value: this.state.reportType,
+                                clearable: true,
+                              },
+                              placeholder: 'علت گزارش',
+                              options: reportTypes,
+                              name: 'select',
+                              type: 'text',
+                            })}
+                          </FormGroup>
                         </Col>
-                      )}
-                    </Row>
-                  </ModalBody>
-                  <ModalFooter>
-                    <Button
-                      color="primary"
-                      onClick={() => { this.handleSaveReport(); }}
-                      disabled={!this.isItemValid('reportType')}
-                    >
-                      ذخیره درخواست
-                    </Button>
-                    <Button
-                      color="secondary"
-                      onClick={() => { this.handleDismissModal('reportModal'); }}
-                    >
-                      بازگشت
-                    </Button>
-                  </ModalFooter>
-                </>
-              )}
-            </Modal>
-            <h4 className="text-center">{this.state.adsInfo.title}</h4>
-            <Row className="ads-detail-height">
-              <Col lg={8} md={7} sm={12} xs={12}>
-                <UncontrolledCarousel autoPlay={false} indicators={false} items={items} />
-              </Col>
-              <Col lg={4} md={5} sm={12} xs={12}>
-                <Card className="text-center">
-                  <CardBody>
-                    {this.state.adsInfo.type === 1
+                        {!this.isItemValid('reportType')
+                        && (
+                          <Col lg={12} md={12} sm={12} xs={12} className="text-danger">
+                            <p>انتخاب علت گزارش الزامی است</p>
+                          </Col>
+                        )}
+                      </Row>
+                    </ModalBody>
+                    <ModalFooter>
+                      <Button
+                        color="primary"
+                        onClick={() => { this.handleSaveReport(); }}
+                        disabled={!this.isItemValid('reportType')}
+                      >
+                        ذخیره درخواست
+                      </Button>
+                      <Button
+                        color="secondary"
+                        onClick={() => { this.handleDismissModal('reportModal'); }}
+                      >
+                        بازگشت
+                      </Button>
+                    </ModalFooter>
+                  </>
+                )}
+              </Modal>
+              <h4 className="text-center">{this.state.adsInfo.title}</h4>
+              <Row className="ads-detail-height">
+                <Col lg={8} md={7} sm={12} xs={12}>
+                  <UncontrolledCarousel autoPlay={false} indicators={false} items={items} />
+                </Col>
+                <Col lg={4} md={5} sm={12} xs={12}>
+                  <Card className="text-center">
+                    <CardBody>
+                      {this.state.adsInfo.type === 1
                       && (
-                      <Row className="ads-price-card">
-                        <Col>
-                          <Label className="pull-right">قیمت</Label>
-                          <span className="bold-text">{nf.format(this.state.adsInfo.price)}</span>
+                        <Row className="ads-price-card">
+                          <Col>
+                            <Label className="pull-right">قیمت</Label>
+                            <span className="bold-text">{nf.format(this.state.adsInfo.price)}</span>
+                            <Label className="pull-left">تومان</Label>
+                          </Col>
+                        </Row>
+                      )
+                      }
+                      {this.state.adsInfo.type === 2
+                      && (
+                        <div className="ads-price-card">
+                          <Row>
+                            <Col>
+                              <Label className="pull-right">ودیعه</Label>
+                              <span className="bold-text">{nf.format(this.state.adsInfo.deposit)}</span>
+                              <Label className="pull-left">تومان</Label>
+                            </Col>
+                          </Row>
+                          <Row>
+                            <Col>
+                              <Label className="pull-right">اجاره</Label>
+                              <span className="bold-text">{nf.format(this.state.adsInfo.rent)}</span>
+                              <Label className="pull-left">تومان</Label>
+                            </Col>
+                          </Row>
+                        </div>
+                      )
+                      }
+                      <Row className="ads-main-info">
+                        <Col xs={6} sm={6} md={6} lg={6} xl={6}>
+                          <MdBorderStyle className="chart-icon" />
+                          <span>۹۰ متر</span>
+                        </Col>
+                        <Col xs={6} sm={6} md={6} lg={6} xl={6}>
+                          <MdAirlineSeatIndividualSuite className="chart-icon" />
+                          <span>۲ خواب</span>
+                        </Col>
+                        <Col xs={6} sm={6} md={6} lg={6} xl={6}>
+                          <MdDomain className="chart-icon" />
+                          <span>۲ ساله</span>
+                        </Col>
+                        <Col xs={6} sm={6} md={6} lg={6} xl={6}>
+                          <MdClearAll className="chart-icon" />
+                          <span>طبقه ۳</span>
+                        </Col>
+                      </Row>
+                      <Row className="ads-commission-card">
+                        <Col xs={12} md={12} sm={12}>
+                          <Label className="pull-right">تعرفه عادی</Label>
+                          <span className="bold-text">{nf.format(this.state.adsInfo.commonCommission)}</span>
+                          <Label className="pull-left">تومان</Label>
+                        </Col>
+                        <Col xs={12} md={12} sm={12}>
+                          <Label className="pull-right">تعرفه املاک ما</Label>
+                          <span className="bold-text">{nf.format(this.state.adsInfo.ourCommission)}</span>
                           <Label className="pull-left">تومان</Label>
                         </Col>
                       </Row>
-                      )
-                    }
-                    {this.state.adsInfo.type === 2
-                    && (
-                      <div className="ads-price-card">
-                        <Row>
-                          <Col>
-                            <Label className="pull-right">ودیعه</Label>
-                            <span className="bold-text">{nf.format(this.state.adsInfo.deposit)}</span>
-                            <Label className="pull-left">تومان</Label>
-                          </Col>
-                        </Row>
-                        <Row>
-                          <Col>
-                            <Label className="pull-right">اجاره</Label>
-                            <span className="bold-text">{nf.format(this.state.adsInfo.rent)}</span>
-                            <Label className="pull-left">تومان</Label>
-                          </Col>
-                        </Row>
-                      </div>
-                    )
-                    }
-                    <Row className="ads-main-info">
-                      <Col xs={6} sm={6} md={6} lg={6} xl={6}>
-                        <MdBorderStyle className="chart-icon" />
-                        <span>۹۰ متر</span>
-                      </Col>
-                      <Col xs={6} sm={6} md={6} lg={6} xl={6}>
-                        <MdAirlineSeatIndividualSuite className="chart-icon" />
-                        <span>۲ خواب</span>
-                      </Col>
-                      <Col xs={6} sm={6} md={6} lg={6} xl={6}>
-                        <MdDomain className="chart-icon" />
-                        <span>۲ ساله</span>
-                      </Col>
-                      <Col xs={6} sm={6} md={6} lg={6} xl={6}>
-                        <MdClearAll className="chart-icon" />
-                        <span>طبقه ۳</span>
-                      </Col>
-                    </Row>
-                    <Row className="ads-commission-card">
-                      <Col xs={12} md={12} sm={12}>
-                        <Label className="pull-right">تعرفه عادی</Label>
-                        <span className="bold-text">{nf.format(this.state.adsInfo.commonCommission)}</span>
-                        <Label className="pull-left">تومان</Label>
-                      </Col>
-                      <Col xs={12} md={12} sm={12}>
-                        <Label className="pull-right">تعرفه املاک ما</Label>
-                        <span className="bold-text">{nf.format(this.state.adsInfo.ourCommission)}</span>
-                        <Label className="pull-left">تومان</Label>
-                      </Col>
-                    </Row>
-                    <Row>
-                      <Col md={4} className="ads-col-btn">
-                        <Button className="btn-ads btn-success" onClick={this.handleCall}>تماس</Button>
-                      </Col>
-                      <Col md={4} className="ads-col-btn">
-                        <Button className="btn-ads btn-success" onClick={this.handleMessage}>پیام</Button>
-                      </Col>
-                      <Col md={4} className="ads-col-btn">
-                        <Button className="btn-ads btn-success" onClick={this.handleEmail}>ایمیل</Button>
-                      </Col>
-                    </Row>
-                    <Row>
-                      <Col />
-                      <Col md={4} className="ads-col-btn">
-                        <Button
-                          className="btn-ads btn-success"
-                          onClick={() => { this.handleToggleModal('reportModal'); }}
-                        >
-                          گزارش تخلف
-                        </Button>
-                      </Col>
-                      <Col />
-                    </Row>
-                  </CardBody>
-                </Card>
-              </Col>
-            </Row>
-            <Card>
-              <Button
-                outline
-                color="link"
-                onClick={(e) => { this.toggle(e, 'toggleMainProperties'); }}
-                className="full-width text-right"
-              >
-                ویژگی های اصلی
-                {this.state.toggleMainProperties
-                && (
-                  <FaAngleUp className="ads-detail-angle" />
-                )}
-                {!this.state.toggleMainProperties
-                && (
-                  <FaAngleDown className="ads-detail-angle" />
-                )}
-              </Button>
-              <Collapse className="collapse-container" isOpen={this.state.toggleMainProperties}>
-                <Row>
-                  {info}
-                </Row>
-              </Collapse>
-            </Card>
-            <Card>
-              <Button
-                outline
-                color="link"
-                onClick={(e) => { this.toggle(e, 'toggleProperties'); }}
-                className="full-width text-right"
-              >
-                سایر ویژگی ها
-                {this.state.toggleProperties
-                && (
-                  <FaAngleUp className="ads-detail-angle" />
-                )}
-                {!this.state.toggleProperties
-                && (
-                  <FaAngleDown className="ads-detail-angle" />
-                )}
-              </Button>
-              <Collapse className="collapse-container" isOpen={this.state.toggleProperties}>
-                <Row>
-                  {properties}
-                </Row>
-              </Collapse>
-            </Card>
-            {this.state.adsInfo.isOwner
-            && (
+                      <Row>
+                        <Col md={4} className="ads-col-btn">
+                          <Button className="btn-ads btn-success" onClick={this.handleCall}>تماس</Button>
+                        </Col>
+                        <Col md={4} className="ads-col-btn">
+                          <Button className="btn-ads btn-success" onClick={this.handleMessage}>پیام</Button>
+                        </Col>
+                        <Col md={4} className="ads-col-btn">
+                          <Button className="btn-ads btn-success" onClick={this.handleEmail}>ایمیل</Button>
+                        </Col>
+                      </Row>
+                      <Row>
+                        <Col />
+                        <Col md={4} className="ads-col-btn">
+                          <Button
+                            className="btn-ads btn-success"
+                            onClick={() => { this.handleToggleModal('reportModal'); }}
+                          >
+                            گزارش تخلف
+                          </Button>
+                        </Col>
+                        <Col />
+                      </Row>
+                    </CardBody>
+                  </Card>
+                </Col>
+              </Row>
               <Card>
                 <Button
                   outline
                   color="link"
-                  onClick={(e) => { this.toggle(e, 'toggleStatistics'); }}
+                  onClick={(e) => { this.toggle(e, 'toggleMainProperties'); }}
                   className="full-width text-right"
                 >
-                  آمار آگهی
-                  {this.state.toggleStatistics
+                  ویژگی های اصلی
+                  {this.state.toggleMainProperties
                   && (
                     <FaAngleUp className="ads-detail-angle" />
                   )}
-                  {!this.state.toggleStatistics
+                  {!this.state.toggleMainProperties
                   && (
                     <FaAngleDown className="ads-detail-angle" />
                   )}
-                  <GiChart className="chart-icon" />
                 </Button>
-                <Collapse className="collapse-container" isOpen={this.state.toggleStatistics}>
+                <Collapse className="collapse-container" isOpen={this.state.toggleMainProperties}>
                   <Row>
-                    <Line data={data} />
+                    {info}
                   </Row>
                 </Collapse>
               </Card>
-            )}
-            <div className="ads-map">
-              <CedarMaps
-                containerStyle={{
-                  height: '80vh',
-                  width: '100%',
-                }}
-                token="8d8be29d01ea833ea7bacdd1836567d67c678a70"
-                center={[this.state.adsInfo.location.lat, this.state.adsInfo.location.lng]}
-                preserveDrawingBuffer={false}
-              >
-                <ZoomControl />
-                <ScaleControl />
-                {this.state.adsInfo.location !== undefined
-                && (
-                  <Marker
-                    coordinates={[this.state.adsInfo.location.lat, this.state.adsInfo.location.lng]}
+              <Card>
+                <Button
+                  outline
+                  color="link"
+                  onClick={(e) => { this.toggle(e, 'toggleProperties'); }}
+                  className="full-width text-right"
+                >
+                  سایر ویژگی ها
+                  {this.state.toggleProperties
+                  && (
+                    <FaAngleUp className="ads-detail-angle" />
+                  )}
+                  {!this.state.toggleProperties
+                  && (
+                    <FaAngleDown className="ads-detail-angle" />
+                  )}
+                </Button>
+                <Collapse className="collapse-container" isOpen={this.state.toggleProperties}>
+                  <Row>
+                    {properties}
+                  </Row>
+                </Collapse>
+              </Card>
+              {this.state.adsInfo.isOwner
+              && (
+                <Card>
+                  <Button
+                    outline
+                    color="link"
+                    onClick={(e) => { this.toggle(e, 'toggleStatistics'); }}
+                    className="full-width text-right"
                   >
-                    <img src="http://maps.google.com/mapfiles/ms/icons/blue-dot.png" alt="marker" />
-                  </Marker>
-                )}
+                    آمار آگهی
+                    {this.state.toggleStatistics
+                    && (
+                      <FaAngleUp className="ads-detail-angle" />
+                    )}
+                    {!this.state.toggleStatistics
+                    && (
+                      <FaAngleDown className="ads-detail-angle" />
+                    )}
+                    <GiChart className="chart-icon" />
+                  </Button>
+                  <Collapse className="collapse-container" isOpen={this.state.toggleStatistics}>
+                    <Row>
+                      <Line data={data} />
+                    </Row>
+                  </Collapse>
+                </Card>
+              )}
+              <div className="ads-map">
+                <CedarMaps
+                  containerStyle={{
+                    height: '80vh',
+                    width: '100%',
+                  }}
+                  token="8d8be29d01ea833ea7bacdd1836567d67c678a70"
+                  center={[this.state.adsInfo.location.lat, this.state.adsInfo.location.lng]}
+                  preserveDrawingBuffer={false}
+                >
+                  <ZoomControl />
+                  <ScaleControl />
+                  {this.state.adsInfo.location !== undefined
+                  && (
+                    <Marker
+                      coordinates={[this.state.adsInfo.location.lat, this.state.adsInfo.location.lng]}
+                    >
+                      <img src="http://maps.google.com/mapfiles/ms/icons/blue-dot.png" alt="marker" />
+                    </Marker>
+                  )}
 
-              </CedarMaps>
+                </CedarMaps>
+              </div>
+              <Card>
+                <CardTitle className="pull-right text-body similar-card-title">آگهی های مشابه</CardTitle>
+                <CardBody>
+                  <CarouselMultiply>
+                    {similarItems}
+                  </CarouselMultiply>
+                </CardBody>
+              </Card>
             </div>
           </div>
         )}
