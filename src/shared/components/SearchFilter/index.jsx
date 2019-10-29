@@ -452,10 +452,10 @@ class SearchFilter extends PureComponent {
               <FormGroup>
                 {renderSelectField({
                   input: {
-                    onChange: (e) => { this.handleTypeSelect(Number(e.value), 'type'); },
+                    onChange: (e) => { this.handleTypeSelect(e, 'type'); },
                     isMulti: false,
                     name: 'type',
-                    value: types[this.state.type],
+                    value: this.state.type,
                     clearable: true,
                   },
                   placeholder: 'نوع آگهی',
