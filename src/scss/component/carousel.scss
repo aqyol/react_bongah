@@ -45,7 +45,7 @@
 
   .slick-arrow.slick-next {
     right: 15px;
-    background: linear-gradient(90deg, transparent, white);
+    background: none;
 
     &:before {
       content: '\203A';
@@ -54,7 +54,7 @@
   }
 
   .slick-arrow.slick-prev {
-    background: linear-gradient(-90deg, transparent, white);
+    background: none;
     left: 0;
 
     &:before {

@@ -11,6 +11,7 @@ export default class CarouselMultiply extends PureComponent {
     const { children } = this.props;
     // all settings: https://github.com/akiran/react-slick
     const settings = {
+      className: 'carousel-btn',
       dots: true,
       infinite: true,
       speed: 500,
