@@ -45,6 +45,10 @@ const applicationType = [
     value: '1',
     label: 'تجاری',
   },
+  {
+    value: '2',
+    label: 'صنعتی',
+  },
 ];
 
 class SearchFilter extends PureComponent {
@@ -52,33 +56,34 @@ class SearchFilter extends PureComponent {
     handleSearch: PropTypes.func.isRequired,
     handleDissmiss: PropTypes.func.isRequired,
     isModal: PropTypes.bool.isRequired,
+    filterData: PropTypes.objectOf(PropTypes.object).isRequired,
   };
 
   constructor() {
     super();
     this.state = {
-      beds: [
-        {
+      beds: {
+        0: {
           label: '0',
           value: false,
         },
-        {
+        1: {
           label: '1',
           value: false,
         },
-        {
+        2: {
           label: '2',
           value: false,
         },
-        {
+        3: {
           label: '3',
           value: false,
         },
-        {
+        4: {
           label: '+4',
           value: false,
         },
-      ],
+      },
       area: {
         min: 0,
         max: 85,
@@ -128,6 +133,10 @@ class SearchFilter extends PureComponent {
   }
 
   componentDidMount() {
+    const state = this.props.filterData;
+    if (state !== undefined) {
+      this.setState(state);
+    }
   }
 
   handlePriceLabel = (value) => {
@@ -326,28 +335,28 @@ class SearchFilter extends PureComponent {
 
   clearFilter() {
     this.setState({
-      beds: [
-        {
+      beds: {
+        0: {
           label: '0',
           value: false,
         },
-        {
+        1: {
           label: '1',
           value: false,
         },
-        {
+        2: {
           label: '2',
           value: false,
         },
-        {
+        3: {
           label: '3',
           value: false,
         },
-        {
+        4: {
           label: '+4',
           value: false,
         },
-      ],
+      },
       area: {
         min: 0,
         max: 85,
@@ -393,29 +402,33 @@ class SearchFilter extends PureComponent {
   }
 
   selectBeds(num) {
-    this.setState((prevState) => {
-      const { beds } = prevState;
-      const newBeds = beds.map((item, index) => {
-        if (index === num) {
-          return {
-            label: item.label,
-            value: !item.value,
-          };
-        }
-        return {
-          label: item.label,
-          value: item.value,
-        };
-      });
-      return {
-        beds: newBeds,
-      };
-    }, () => {
+    this.setState(prevState => (
+      {
+        ...prevState,
+        beds: {
+          ...prevState.beds,
+          [num]: {
+            ...prevState.beds[num],
+            value: !prevState.beds[num].value,
+          },
+        },
+      }
+    ), () => {
       this.handleSearch(false);
     });
   }
 
   render() {
+    const bedItems = [0, 1, 2, 3, 4].map(item => (
+      <div
+        role="none"
+        className={`${(this.state.beds[item].value ? 'beds-active' : '')}`}
+        onClick={() => { this.selectBeds(item); }}
+      >
+        {(item === 4) ? `+${item}` : item}
+      </div>
+    ));
+
     return (
       <div>
         <Form>
@@ -445,9 +458,24 @@ class SearchFilter extends PureComponent {
                     value: types[this.state.type],
                     clearable: true,
                   },
-                  placeholder: 'نوع',
+                  placeholder: 'نوع آگهی',
                   options: types,
                   name: 'select',
+                  type: 'text',
+                })}
+              </FormGroup>
+            </Col>
+            <Col lg={12} md={12} sm={12} xs={12}>
+              <FormGroup>
+                {renderSelectField({
+                  input: {
+                    onChange: (e) => { this.handleApplicationSelect(e); },
+                    isMulti: false,
+                    name: 'applicationType',
+                    value: this.state.applicationType,
+                  },
+                  placeholder: 'نوع کاربری',
+                  options: applicationType,
                   type: 'text',
                 })}
               </FormGroup>
@@ -566,47 +594,11 @@ class SearchFilter extends PureComponent {
               </>
             )}
             <Col lg={12} md={12} sm={12} xs={12}>
+              <Label>تعداد اتاق</Label>
               <FormGroup>
-                <Label>تعداد اتاق</Label>
-                <FormGroup>
-                  <div className="bed-container">
-                    <div
-                      role="none"
-                      className={`${(this.state.beds[0].value ? 'beds-active' : '')}`}
-                      onClick={() => { this.selectBeds(0); }}
-                    >
-                      0
-                    </div>
-                    <div
-                      role="none"
-                      className={`${(this.state.beds[1].value ? 'beds-active' : '')}`}
-                      onClick={() => { this.selectBeds(1); }}
-                    >
-                      1
-                    </div>
-                    <div
-                      role="none"
-                      className={`${(this.state.beds[2].value ? 'beds-active' : '')}`}
-                      onClick={() => { this.selectBeds(2); }}
-                    >
-                      2
-                    </div>
-                    <div
-                      role="none"
-                      className={`${this.state.beds[3].value ? 'beds-active' : ''}`}
-                      onClick={() => { this.selectBeds(3); }}
-                    >
-                      3
-                    </div>
-                    <div
-                      role="none"
-                      className={`${(this.state.beds[4].value ? 'beds-active' : '')}`}
-                      onClick={() => { this.selectBeds(4); }}
-                    >
-                      +4
-                    </div>
-                  </div>
-                </FormGroup>
+                <div className="bed-container">
+                  {bedItems}
+                </div>
               </FormGroup>
             </Col>
             <Col lg={12} md={12} sm={12} xs={12} className="range-price">
@@ -657,21 +649,6 @@ class SearchFilter extends PureComponent {
                     onChange={(value, isCompleted) => { this.handleAreaRangeChange('age', value, isCompleted); }}
                   />
                 </Col>
-              </FormGroup>
-            </Col>
-            <Col lg={12} md={12} sm={12} xs={12}>
-              <FormGroup>
-                {renderSelectField({
-                  input: {
-                    onChange: (e) => { this.handleApplicationSelect(e); },
-                    isMulti: false,
-                    name: 'applicationType',
-                    value: this.state.applicationType,
-                  },
-                  placeholder: 'نوع کاربری',
-                  options: applicationType,
-                  type: 'text',
-                })}
               </FormGroup>
             </Col>
           </Row>

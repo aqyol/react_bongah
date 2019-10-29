@@ -215,8 +215,9 @@ class SearchForm extends PureComponent {
       filterModal: false,
       requestModal: false,
       requestModalLoading: false,
+      searchLoading: false,
       requestTitle: '',
-      filterData: '',
+      filterData: undefined,
       result: {
         list: [],
         size: 22,
@@ -338,6 +339,10 @@ class SearchForm extends PureComponent {
       this.state.sortBy,
     );
     console.groupEnd();
+    this.setState({ searchLoading: true });
+    setTimeout(() => {
+      this.setState({ searchLoading: false });
+    }, 1000);
   }
 
   handleFilter(data) {
@@ -462,9 +467,10 @@ class SearchForm extends PureComponent {
           >
             <ModalHeader className="modal-title">فیلتر جستجو</ModalHeader>
             <SearchFilter
+              filterData={this.state.filterData}
               handleDissmiss={() => { this.handleDismissModal('filterModal'); }}
               isModal
-              handleSearch={(data) => { this.handleFilter(data); }}
+              handleSearch={(data) => { this.handleDismissModal('filterModal'); this.handleFilter(data); }}
             />
           </Modal>
         </div>
@@ -472,6 +478,7 @@ class SearchForm extends PureComponent {
           <div className="search-filter search-advanced">
             <StickyBox>
               <SearchFilter
+                filterData={this.state.filterData}
                 handleSave={this.handleToggleModal}
                 handleDissmiss={this.handleToggleModal}
                 isModal={false}
@@ -565,42 +572,59 @@ class SearchForm extends PureComponent {
                 </span>
               </div>
               <div>
-                <div className="result-table">
-                  <div className="resultTab">
-                    <ul>
-                      <li
-                        className={this.state.resultTab === 'list' ? 'active' : ''}
-                      >
-                        <a href="#1" onClick={() => { this.changeResultTab('list'); }}><FaThList /> نمایش لیست </a>
-                      </li>
-                      <li
-                        className={this.state.resultTab === 'map' ? 'active' : ''}
-                      >
-                        <a href="#1" onClick={() => { this.changeResultTab('map'); }}><FaMap /> نمایش روی نقشه </a>
-                      </li>
-                    </ul>
+                {this.state.searchLoading
+                && (
+                  <div className={`relative-load${this.state.searchLoading ? '' : ' loaded'}`}>
+                    <div className="load__icon-wrap">
+                      <svg className="load__icon">
+                        <path fill="#4ce1b6" d="M12,4V2A10,10 0 0,0 2,12H4A8,8 0 0,1 12,4Z" />
+                      </svg>
+                    </div>
                   </div>
-                  <div className="resultBody">
-                    {this.state.resultTab === 'list' ? this.resultList() : this.resultMap()}
+                )
+                }
+                {!this.state.searchLoading
+                && (
+                  <div>
+                    <div className="result-table">
+                      <div className="resultTab">
+                        <ul>
+                          <li
+                            className={this.state.resultTab === 'list' ? 'active' : ''}
+                          >
+                            <a href="#1" onClick={() => { this.changeResultTab('list'); }}><FaThList /> نمایش لیست </a>
+                          </li>
+                          <li
+                            className={this.state.resultTab === 'map' ? 'active' : ''}
+                          >
+                            <a href="#1" onClick={() => { this.changeResultTab('map'); }}><FaMap /> نمایش روی نقشه </a>
+                          </li>
+                        </ul>
+                      </div>
+                      <div className="resultBody">
+                        {this.state.resultTab === 'list' ? this.resultList() : this.resultMap()}
+                      </div>
+                    </div>
+                    <Row>
+                      <Pagination aria-label="Page navigation example">
+                        <PaginationItem>
+                          <PaginationLink
+                            previous
+                            onClick={() => { this.changePagination(this.state.result.currPagination - 1); }}
+                          />
+                        </PaginationItem>
+                        {this.createPagination()}
+                        <PaginationItem>
+                          <PaginationLink
+                            next
+                            onClick={() => { this.changePagination(this.state.result.currPagination + 1); }}
+                          />
+                        </PaginationItem>
+                      </Pagination>
+                    </Row>
                   </div>
-                </div>
-                <Row>
-                  <Pagination aria-label="Page navigation example">
-                    <PaginationItem>
-                      <PaginationLink
-                        previous
-                        onClick={() => { this.changePagination(this.state.result.currPagination - 1); }}
-                      />
-                    </PaginationItem>
-                    {this.createPagination()}
-                    <PaginationItem>
-                      <PaginationLink
-                        next
-                        onClick={() => { this.changePagination(this.state.result.currPagination + 1); }}
-                      />
-                    </PaginationItem>
-                  </Pagination>
-                </Row>
+                )
+                }
               </div>
             </div>
           </div>
