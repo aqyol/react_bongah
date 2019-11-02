@@ -30,6 +30,7 @@ import {
   FaAngleUp,
   FaAngleDown,
 } from 'react-icons/fa';
+import { PropTypes } from 'prop-types';
 import renderSelectField from '../../../../shared/components/form/Select';
 import CarouselMultiply from '../../../../shared/components/Carousel/CarouselMultiply';
 import SingleHouse from '../../../../shared/components/SingleHouse';
@@ -98,6 +99,11 @@ const items = [
 
 const houseData = [
   {
+    id: 1,
+    type: 1,
+    price: 100000000,
+    deposit: 30000000,
+    rent: 1500000,
     name: 'خانه آپارتمانی در نارمک',
     address: 'خیابان آزادی، کوچه ۳۹، پلاک ۲۳۱، واحد ۵',
     beds: 2,
@@ -105,6 +111,11 @@ const houseData = [
     square: 20,
     img: 'http://mariusn.com/themes/reales/images/prop/1-1.png',
   }, {
+    id: 2,
+    type: 1,
+    price: 100000000,
+    deposit: 30000000,
+    rent: 1500000,
     name: 'خانه آپارتمانی در نارمک',
     address: 'خیابان آزادی، کوچه ۳۹، پلاک ۲۳۱، واحد ۵',
     beds: 3,
@@ -112,6 +123,11 @@ const houseData = [
     square: 20,
     img: 'http://mariusn.com/themes/reales/images/prop/2-1.png',
   }, {
+    id: 3,
+    type: 1,
+    price: 100000000,
+    deposit: 30000000,
+    rent: 1500000,
     name: 'خانه آپارتمانی در نارمک',
     address: 'خیابان آزادی، کوچه ۳۹، پلاک ۲۳۱، واحد ۵',
     beds: 3,
@@ -119,6 +135,11 @@ const houseData = [
     square: 20,
     img: 'http://mariusn.com/themes/reales/images/prop/1-1.png',
   }, {
+    id: 4,
+    type: 1,
+    price: 100000000,
+    deposit: 30000000,
+    rent: 1500000,
     name: 'خانه آپارتمانی در نارمک',
     address: 'خیابان آزادی، کوچه ۳۹، پلاک ۲۳۱، واحد ۵',
     beds: 3,
@@ -126,6 +147,11 @@ const houseData = [
     square: 20,
     img: 'http://mariusn.com/themes/reales/images/prop/2-1.png',
   }, {
+    id: 5,
+    type: 1,
+    price: 100000000,
+    deposit: 30000000,
+    rent: 1500000,
     name: 'خانه آپارتمانی در نارمک',
     address: 'خیابان آزادی، کوچه ۳۹، پلاک ۲۳۱، واحد ۵',
     beds: 3,
@@ -133,6 +159,11 @@ const houseData = [
     square: 20,
     img: 'http://mariusn.com/themes/reales/images/prop/1-1.png',
   }, {
+    id: 6,
+    type: 1,
+    price: 100000000,
+    deposit: 30000000,
+    rent: 1500000,
     name: 'خانه آپارتمانی در نارمک',
     address: 'خیابان آزادی، کوچه ۳۹، پلاک ۲۳۱، واحد ۵',
     beds: 3,
@@ -185,6 +216,11 @@ const reportTypes = [
 ];
 
 class AdsDetailForm extends PureComponent {
+  static propTypes = {
+    history: PropTypes.objectOf(PropTypes.object).isRequired,
+    id: PropTypes.string.isRequired,
+  };
+
   constructor(props) {
     super(props);
     this.state = {
@@ -219,15 +255,28 @@ class AdsDetailForm extends PureComponent {
     this.isItemValid = this.isItemValid.bind(this);
     this.handleSaveReport = this.handleSaveReport.bind(this);
     this.handleSelect = this.handleSelect.bind(this);
+    this.adsClick = this.adsClick.bind(this);
   }
 
   componentDidMount() {
     this.getAdsInfo();
   }
 
-  getAdsInfo() {
-    this.setState({ isLoading: true });
+  componentDidUpdate(prevProps) {
+    if (this.props.id === undefined) {
+      return;
+    }
+    if (prevProps.id === this.props.id) {
+      return;
+    }
+    this.getAdsInfo(this.props.id);
+  }
 
+  getAdsInfo(id) {
+    this.setState({ isLoading: true });
+    console.group('user id');
+    console.log(id);
+    console.groupEnd();
     setTimeout(() => {
       this.setState({
         isLoading: false,
@@ -306,6 +355,14 @@ class AdsDetailForm extends PureComponent {
     }, 1000);
   }
 
+  adsClick(id) {
+    console.group('ads click');
+    console.log(id);
+    console.log(this.state);
+    console.groupEnd();
+    this.props.history.push(`/ads/detail/${id}`);
+  }
+
   render() {
     const info = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(i => (
       <Col lg={3} md={6} sm={4} xs={6} className="text-center" key={i.toString()}>
@@ -322,7 +379,7 @@ class AdsDetailForm extends PureComponent {
 
     const similarItems = houseData.map(item => (
       <div>
-        <SingleHouse data={item} />
+        <SingleHouse onClick={(id) => { this.adsClick(id); }} data={item} />
       </div>
     ));
 
