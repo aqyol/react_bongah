@@ -208,6 +208,8 @@ a.card h2, div.card h2 {
 
 a.card:hover, div.card:hover {
   text-decoration: none;
+  -webkit-box-shadow: 0 2px 2px 1px rgba(10, 10, 10, 0.5) !important;
+  box-shadow: 0 2px 2px 1px rgba(10, 10, 10, 0.5) !important;
 }
 
 a.card:hover h2, div.card:hover h2 {
