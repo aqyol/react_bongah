@@ -497,7 +497,7 @@ class SearchFilter extends PureComponent {
                       )}
                     </p>
                   </Col>
-                  <Col lg={12} md={12} sm={12} xs={12}>
+                  <Col lg={12} md={12} sm={12} xs={12} className="range-slider-col">
                     <RangeSlider
                       minValue={0}
                       maxValue={38}
@@ -526,7 +526,7 @@ class SearchFilter extends PureComponent {
                         )}
                       </p>
                     </Col>
-                    <Col lg={12} md={12} sm={12} xs={12}>
+                    <Col lg={12} md={12} sm={12} xs={12} className="range-slider-col">
                       <RangeSlider
                         minValue={0}
                         maxValue={38}
@@ -551,7 +551,7 @@ class SearchFilter extends PureComponent {
                         )}
                       </p>
                     </Col>
-                    <Col lg={12} md={12} sm={12} xs={12}>
+                    <Col lg={12} md={12} sm={12} xs={12} className="range-slider-col">
                       <RangeSlider
                         minValue={0}
                         maxValue={28}
@@ -581,7 +581,7 @@ class SearchFilter extends PureComponent {
                         )}
                       </p>
                     </Col>
-                    <Col lg={12} md={12} sm={12} xs={12}>
+                    <Col lg={12} md={12} sm={12} xs={12} className="range-slider-col">
                       <RangeSlider
                         minValue={0}
                         maxValue={28}
@@ -616,7 +616,7 @@ class SearchFilter extends PureComponent {
                     )}
                   </p>
                 </Col>
-                <Col lg={12} md={12} sm={12} xs={12}>
+                <Col lg={12} md={12} sm={12} xs={12} className="range-slider-col">
                   <RangeSlider
                     minValue={0}
                     maxValue={85}
@@ -641,7 +641,7 @@ class SearchFilter extends PureComponent {
                     )}
                   </p>
                 </Col>
-                <Col lg={12} md={12} sm={12} xs={12}>
+                <Col lg={12} md={12} sm={12} xs={12} className="range-slider-col">
                   <RangeSlider
                     minValue={0}
                     maxValue={30}
