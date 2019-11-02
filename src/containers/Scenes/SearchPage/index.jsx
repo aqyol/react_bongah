@@ -8,6 +8,7 @@ const SearchPage = props => (
     <Dashboard>
       <div className="searchFormWrapper">
         <SearchForm
+          history={props.history}
           type={(props.location.state !== undefined) ? props.location.state.type : undefined}
           searchParams={(props.location.state !== undefined) ? props.location.state.searchItem : undefined}
         />
@@ -29,6 +30,7 @@ SearchPage.propTypes = {
       type: PropTypes.string,
     }),
   }).isRequired,
+  history: PropTypes.objectOf(PropTypes.object).isRequired,
 };
 
 export default SearchPage;
