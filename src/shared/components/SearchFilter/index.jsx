@@ -11,6 +11,7 @@ import {
 } from 'reactstrap';
 import renderSelectField from '../form/Select';
 import RangeSlider from '../RangeSlider/RangeSlider';
+import CheckBox from '../CheckBox';
 
 
 const types = [
@@ -55,8 +56,12 @@ class SearchFilter extends PureComponent {
   static propTypes = {
     handleSearch: PropTypes.func.isRequired,
     handleDissmiss: PropTypes.func.isRequired,
-    isModal: PropTypes.bool.isRequired,
+    isModal: PropTypes.bool,
     filterData: PropTypes.objectOf(PropTypes.object).isRequired,
+  };
+
+  static defaultProps = {
+    isModal: true,
   };
 
   constructor() {
@@ -122,6 +127,8 @@ class SearchFilter extends PureComponent {
       },
       type: types[0],
       applicationType: '',
+      haveVam: false,
+      isConvertable: false,
     };
     this.handleRangeChange = this.handleRangeChange.bind(this);
     this.handleTypeSelect = this.handleTypeSelect.bind(this);
@@ -130,9 +137,13 @@ class SearchFilter extends PureComponent {
     this.clearFilter = this.clearFilter.bind(this);
     this.selectBeds = this.selectBeds.bind(this);
     this.handleAreaRangeChange = this.handleAreaRangeChange.bind(this);
+    this.handleToggle = this.handleToggle.bind(this);
   }
 
   componentDidMount() {
+    console.group('filter props');
+    console.log(this.props);
+    console.groupEnd();
     const state = this.props.filterData;
     if (state !== undefined) {
       this.setState(state);
@@ -319,6 +330,7 @@ class SearchFilter extends PureComponent {
   }
 
   handleSearch(clickEvent) {
+    console.log(clickEvent, this.props.isModal);
     const { handleSearch } = this.props;
     if (!this.props.isModal) {
       handleSearch(this.state);
@@ -414,6 +426,17 @@ class SearchFilter extends PureComponent {
         },
       }
     ), () => {
+      this.handleSearch(false);
+    });
+  }
+
+  handleToggle(name) {
+    this.setState((prevState) => {
+      const { [name]: prevVal } = prevState;
+      return {
+        [name]: !prevVal,
+      };
+    }, () => {
       this.handleSearch(false);
     });
   }
@@ -650,6 +673,24 @@ class SearchFilter extends PureComponent {
                   />
                 </Col>
               </FormGroup>
+            </Col>
+            <Col lg={6} md={6} sm={6} xs={6} className="filter-checkbox">
+              <CheckBox
+                name="haveVam"
+                value={this.state.havVam}
+                onChange={() => { this.handleToggle('havVam'); }}
+              >
+                دارای وام
+              </CheckBox>
+            </Col>
+            <Col lg={6} md={6} sm={6} xs={6} className="filter-checkbox">
+              <CheckBox
+                name="isConvertable"
+                value={this.state.isConvertable}
+                onChange={() => { this.handleToggle('isConvertable'); }}
+              >
+                قابلیت تبدیل
+              </CheckBox>
             </Col>
           </Row>
           <Row className="filter-modal-btn">
