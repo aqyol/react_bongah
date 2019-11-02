@@ -199,7 +199,7 @@ class SearchForm extends PureComponent {
       requestModalLoading: false,
       searchLoading: false,
       requestTitle: '',
-      filterData: undefined,
+      filterData: {},
       result: {
         list: [],
         size: 22,
