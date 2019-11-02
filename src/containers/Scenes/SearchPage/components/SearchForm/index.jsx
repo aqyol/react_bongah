@@ -5,6 +5,7 @@ import {
   FaFilter,
 } from 'react-icons/fa';
 import 'react-input-range/lib/css/index.css';
+import PropTypes from 'prop-types';
 import {
   Row,
   Col,
@@ -34,99 +35,76 @@ import SearchFilter from '../../../../../shared/components/SearchFilter/index';
 
 const houseData = [
   {
-    name: 'خانه ویلایی',
-    address: ' تهران، آزادی',
-    beds: 3,
-    toilets: 2,
-    square: 120,
+    id: 1,
+    type: 2,
+    price: 100000000,
+    deposit: 30000000,
+    rent: 1500000,
+    name: 'خانه آپارتمانی در نارمک',
+    address: 'خیابان آزادی، کوچه ۳۹، پلاک ۲۳۱، واحد ۵',
+    beds: 2,
+    toilets: 1,
+    square: 20,
     img: 'http://mariusn.com/themes/reales/images/prop/1-1.png',
-  },
-  {
-    name: 'خانه آپارتمانی ',
-    address: 'تهران، ونک',
+  }, {
+    id: 2,
+    type: 1,
+    price: 100000000,
+    deposit: 30000000,
+    rent: 1500000,
+    name: 'خانه آپارتمانی در نارمک',
+    address: 'خیابان آزادی، کوچه ۳۹، پلاک ۲۳۱، واحد ۵',
     beds: 3,
     toilets: 2,
-    square: 120,
+    square: 20,
     img: 'http://mariusn.com/themes/reales/images/prop/2-1.png',
-  },
-  {
-    name: 'آپارتمان مسکونی',
-    address: ' شیراز، شریعتی',
+  }, {
+    id: 3,
+    type: 1,
+    price: 100000000,
+    deposit: 30000000,
+    rent: 1500000,
+    name: 'خانه آپارتمانی در نارمک',
+    address: 'خیابان آزادی، کوچه ۳۹، پلاک ۲۳۱، واحد ۵',
     beds: 3,
     toilets: 2,
-    square: 200,
+    square: 20,
     img: 'http://mariusn.com/themes/reales/images/prop/1-1.png',
-  },
-  {
-    name: 'آپارتمان اداری',
-    address: 'تبریز، آبرسان',
+  }, {
+    id: 4,
+    type: 2,
+    price: 100000000,
+    deposit: 30000000,
+    rent: 1500000,
+    name: 'خانه آپارتمانی در نارمک',
+    address: 'خیابان آزادی، کوچه ۳۹، پلاک ۲۳۱، واحد ۵',
     beds: 3,
     toilets: 2,
-    square: 220,
+    square: 20,
     img: 'http://mariusn.com/themes/reales/images/prop/2-1.png',
-  },
-  {
-    name: 'خانه ویلایی',
-    address: ' تهران، آزادی',
+  }, {
+    id: 5,
+    type: 1,
+    price: 100000000,
+    deposit: 30000000,
+    rent: 1500000,
+    name: 'خانه آپارتمانی در نارمک',
+    address: 'خیابان آزادی، کوچه ۳۹، پلاک ۲۳۱، واحد ۵',
     beds: 3,
     toilets: 2,
-    square: 120,
+    square: 20,
     img: 'http://mariusn.com/themes/reales/images/prop/1-1.png',
-  },
-  {
-    name: 'خانه آپارتمانی ',
-    address: 'تهران، ونک',
+  }, {
+    id: 6,
+    type: 1,
+    price: 100000000,
+    deposit: 30000000,
+    rent: 1500000,
+    name: 'خانه آپارتمانی در نارمک',
+    address: 'خیابان آزادی، کوچه ۳۹، پلاک ۲۳۱، واحد ۵',
     beds: 3,
     toilets: 2,
-    square: 120,
-    img: 'http://mariusn.com/themes/reales/images/prop/2-1.png',
-  },
-  {
-    name: 'آپارتمان مسکونی',
-    address: ' شیراز، شریعتی',
-    beds: 3,
-    toilets: 2,
-    square: 200,
-    img: 'http://mariusn.com/themes/reales/images/prop/1-1.png',
-  },
-  {
-    name: 'آپارتمان اداری',
-    address: 'تبریز، آبرسان',
-    beds: 3,
-    toilets: 2,
-    square: 220,
-    img: 'http://mariusn.com/themes/reales/images/prop/2-1.png',
-  },
-  {
-    name: 'خانه ویلایی',
-    address: ' تهران، آزادی',
-    beds: 3,
-    toilets: 2,
-    square: 120,
-    img: 'http://mariusn.com/themes/reales/images/prop/1-1.png',
-  },
-  {
-    name: 'خانه آپارتمانی ',
-    address: 'تهران، ونک',
-    beds: 3,
-    toilets: 2,
-    square: 120,
-    img: 'http://mariusn.com/themes/reales/images/prop/2-1.png',
-  },
-  {
-    name: 'آپارتمان مسکونی',
-    address: ' شیراز، شریعتی',
-    beds: 3,
-    toilets: 2,
-    square: 200,
-    img: 'http://mariusn.com/themes/reales/images/prop/1-1.png',
-  },
-  {
-    name: 'آپارتمان اداری',
-    address: 'تبریز، آبرسان',
-    beds: 3,
-    toilets: 2,
-    square: 220,
+    square: 20,
     img: 'http://mariusn.com/themes/reales/images/prop/2-1.png',
   },
 ];
@@ -205,6 +183,10 @@ const selectTheme = theme => ({
 });
 
 class SearchForm extends PureComponent {
+  static propTypes = {
+    history: PropTypes.objectOf(PropTypes.object).isRequired,
+  };
+
   constructor() {
     super();
     this.state = {
@@ -222,7 +204,7 @@ class SearchForm extends PureComponent {
         list: [],
         size: 22,
         pages: 3,
-        currPagination: 1,
+        currPagination: 0,
         pagination: 1,
       },
     };
@@ -239,6 +221,7 @@ class SearchForm extends PureComponent {
     this.handleFilter = this.handleFilter.bind(this);
     this.changePagination = this.changePagination.bind(this);
     this.isItemValid = this.isItemValid.bind(this);
+    this.adsClick = this.adsClick.bind(this);
   }
 
   componentDidMount() {
@@ -259,8 +242,8 @@ class SearchForm extends PureComponent {
     <div className="resultsList">
       <Row>
         {houseData.map((data, index) => (
-          <Col xs={12} sm={6} md={6} lg={4} key={index.toString()}>
-            <SingleHouse data={data} />
+          <Col xs={12} sm={6} md={6} lg={6} xl={4} key={index.toString()}>
+            <SingleHouse onClick={(id) => { this.adsClick(id); }} data={data} />
           </Col>
         ))}
       </Row>
@@ -407,6 +390,14 @@ class SearchForm extends PureComponent {
     return val.trim().length > 0;
   }
 
+  adsClick(id) {
+    console.group('ads click');
+    console.log(id);
+    console.log(this.state);
+    console.groupEnd();
+    this.props.history.push(`/ads/detail/${id}`);
+  }
+
   render() {
     return (
       <div>
@@ -508,7 +499,7 @@ class SearchForm extends PureComponent {
                         />
                       </FormGroup>
                     </Col>
-                    <Col lg={2} md={2} sm={2} xs={12}>
+                    <Col lg={2} md={2} sm={2} xs={6}>
                       <Button
                         style={{ margin: '0px 2px 5px 2px' }}
                         onClick={() => { this.handleFilter(); }}
@@ -516,7 +507,7 @@ class SearchForm extends PureComponent {
                       >تغییر جستجو
                       </Button>
                     </Col>
-                    <Col lg={2} md={2} sm={2} xs={12}>
+                    <Col lg={2} md={2} sm={2} xs={6}>
                       <Button
                         style={{ margin: '0px 2px 5px 2px' }}
                         color="success"

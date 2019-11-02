@@ -1,7 +1,7 @@
 .ads-detail-container {
   direction: rtl;
   width: 80%;
-  margin: auto;
+  margin: 20px auto;
 }
 
 .ads-detail-height {
@@ -71,8 +71,13 @@ canvas {
   height: 50%;
 }
 
+.similar-card-title {
+  font-size: 1.5rem;
+  padding: 1%;
+}
+
 @media screen and (max-width: 700px) {
   .ads-detail-container {
-    width: 100%;
+    width: 90%;
   }
 }

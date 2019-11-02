@@ -1,53 +1,112 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
-  FaBed,
-  FaParking,
-  FaVectorSquare,
-  FaRegEye,
-  FaRegHeart,
-} from 'react-icons/fa';
+  MdBorderStyle,
+  MdAirlineSeatIndividualSuite,
+  MdDomain,
+} from 'react-icons/md';
 import {
   Card,
   CardBody,
   CardImg,
   CardText,
-  CardTitle,
+  CardImgOverlay,
+  CardHeader,
+  Row,
+  Col,
+  Label,
 } from 'reactstrap';
-import { Link } from 'react-router-dom';
 
-const SingleHouse = ({ data }) => (
-  <div className="singleHouse">
+const nf = new Intl.NumberFormat();
+
+const SingleHouse = props => (
+  <div
+    className="singleHouse"
+    onClick={() => {
+      const { onClick } = props;
+      onClick(props.data.id);
+    }}
+    role="none"
+  >
     <Card>
-      <CardImg
-        top
-        width="100%"
-        src={data.img}
-        alt="Card image cap"
-      />
-      <CardBody style={{ textAlign: 'right' }}>
-        <CardTitle>{data.name}</CardTitle>
+      <CardHeader style={{ position: 'relative', padding: 0 }}>
+        <CardImg
+          top
+          width="100%"
+          src={props.data.img}
+          alt="Card image cap"
+        />
+        <CardImgOverlay style={{ top: 'unset', color: 'white', textAlign: 'right' }}>
+          <Row>
+            <Col xs={8} sm={8} md={8} lg={8} xl={8} style={{ padding: 0 }}>{props.data.name}</Col>
+            <Col xs={4} sm={4} md={4} lg={4} xl={4} style={{ padding: 0 }}>۳ هفته پیش</Col>
+          </Row>
+        </CardImgOverlay>
+      </CardHeader>
+      <CardBody style={{ textAlign: 'right', padding: '0.5rem' }}>
         <CardText>
-          {data.address}
-        </CardText>
-        <CardText>
-          <ul className="cardFeat">
-            <li><span className="fa fa-moon-o"><FaBed /></span> {data.beds}</li>
-            <li><span className="icon-drop"><FaParking /></span> {data.toilets}</li>
-            <li><span className="icon-frame"><FaVectorSquare /></span> {data.square} مترمربع</li>
-          </ul>
-          <ul className="cardFeat">
-            <li><span className="fa fa-moon-o"><FaRegEye /></span> 200</li>
-            <li><span className="icon-drop"><FaRegHeart /></span> 54</li>
-          </ul>
-          <small className="text-muted">{data.beds} دقیقه پیش</small>
-          <Link
-            to={`/ads/detail/${data.beds}`}
-            className="btn-success"
-            style={{ width: '30%', float: 'left', textAlign: 'center' }}
-          >
-            مشاهده
-          </Link>
+          <Row className="ads-main-info-list">
+            <Col xs={4} sm={4} md={4} lg={4} xl={4}>
+              <MdBorderStyle className="chart-icon-list" />
+              <span>{props.data.square} متر</span>
+            </Col>
+            <Col xs={4} sm={4} md={4} lg={4} xl={4}>
+              <MdAirlineSeatIndividualSuite className="chart-icon-list" />
+              <span>{props.data.beds} خواب</span>
+            </Col>
+            <Col xs={4} sm={4} md={4} lg={4} xl={4}>
+              <MdDomain className="chart-icon-list" />
+              <span>{props.data.toilets} ساله</span>
+            </Col>
+          </Row>
+          {props.data.type === 1
+          && (
+            <div className="ads-price-card">
+              <Row>
+                <Col>
+                  <Label className="pull-right" style={{ width: '20%' }}>قیمت</Label>
+                  <Label className="bold-text" style={{ width: '60%', textAlign: 'left', padding: '0 5px' }}>
+                    {nf.format(props.data.price)}
+                  </Label>
+                  <Label className="pull-left" style={{ width: '20%' }}>تومان</Label>
+                </Col>
+              </Row>
+              <Row>
+                <Col>
+                  <Label className="pull-right" style={{ width: '20%' }}>هر متر</Label>
+                  <Label className="bold-text" style={{ width: '60%', textAlign: 'left', padding: '0 5px' }}>
+                    {nf.format(props.data.price)}
+                  </Label>
+                  <Label className="pull-left" style={{ width: '20%' }}>تومان</Label>
+                </Col>
+              </Row>
+            </div>
+          )
+          }
+          {props.data.type !== 1
+          && (
+            <div className="ads-price-card">
+              <Row>
+                <Col>
+                  <Label className="pull-right" style={{ width: '20%' }}>ودیعه</Label>
+                  <Label className="bold-text" style={{ width: '60%', textAlign: 'left', padding: '0 5px' }}>
+                    {nf.format(props.data.deposit)}
+                  </Label>
+                  <Label className="pull-left" style={{ width: '20%' }}>تومان</Label>
+                </Col>
+              </Row>
+              <Row>
+                <Col>
+                  <Label className="pull-right" style={{ width: '20%' }}>اجاره</Label>
+                  <Label className="bold-text" style={{ width: '60%', textAlign: 'left', padding: '0 5px' }}>
+                    {nf.format(props.data.rent)}
+                  </Label>
+                  <Label className="pull-left" style={{ width: '20%' }}>تومان</Label>
+                </Col>
+              </Row>
+            </div>
+          )
+          }
         </CardText>
       </CardBody>
     </Card>
@@ -56,6 +115,7 @@ const SingleHouse = ({ data }) => (
 
 SingleHouse.propTypes = {
   data: PropTypes.objectOf(PropTypes.object).isRequired,
+  onClick: PropTypes.func.isRequired,
 };
 
 export default SingleHouse;
