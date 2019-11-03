@@ -466,7 +466,7 @@ class SearchForm extends PureComponent {
           </Modal>
         </div>
         <div className="search-container">
-          <div className="search-filter search-advanced">
+          <div className="search-filter">
             <StickyBox>
               <SearchFilter
                 filterData={this.state.filterData}

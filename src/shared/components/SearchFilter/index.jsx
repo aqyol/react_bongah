@@ -56,13 +56,10 @@ class SearchFilter extends PureComponent {
   static propTypes = {
     handleSearch: PropTypes.func.isRequired,
     handleDissmiss: PropTypes.func.isRequired,
-    isModal: PropTypes.bool,
+    isModal: PropTypes.bool.isRequired,
     filterData: PropTypes.objectOf(PropTypes.object).isRequired,
   };
 
-  static defaultProps = {
-    isModal: true,
-  };
 
   constructor() {
     super();
@@ -674,24 +671,52 @@ class SearchFilter extends PureComponent {
                 </Col>
               </FormGroup>
             </Col>
-            <Col lg={6} md={6} sm={6} xs={6} className="filter-checkbox">
-              <CheckBox
-                name="haveVam"
-                value={this.state.havVam}
-                onChange={() => { this.handleToggle('havVam'); }}
-              >
-                دارای وام
-              </CheckBox>
-            </Col>
-            <Col lg={6} md={6} sm={6} xs={6} className="filter-checkbox">
-              <CheckBox
-                name="isConvertable"
-                value={this.state.isConvertable}
-                onChange={() => { this.handleToggle('isConvertable'); }}
-              >
-                قابلیت تبدیل
-              </CheckBox>
-            </Col>
+            {this.props.isModal
+            && (
+              <Row style={{ width: '100%' }}>
+                <Col lg={6} md={6} sm={6} xs={6} className="filter-checkbox">
+                  <CheckBox
+                    name="haveVam"
+                    value={this.state.havVam}
+                    onChange={() => { this.handleToggle('havVam'); }}
+                  >
+                    وام
+                  </CheckBox>
+                </Col>
+                <Col lg={6} md={6} sm={6} xs={6} className="filter-checkbox">
+                  <CheckBox
+                    name="isConvertable"
+                    value={this.state.isConvertable}
+                    onChange={() => { this.handleToggle('isConvertable'); }}
+                  >
+                    تبدیل
+                  </CheckBox>
+                </Col>
+              </Row>
+            )}
+            {!this.props.isModal
+            && (
+              <Row style={{ width: '100%' }}>
+                <Col lg={6} md={6} sm={6} xs={6} className="filter-checkbox">
+                  <CheckBox
+                    name="haveVam"
+                    value={this.state.havVam}
+                    onChange={() => { this.handleToggle('havVam'); }}
+                  >
+                    دارای وام
+                  </CheckBox>
+                </Col>
+                <Col lg={6} md={6} sm={6} xs={6} className="filter-checkbox">
+                  <CheckBox
+                    name="isConvertable"
+                    value={this.state.isConvertable}
+                    onChange={() => { this.handleToggle('isConvertable'); }}
+                  >
+                    قابلیت تبدیل
+                  </CheckBox>
+                </Col>
+              </Row>
+            )}
           </Row>
           <Row className="filter-modal-btn">
             <Col />
