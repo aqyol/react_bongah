@@ -8,10 +8,16 @@ import {
   FormGroup,
   Button,
   Label,
+  Collapse,
 } from 'reactstrap';
+import {
+  FaAngleUp,
+  FaAngleDown,
+} from 'react-icons/fa';
 import renderSelectField from '../form/Select';
 import RangeSlider from '../RangeSlider/RangeSlider';
 import CheckBox from '../CheckBox';
+import { FILTER_CHECKS, HOME_TYPE_ARRAY } from '../../../containers/constants';
 
 
 const types = [
@@ -40,11 +46,11 @@ const types = [
 const applicationType = [
   {
     value: '0',
-    label: 'اداری',
+    label: 'مسکونی',
   },
   {
     value: '1',
-    label: 'تجاری',
+    label: 'اداری، تجاری',
   },
   {
     value: '2',
@@ -122,10 +128,23 @@ class SearchFilter extends PureComponent {
         max: 28,
         maxLabel: '5 میلیون تومان',
       },
-      type: types[0],
-      applicationType: '',
+      type:
+        {
+          value: '0',
+          label: 'فروش',
+        },
+      applicationType:
+        {
+          value: '0',
+          label: 'مسکونی',
+        },
+      homeType: '',
+      homeTypeArr: HOME_TYPE_ARRAY[0],
       haveVam: false,
       isConvertable: false,
+      checkItems: FILTER_CHECKS,
+      checkNums: [0, 1, 2, 3, 4, 5, 6, 7, 8],
+      toggleProperties: false,
     };
     this.handleRangeChange = this.handleRangeChange.bind(this);
     this.handleTypeSelect = this.handleTypeSelect.bind(this);
@@ -135,6 +154,8 @@ class SearchFilter extends PureComponent {
     this.selectBeds = this.selectBeds.bind(this);
     this.handleAreaRangeChange = this.handleAreaRangeChange.bind(this);
     this.handleToggle = this.handleToggle.bind(this);
+    this.getInitialData = this.getInitialData.bind(this);
+    this.toggle = this.toggle.bind(this);
   }
 
   componentDidMount() {
@@ -145,6 +166,17 @@ class SearchFilter extends PureComponent {
     if (state !== undefined) {
       this.setState(state);
     }
+  }
+
+  getInitialData() {
+    // get init data using selected applicationType
+    console.group();
+    console.log('init data, selected type');
+    console.log(this.state.applicationType);
+    console.groupEnd();
+    this.setState({
+      homeType: '',
+    });
   }
 
   handlePriceLabel = (value) => {
@@ -318,12 +350,23 @@ class SearchFilter extends PureComponent {
     this.setState({ [name]: index }, () => {
       this.handleSearch(false);
     });
+    if (name === 'applicationType') {
+      // get initial data from server based ads selected type
+      // like : applicationType, homeType, ...
+      this.getInitialData();
+    }
   }
 
   handleApplicationSelect(type) {
-    this.setState({ applicationType: type }, () => {
-      this.handleSearch(false);
-    });
+    this.setState(
+      {
+        applicationType: type,
+        homeTypeArr: HOME_TYPE_ARRAY[Number(type.value)],
+      },
+      () => {
+        this.handleSearch(false);
+      },
+    );
   }
 
   handleSearch(clickEvent) {
@@ -402,8 +445,18 @@ class SearchFilter extends PureComponent {
         max: 28,
         maxLabel: '5 میلیون تومان',
       },
+      type:
+        {
+          value: '0',
+          label: 'فروش',
+        },
       applicationType: '',
-      type: 0,
+      homeType: '',
+      haveVam: false,
+      isConvertable: false,
+      checkItems: FILTER_CHECKS,
+      checkNums: [0, 1, 2, 3, 4, 5],
+      toggleProperties: false,
     }, () => {
       const { handleSearch } = this.props;
       handleSearch(this.state);
@@ -427,14 +480,30 @@ class SearchFilter extends PureComponent {
     });
   }
 
-  handleToggle(name) {
+  handleToggle(num) {
+    this.setState(prevState => (
+      {
+        ...prevState,
+        checkItems: {
+          ...prevState.checkItems,
+          [num]: {
+            ...prevState.checkItems[num],
+            value: !prevState.checkItems[num].value,
+          },
+        },
+      }
+    ), () => {
+      this.handleSearch(false);
+    });
+  }
+
+  toggle(e, name) {
+    e.preventDefault();
     this.setState((prevState) => {
       const { [name]: prevVal } = prevState;
       return {
         [name]: !prevVal,
       };
-    }, () => {
-      this.handleSearch(false);
     });
   }
 
@@ -447,6 +516,18 @@ class SearchFilter extends PureComponent {
       >
         {(item === 4) ? `+${item}` : item}
       </div>
+    ));
+
+    const checks = this.state.checkNums.map(num => (
+      <Col lg={6} md={6} sm={6} xs={6} className="filter-checkbox">
+        <CheckBox
+          name={this.state.checkItems[num].label}
+          value={this.state.checkItems[num].value}
+          onChange={() => { this.handleToggle(num); }}
+        >
+          {this.state.checkItems[num].label} {this.props.isModal ? 'modal' : ''}
+        </CheckBox>
+      </Col>
     ));
 
     return (
@@ -494,8 +575,23 @@ class SearchFilter extends PureComponent {
                     name: 'applicationType',
                     value: this.state.applicationType,
                   },
-                  placeholder: 'نوع کاربری',
+                  placeholder: 'کاربری ملک',
                   options: applicationType,
+                  type: 'text',
+                })}
+              </FormGroup>
+            </Col>
+            <Col lg={12} md={12} sm={12} xs={12}>
+              <FormGroup>
+                {renderSelectField({
+                  input: {
+                    onChange: (e) => { this.handleApplicationSelect(e); },
+                    isMulti: false,
+                    name: 'homeType',
+                    value: this.state.homeType,
+                  },
+                  placeholder: 'نوع ملک',
+                  options: this.state.homeTypeArr,
                   type: 'text',
                 })}
               </FormGroup>
@@ -674,48 +770,34 @@ class SearchFilter extends PureComponent {
             {this.props.isModal
             && (
               <Row style={{ width: '100%' }}>
-                <Col lg={6} md={6} sm={6} xs={6} className="filter-checkbox">
-                  <CheckBox
-                    name="haveVam"
-                    value={this.state.havVam}
-                    onChange={() => { this.handleToggle('havVam'); }}
-                  >
-                    وام
-                  </CheckBox>
-                </Col>
-                <Col lg={6} md={6} sm={6} xs={6} className="filter-checkbox">
-                  <CheckBox
-                    name="isConvertable"
-                    value={this.state.isConvertable}
-                    onChange={() => { this.handleToggle('isConvertable'); }}
-                  >
-                    تبدیل
-                  </CheckBox>
-                </Col>
+                {checks}
               </Row>
             )}
             {!this.props.isModal
             && (
-              <Row style={{ width: '100%' }}>
-                <Col lg={6} md={6} sm={6} xs={6} className="filter-checkbox">
-                  <CheckBox
-                    name="haveVam"
-                    value={this.state.havVam}
-                    onChange={() => { this.handleToggle('havVam'); }}
-                  >
-                    دارای وام
-                  </CheckBox>
-                </Col>
-                <Col lg={6} md={6} sm={6} xs={6} className="filter-checkbox">
-                  <CheckBox
-                    name="isConvertable"
-                    value={this.state.isConvertable}
-                    onChange={() => { this.handleToggle('isConvertable'); }}
-                  >
-                    قابلیت تبدیل
-                  </CheckBox>
-                </Col>
-              </Row>
+              <div className="filter-properties">
+                <Button
+                  outline
+                  color="link"
+                  onClick={(e) => { this.toggle(e, 'toggleProperties'); }}
+                  className="full-width text-right"
+                >
+                  سایر ویژگی ها
+                  {this.state.toggleProperties
+                  && (
+                    <FaAngleUp className="ads-detail-angle" />
+                  )}
+                  {!this.state.toggleProperties
+                  && (
+                    <FaAngleDown className="ads-detail-angle" />
+                  )}
+                </Button>
+                <Collapse className="collapse-container" isOpen={this.state.toggleProperties}>
+                  <Row style={{ width: '100%' }}>
+                    {checks}
+                  </Row>
+                </Collapse>
+              </div>
             )}
           </Row>
           <Row className="filter-modal-btn">
