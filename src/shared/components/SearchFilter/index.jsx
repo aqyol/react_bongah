@@ -142,7 +142,7 @@ class SearchFilter extends PureComponent {
       homeTypeArr: HOME_TYPE_ARRAY[0],
       haveVam: false,
       isConvertable: false,
-      checkItems: FILTER_CHECKS,
+      checkItems: FILTER_CHECKS[0],
       checkNums: [0, 1, 2, 3, 4, 5, 6, 7, 8],
       toggleProperties: false,
     };
@@ -156,6 +156,7 @@ class SearchFilter extends PureComponent {
     this.handleToggle = this.handleToggle.bind(this);
     this.getInitialData = this.getInitialData.bind(this);
     this.toggle = this.toggle.bind(this);
+    this.getAdsTypeInitData = this.getAdsTypeInitData.bind(this);
   }
 
   componentDidMount() {
@@ -177,6 +178,10 @@ class SearchFilter extends PureComponent {
     this.setState({
       homeType: '',
     });
+  }
+
+  getAdsTypeInitData(index) {
+    this.setState({ checkItems: FILTER_CHECKS[index] });
   }
 
   handlePriceLabel = (value) => {
@@ -355,6 +360,11 @@ class SearchFilter extends PureComponent {
       // like : applicationType, homeType, ...
       this.getInitialData();
     }
+    if (name === 'type') {
+      // get initial data from server based ads selected type
+      // like : applicationType, homeType, ...
+      this.getAdsTypeInitData(Number(index.value));
+    }
   }
 
   handleApplicationSelect(type) {
@@ -454,8 +464,7 @@ class SearchFilter extends PureComponent {
       homeType: '',
       haveVam: false,
       isConvertable: false,
-      checkItems: FILTER_CHECKS,
-      checkNums: [0, 1, 2, 3, 4, 5],
+      checkItems: FILTER_CHECKS[0],
       toggleProperties: false,
     }, () => {
       const { handleSearch } = this.props;
@@ -486,9 +495,12 @@ class SearchFilter extends PureComponent {
         ...prevState,
         checkItems: {
           ...prevState.checkItems,
-          [num]: {
-            ...prevState.checkItems[num],
-            value: !prevState.checkItems[num].value,
+          checks: {
+            ...prevState.checkItems.checks,
+            [num]: {
+              ...prevState.checkItems.checks[num],
+              value: !prevState.checkItems.checks[num].value,
+            },
           },
         },
       }
@@ -518,17 +530,22 @@ class SearchFilter extends PureComponent {
       </div>
     ));
 
-    const checks = this.state.checkNums.map(num => (
-      <Col lg={6} md={6} sm={6} xs={6} className="filter-checkbox">
-        <CheckBox
-          name={this.state.checkItems[num].label}
-          value={this.state.checkItems[num].value}
-          onChange={() => { this.handleToggle(num); }}
-        >
-          {this.state.checkItems[num].label} {this.props.isModal ? 'modal' : ''}
-        </CheckBox>
-      </Col>
-    ));
+    let checks;
+
+    if (this.state.checkItems !== undefined) {
+      checks = this.state.checkItems.ids.map(num => (
+        <Col lg={6} md={6} sm={6} xs={6} className="filter-checkbox">
+          <CheckBox
+            name={this.state.checkItems.checks[num].label}
+            value={this.state.checkItems.checks[num].value}
+            onChange={() => { this.handleToggle(num); }}
+          >
+            {this.state.checkItems.checks[num].label} {this.props.isModal ? 'modal' : ''}
+          </CheckBox>
+        </Col>
+      ));
+    }
+
 
     return (
       <div>
@@ -596,7 +613,7 @@ class SearchFilter extends PureComponent {
                 })}
               </FormGroup>
             </Col>
-            {(this.state.type !== 1 && this.state.type !== 2)
+            {(this.state.type.value !== '1' && this.state.type.value !== '2')
             && (
               <Col lg={12} md={12} sm={12} xs={12} className="range-price">
                 <FormGroup>
@@ -624,7 +641,7 @@ class SearchFilter extends PureComponent {
                 </FormGroup>
               </Col>
             )}
-            {this.state.type === 1
+            {this.state.type.value === '1'
             && (
               <>
                 <Col lg={12} md={12} sm={12} xs={12} className="range-price">
@@ -679,7 +696,7 @@ class SearchFilter extends PureComponent {
                 </Col>
               </>
             )}
-            {this.state.type === 2
+            {this.state.type.value === '2'
             && (
               <>
                 <Col lg={12} md={12} sm={12} xs={12} className="range-price">

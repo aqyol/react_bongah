@@ -125,7 +125,7 @@ const HOME_TYPE_3 = [
 
 export const HOME_TYPE_ARRAY = [HOME_TYPE_1, HOME_TYPE_2, HOME_TYPE_3];
 
-export const FILTER_CHECKS = {
+const CHECK_0 = {
   0: {
     label: 'پارکینگ',
     value: false,
@@ -150,16 +150,111 @@ export const FILTER_CHECKS = {
     label: 'تخلیه',
     value: false,
   },
-  6: {
+};
+
+const CHECK_1 = {
+  0: {
+    label: 'پارکینگ',
+    value: false,
+  },
+  1: {
+    label: 'انباری',
+    value: false,
+  },
+  2: {
+    label: 'آسانسور',
+    value: false,
+  },
+  3: {
+    label: 'تخلیه',
+    value: false,
+  },
+  4: {
     label: 'قابل تبدیل',
     value: false,
   },
-  7: {
-    label: 'فروش اقساطی',
-    value: false,
-  },
-  8: {
+  5: {
     label: 'مبله',
     value: false,
   },
 };
+
+const CHECK_2 = {
+  0: {
+    label: 'پارکینگ',
+    value: false,
+  },
+  1: {
+    label: 'آسانسور',
+    value: false,
+  },
+  2: {
+    label: 'تخلیه',
+    value: false,
+  },
+  3: {
+    label: 'مبله',
+    value: false,
+  },
+};
+
+const CHECK_3 = {
+  0: {
+    label: 'پارکینگ',
+    value: false,
+  },
+  1: {
+    label: 'انباری',
+    value: false,
+  },
+  2: {
+    label: 'آسانسور',
+    value: false,
+  },
+  3: {
+    label: 'وام',
+    value: false,
+  },
+  4: {
+    label: 'فروش اقساطی',
+    value: false,
+  },
+};
+
+const CHECK_4 = {
+  0: {
+    label: 'پارکینگ',
+    value: false,
+  },
+  1: {
+    label: 'وام',
+    value: false,
+  },
+  2: {
+    label: 'تخلیه',
+    value: false,
+  },
+};
+
+export const FILTER_CHECKS = [
+  {
+    ids: [0, 1, 2, 3, 4, 5],
+    checks: CHECK_0,
+  },
+  {
+    ids: [0, 1, 2, 3, 4, 5],
+    checks: CHECK_1,
+  },
+  {
+    ids: [0, 1, 2, 3],
+    checks: CHECK_2,
+  },
+  {
+    ids: [0, 1, 2, 3, 4],
+    checks: CHECK_3,
+  },
+  {
+    ids: [0, 1, 2],
+    checks: CHECK_4,
+  },
+];
