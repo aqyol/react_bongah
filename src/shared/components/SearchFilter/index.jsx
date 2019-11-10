@@ -143,11 +143,9 @@ class SearchFilter extends PureComponent {
       haveVam: false,
       isConvertable: false,
       checkItems: FILTER_CHECKS[0],
-      checkNums: [0, 1, 2, 3, 4, 5, 6, 7, 8],
       toggleProperties: false,
     };
     this.handleRangeChange = this.handleRangeChange.bind(this);
-    this.handleTypeSelect = this.handleTypeSelect.bind(this);
     this.handleSearch = this.handleSearch.bind(this);
     this.handleDismiss = this.handleDismiss.bind(this);
     this.clearFilter = this.clearFilter.bind(this);
@@ -157,6 +155,7 @@ class SearchFilter extends PureComponent {
     this.getInitialData = this.getInitialData.bind(this);
     this.toggle = this.toggle.bind(this);
     this.getAdsTypeInitData = this.getAdsTypeInitData.bind(this);
+    this.handleSelect = this.handleSelect.bind(this);
   }
 
   componentDidMount() {
@@ -175,8 +174,10 @@ class SearchFilter extends PureComponent {
     console.log('init data, selected type');
     console.log(this.state.applicationType);
     console.groupEnd();
+    const val = Number(this.state.applicationType.value);
     this.setState({
       homeType: '',
+      homeTypeArr: HOME_TYPE_ARRAY[val],
     });
   }
 
@@ -351,8 +352,8 @@ class SearchFilter extends PureComponent {
     });
   }
 
-  handleTypeSelect(index, name) {
-    this.setState({ [name]: index }, () => {
+  handleSelect(value, name) {
+    this.setState({ [name]: value }, () => {
       this.handleSearch(false);
     });
     if (name === 'applicationType') {
@@ -363,20 +364,8 @@ class SearchFilter extends PureComponent {
     if (name === 'type') {
       // get initial data from server based ads selected type
       // like : applicationType, homeType, ...
-      this.getAdsTypeInitData(Number(index.value));
+      this.getAdsTypeInitData(Number(value.value));
     }
-  }
-
-  handleApplicationSelect(type) {
-    this.setState(
-      {
-        applicationType: type,
-        homeTypeArr: HOME_TYPE_ARRAY[Number(type.value)],
-      },
-      () => {
-        this.handleSearch(false);
-      },
-    );
   }
 
   handleSearch(clickEvent) {
@@ -570,7 +559,7 @@ class SearchFilter extends PureComponent {
               <FormGroup>
                 {renderSelectField({
                   input: {
-                    onChange: (e) => { this.handleTypeSelect(e, 'type'); },
+                    onChange: (e) => { this.handleSelect(e, 'type'); },
                     isMulti: false,
                     name: 'type',
                     value: this.state.type,
@@ -587,7 +576,7 @@ class SearchFilter extends PureComponent {
               <FormGroup>
                 {renderSelectField({
                   input: {
-                    onChange: (e) => { this.handleApplicationSelect(e); },
+                    onChange: (e) => { this.handleSelect(e, 'applicationType'); },
                     isMulti: false,
                     name: 'applicationType',
                     value: this.state.applicationType,
@@ -602,7 +591,7 @@ class SearchFilter extends PureComponent {
               <FormGroup>
                 {renderSelectField({
                   input: {
-                    onChange: (e) => { this.handleApplicationSelect(e); },
+                    onChange: (e) => { this.handleSelect(e, 'homeType'); },
                     isMulti: false,
                     name: 'homeType',
                     value: this.state.homeType,
