@@ -14,6 +14,7 @@ import {
   FaAngleUp,
   FaAngleDown,
 } from 'react-icons/fa';
+import AsyncSelect from 'react-select/async';
 import renderSelectField from '../form/Select';
 import RangeSlider from '../RangeSlider/RangeSlider';
 import CheckBox from '../CheckBox';
@@ -58,6 +59,79 @@ const applicationType = [
   },
 ];
 
+const zones = [
+  {
+    value: 0,
+    label: 'تهران',
+  },
+  {
+    value: 1,
+    label: 'شیراز',
+  },
+  {
+    value: 2,
+    label: 'مشهد',
+  },
+  {
+    value: 3,
+    label: 'تبریز',
+  },
+  {
+    value: 4,
+    label: 'اصفهان',
+  },
+  {
+    value: 5,
+    label: 'بندرعباس',
+  },
+  {
+    value: 6,
+    label: 'قم',
+  },
+  {
+    value: 7,
+    label: 'کرج',
+  },
+  {
+    value: 8,
+    label: 'یزد',
+  },
+  {
+    value: 9,
+    label: 'گنبد',
+  },
+  {
+    value: 10,
+    label: 'بندرترکمن',
+  },
+];
+
+const customStyles = {
+  option: provided => ({
+    ...provided,
+  }),
+  container: () => ({
+    width: '100%',
+  }),
+  menu: provided => ({
+    ...provided,
+    zIndex: 5,
+  }),
+  menuList: () => ({
+    width: '100%',
+  }),
+};
+
+const selectTheme = theme => ({
+  ...theme,
+  colors: {
+    ...theme.colors,
+    primary25: '#98EAD3',
+    primary: '#54E1B9',
+    primary50: '#B4EEDD',
+  },
+});
+
 class SearchFilter extends PureComponent {
   static propTypes = {
     handleSearch: PropTypes.func.isRequired,
@@ -70,6 +144,7 @@ class SearchFilter extends PureComponent {
   constructor() {
     super();
     this.state = {
+      city: '',
       beds: {
         0: {
           label: '0',
@@ -156,6 +231,8 @@ class SearchFilter extends PureComponent {
     this.toggle = this.toggle.bind(this);
     this.getAdsTypeInitData = this.getAdsTypeInitData.bind(this);
     this.handleSelect = this.handleSelect.bind(this);
+    this.searchRegion = this.searchRegion.bind(this);
+    this.handleSearchSelect = this.handleSearchSelect.bind(this);
   }
 
   componentDidMount() {
@@ -293,6 +370,25 @@ class SearchFilter extends PureComponent {
     return label;
   }
 
+  promiseOptions = (inputValue, callback) => (
+    new Promise((resolve) => {
+      resolve(this.searchRegion(inputValue, callback));
+    }));
+
+  searchRegion(name, callback) {
+    console.log(this.state.region);
+    setTimeout(() => {
+      callback(zones);
+    }, 1000);
+
+    //   searchGoods(name, this.props.businessId)
+    //     .then((response) => {
+    //       this.setState({ totalGoods: response.totalScopes });
+    //       callback(response.totalScopes);
+    //     })
+    //     .catch(() => (null));
+  }
+
   handleRangeChange(name, value, isComplete) {
     let min;
     let minLabel;
@@ -386,6 +482,7 @@ class SearchFilter extends PureComponent {
 
   clearFilter() {
     this.setState({
+      city: '',
       beds: {
         0: {
           label: '0',
@@ -508,6 +605,16 @@ class SearchFilter extends PureComponent {
     });
   }
 
+  handleSearchSelect(city) {
+    console.group('select city');
+    console.log(city);
+    console.groupEnd();
+    this.setState({ city },
+      () => {
+        this.handleSearch(false);
+      });
+  }
+
   render() {
     const bedItems = [0, 1, 2, 3, 4].map(item => (
       <div
@@ -529,7 +636,7 @@ class SearchFilter extends PureComponent {
             value={this.state.checkItems.checks[num].value}
             onChange={() => { this.handleToggle(num); }}
           >
-            {this.state.checkItems.checks[num].label} {this.props.isModal ? 'modal' : ''}
+            {this.state.checkItems.checks[num].label}
           </CheckBox>
         </Col>
       ));
@@ -554,6 +661,25 @@ class SearchFilter extends PureComponent {
             </Col>
           </Row>
           <div className="search-bar-divider" />
+          <Row form className="search-input">
+            <Col lg={12} md={12} sm={12} xs={12}>
+              <FormGroup>
+                <AsyncSelect
+                  isMulti
+                  cacheOptions
+                  defaultOptions
+                  placeholder="نام شهر، منطقه و .. خود را وارد کنید"
+                  loadOptions={(input, callback) => { this.promiseOptions(input, callback); }}
+                  onChange={(e) => { this.handleSearchSelect(e); }}
+                  value={this.state.city}
+                  loadingMessage={() => ('درحال بارگزاری...')}
+                  theme={theme => selectTheme(theme)}
+                  noOptionsMessage={() => ('نتیجه ای یافت نشد')}
+                  styles={customStyles}
+                />
+              </FormGroup>
+            </Col>
+          </Row>
           <Row form className="search-input">
             <Col lg={12} md={12} sm={12} xs={12}>
               <FormGroup>

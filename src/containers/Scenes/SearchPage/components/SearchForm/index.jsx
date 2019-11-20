@@ -26,7 +26,6 @@ import {
   Pagination,
 } from 'reactstrap';
 import classnames from 'classnames';
-import AsyncSelect from 'react-select/async';
 import StickyBox from 'react-sticky-box';
 import SingleHouse from '../../../../../shared/components/SingleHouse';
 import SearchMap from '../SearchMap';
@@ -109,79 +108,6 @@ const houseData = [
   },
 ];
 
-const zones = [
-  {
-    value: 0,
-    label: 'تهران',
-  },
-  {
-    value: 1,
-    label: 'شیراز',
-  },
-  {
-    value: 2,
-    label: 'مشهد',
-  },
-  {
-    value: 3,
-    label: 'تبریز',
-  },
-  {
-    value: 4,
-    label: 'اصفهان',
-  },
-  {
-    value: 5,
-    label: 'بندرعباس',
-  },
-  {
-    value: 6,
-    label: 'قم',
-  },
-  {
-    value: 7,
-    label: 'کرج',
-  },
-  {
-    value: 8,
-    label: 'یزد',
-  },
-  {
-    value: 9,
-    label: 'گنبد',
-  },
-  {
-    value: 10,
-    label: 'بندرترکمن',
-  },
-];
-
-const customStyles = {
-  option: provided => ({
-    ...provided,
-  }),
-  container: () => ({
-    width: '100%',
-  }),
-  menu: provided => ({
-    ...provided,
-    zIndex: 5,
-  }),
-  menuList: () => ({
-    width: '100%',
-  }),
-};
-
-const selectTheme = theme => ({
-  ...theme,
-  colors: {
-    ...theme.colors,
-    primary25: '#98EAD3',
-    primary: '#54E1B9',
-    primary50: '#B4EEDD',
-  },
-});
-
 class SearchForm extends PureComponent {
   static propTypes = {
     history: PropTypes.objectOf(PropTypes.object).isRequired,
@@ -215,9 +141,7 @@ class SearchForm extends PureComponent {
     this.handleCreateRequest = this.handleCreateRequest.bind(this);
     this.handleDismissModal = this.handleDismissModal.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
-    this.searchRegion = this.searchRegion.bind(this);
     this.toggleSort = this.toggleSort.bind(this);
-    this.handleSearchSelect = this.handleSearchSelect.bind(this);
     this.handleFilter = this.handleFilter.bind(this);
     this.changePagination = this.changePagination.bind(this);
     this.isItemValid = this.isItemValid.bind(this);
@@ -256,11 +180,6 @@ class SearchForm extends PureComponent {
     </div>
   );
 
-  promiseOptions = (inputValue, callback) => (
-    new Promise((resolve) => {
-      resolve(this.searchRegion(inputValue, callback));
-    }));
-
   createPagination = () => {
     const pagination = [];
     for (let i = 0; i < this.state.result.pages; i += 1) {
@@ -288,20 +207,6 @@ class SearchForm extends PureComponent {
     }, () => {
       this.handleSearch();
     });
-  }
-
-  searchRegion(name, callback) {
-    console.log(this.state.region);
-    setTimeout(() => {
-      callback(zones);
-    }, 1000);
-
-    //   searchGoods(name, this.props.businessId)
-    //     .then((response) => {
-    //       this.setState({ totalGoods: response.totalScopes });
-    //       callback(response.totalScopes);
-    //     })
-    //     .catch(() => (null));
   }
 
   handleTypeSelect(index, name) {
@@ -379,10 +284,6 @@ class SearchForm extends PureComponent {
         this.handleSearch();
       });
     }
-  }
-
-  handleSearchSelect(searchSelect) {
-    this.setState({ searchSelect });
   }
 
   isItemValid(name) {
