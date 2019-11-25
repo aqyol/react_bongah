@@ -17,7 +17,7 @@ import {
 import AsyncSelect from 'react-select/async';
 import renderSelectField from '../form/Select';
 import RangeSlider from '../RangeSlider/RangeSlider';
-import CheckBox from '../CheckBox';
+import CheckBoxField from '../form/CheckBox';
 import { FILTER_CHECKS, HOME_TYPE_ARRAY } from '../../../containers/constants';
 
 
@@ -141,85 +141,11 @@ class SearchFilter extends PureComponent {
   };
 
 
-  constructor() {
-    super();
-    this.state = {
-      city: '',
-      beds: {
-        0: {
-          label: '0',
-          value: false,
-        },
-        1: {
-          label: '1',
-          value: false,
-        },
-        2: {
-          label: '2',
-          value: false,
-        },
-        3: {
-          label: '3',
-          value: false,
-        },
-        4: {
-          label: '+4',
-          value: false,
-        },
-      },
-      area: {
-        min: 0,
-        max: 85,
-        minLabel: '',
-        maxLabel: 12000,
-      },
-      age: {
-        min: 0,
-        max: 30,
-        minLabel: 'نوساز',
-        maxLabel: '30 سال و بیشتر',
-      },
-      price: {
-        min: 0,
-        minLabel: '',
-        max: 38,
-        maxLabel: '200 میلیارد تومان',
-      },
-      deposit: {
-        min: 0,
-        minLabel: '',
-        max: 38,
-        maxLabel: '200 میلیارد تومان',
-      },
-      rent: {
-        min: 0,
-        minLabel: '',
-        max: 28,
-        maxLabel: '500 میلیون تومان',
-      },
-      dailyRent: {
-        min: 0,
-        minLabel: '',
-        max: 28,
-        maxLabel: '5 میلیون تومان',
-      },
-      type:
-        {
-          value: '0',
-          label: 'فروش',
-        },
-      applicationType:
-        {
-          value: '0',
-          label: 'مسکونی',
-        },
-      homeType: '',
-      homeTypeArr: HOME_TYPE_ARRAY[0],
-      haveVam: false,
-      isConvertable: false,
-      checkItems: FILTER_CHECKS[0],
-      toggleProperties: false,
-    };
+  constructor(props) {
+    super(props);
+    this.state = props.filterData;
+    console.log('ssssssssss');
+    console.log(this.state);
     this.handleRangeChange = this.handleRangeChange.bind(this);
     this.handleSearch = this.handleSearch.bind(this);
     this.handleDismiss = this.handleDismiss.bind(this);
@@ -592,6 +518,9 @@ class SearchFilter extends PureComponent {
       }
     ), () => {
       this.handleSearch(false);
+      console.group('checks');
+      console.log(this.state.checkItems);
+      console.groupEnd();
     });
   }
 
@@ -631,13 +560,13 @@ class SearchFilter extends PureComponent {
     if (this.state.checkItems !== undefined) {
       checks = this.state.checkItems.ids.map(num => (
         <Col lg={6} md={6} sm={6} xs={6} className="filter-checkbox">
-          <CheckBox
+          <CheckBoxField
             name={this.state.checkItems.checks[num].label}
+            label={this.state.checkItems.checks[num].label}
             value={this.state.checkItems.checks[num].value}
+            defaultChecked={this.state.checkItems.checks[num].value}
             onChange={() => { this.handleToggle(num); }}
-          >
-            {this.state.checkItems.checks[num].label}
-          </CheckBox>
+          />
         </Col>
       ));
     }
@@ -679,8 +608,6 @@ class SearchFilter extends PureComponent {
                 />
               </FormGroup>
             </Col>
-          </Row>
-          <Row form className="search-input">
             <Col lg={12} md={12} sm={12} xs={12}>
               <FormGroup>
                 {renderSelectField({
@@ -899,38 +826,29 @@ class SearchFilter extends PureComponent {
                 </Col>
               </FormGroup>
             </Col>
-            {this.props.isModal
-            && (
-              <Row style={{ width: '100%' }}>
-                {checks}
-              </Row>
-            )}
-            {!this.props.isModal
-            && (
-              <div className="filter-properties">
-                <Button
-                  outline
-                  color="link"
-                  onClick={(e) => { this.toggle(e, 'toggleProperties'); }}
-                  className="full-width text-right"
-                >
-                  سایر ویژگی ها
-                  {this.state.toggleProperties
-                  && (
-                    <FaAngleUp className="ads-detail-angle" />
-                  )}
-                  {!this.state.toggleProperties
-                  && (
-                    <FaAngleDown className="ads-detail-angle" />
-                  )}
-                </Button>
-                <Collapse className="collapse-container" isOpen={this.state.toggleProperties}>
-                  <Row style={{ width: '100%' }}>
-                    {checks}
-                  </Row>
-                </Collapse>
-              </div>
-            )}
+            <div className="filter-properties">
+              <Button
+                outline
+                color="link"
+                onClick={(e) => { this.toggle(e, 'toggleProperties'); }}
+                className="full-width text-right"
+              >
+                سایر ویژگی ها
+                {this.state.toggleProperties
+                && (
+                  <FaAngleUp className="ads-detail-angle" />
+                )}
+                {!this.state.toggleProperties
+                && (
+                  <FaAngleDown className="ads-detail-angle" />
+                )}
+              </Button>
+              <Collapse className="collapse-container" isOpen={this.state.toggleProperties}>
+                <Row style={{ width: '100%', direction: 'ltr' }}>
+                  {checks}
+                </Row>
+              </Collapse>
+            </div>
           </Row>
           <Row className="filter-modal-btn">
             <Col />

@@ -151,7 +151,6 @@
   background-color: #0d908d;
   padding: 15px;
   border-radius: 50%;
-  display: none !important;
 
   .fab-icon {
     width: 30px;
@@ -189,11 +188,5 @@
   }
   .sort-title {
     display: none;
-  }
-  .fab {
-    display: block !important;
-  }
-  .search-filter {
-    display: none !important;
   }
 }

@@ -1,6 +1,7 @@
 .checkbox-btn {
   display: flex;
   cursor: pointer;
+  margin-left: 20%;
 
   &:hover {
 
@@ -160,6 +161,7 @@
   width: 18px;
   height: 18px;
   border-radius: 3px;
+  border: 1px solid #dddddd;
 
   @include themify($themes) {
     border: 1px solid themed('colorIcon');
@@ -171,7 +173,7 @@
     height: 16px;
     width: 16px;
     fill: $color-accent;
-    margin-top: -6px;
+    margin-top: 0;
   }
 }
 
@@ -196,5 +198,11 @@
 
   svg {
     opacity: 1;
+  }
+}
+
+@media screen and (min-width: 1080px) {
+  .checkbox-btn {
+    margin-left: 0 !important;
   }
 }
