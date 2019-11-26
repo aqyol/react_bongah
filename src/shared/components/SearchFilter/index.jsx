@@ -8,10 +8,17 @@ import {
   FormGroup,
   Button,
   Label,
+  Collapse,
 } from 'reactstrap';
+import {
+  FaAngleUp,
+  FaAngleDown,
+} from 'react-icons/fa';
+import AsyncSelect from 'react-select/async';
 import renderSelectField from '../form/Select';
 import RangeSlider from '../RangeSlider/RangeSlider';
-import CheckBox from '../CheckBox';
+import CheckBoxField from '../form/CheckBox';
+import { FILTER_CHECKS, HOME_TYPE_ARRAY } from '../../../containers/constants';
 
 
 const types = [
@@ -40,17 +47,90 @@ const types = [
 const applicationType = [
   {
     value: '0',
-    label: 'اداری',
+    label: 'مسکونی',
   },
   {
     value: '1',
-    label: 'تجاری',
+    label: 'اداری، تجاری',
   },
   {
     value: '2',
     label: 'صنعتی',
   },
 ];
+
+const zones = [
+  {
+    value: 0,
+    label: 'تهران',
+  },
+  {
+    value: 1,
+    label: 'شیراز',
+  },
+  {
+    value: 2,
+    label: 'مشهد',
+  },
+  {
+    value: 3,
+    label: 'تبریز',
+  },
+  {
+    value: 4,
+    label: 'اصفهان',
+  },
+  {
+    value: 5,
+    label: 'بندرعباس',
+  },
+  {
+    value: 6,
+    label: 'قم',
+  },
+  {
+    value: 7,
+    label: 'کرج',
+  },
+  {
+    value: 8,
+    label: 'یزد',
+  },
+  {
+    value: 9,
+    label: 'گنبد',
+  },
+  {
+    value: 10,
+    label: 'بندرترکمن',
+  },
+];
+
+const customStyles = {
+  option: provided => ({
+    ...provided,
+  }),
+  container: () => ({
+    width: '100%',
+  }),
+  menu: provided => ({
+    ...provided,
+    zIndex: 5,
+  }),
+  menuList: () => ({
+    width: '100%',
+  }),
+};
+
+const selectTheme = theme => ({
+  ...theme,
+  colors: {
+    ...theme.colors,
+    primary25: '#98EAD3',
+    primary: '#54E1B9',
+    primary50: '#B4EEDD',
+  },
+});
 
 class SearchFilter extends PureComponent {
   static propTypes = {
@@ -61,80 +141,24 @@ class SearchFilter extends PureComponent {
   };
 
 
-  constructor() {
-    super();
-    this.state = {
-      beds: {
-        0: {
-          label: '0',
-          value: false,
-        },
-        1: {
-          label: '1',
-          value: false,
-        },
-        2: {
-          label: '2',
-          value: false,
-        },
-        3: {
-          label: '3',
-          value: false,
-        },
-        4: {
-          label: '+4',
-          value: false,
-        },
-      },
-      area: {
-        min: 0,
-        max: 85,
-        minLabel: '',
-        maxLabel: 12000,
-      },
-      age: {
-        min: 0,
-        max: 30,
-        minLabel: 'نوساز',
-        maxLabel: '30 سال و بیشتر',
-      },
-      price: {
-        min: 0,
-        minLabel: '',
-        max: 38,
-        maxLabel: '200 میلیارد تومان',
-      },
-      deposit: {
-        min: 0,
-        minLabel: '',
-        max: 38,
-        maxLabel: '200 میلیارد تومان',
-      },
-      rent: {
-        min: 0,
-        minLabel: '',
-        max: 28,
-        maxLabel: '500 میلیون تومان',
-      },
-      dailyRent: {
-        min: 0,
-        minLabel: '',
-        max: 28,
-        maxLabel: '5 میلیون تومان',
-      },
-      type: types[0],
-      applicationType: '',
-      haveVam: false,
-      isConvertable: false,
-    };
+  constructor(props) {
+    super(props);
+    this.state = props.filterData;
+    console.log('ssssssssss');
+    console.log(this.state);
     this.handleRangeChange = this.handleRangeChange.bind(this);
-    this.handleTypeSelect = this.handleTypeSelect.bind(this);
     this.handleSearch = this.handleSearch.bind(this);
     this.handleDismiss = this.handleDismiss.bind(this);
     this.clearFilter = this.clearFilter.bind(this);
     this.selectBeds = this.selectBeds.bind(this);
     this.handleAreaRangeChange = this.handleAreaRangeChange.bind(this);
     this.handleToggle = this.handleToggle.bind(this);
+    this.getInitialData = this.getInitialData.bind(this);
+    this.toggle = this.toggle.bind(this);
+    this.getAdsTypeInitData = this.getAdsTypeInitData.bind(this);
+    this.handleSelect = this.handleSelect.bind(this);
+    this.searchRegion = this.searchRegion.bind(this);
+    this.handleSearchSelect = this.handleSearchSelect.bind(this);
   }
 
   componentDidMount() {
@@ -145,6 +169,23 @@ class SearchFilter extends PureComponent {
     if (state !== undefined) {
       this.setState(state);
     }
+  }
+
+  getInitialData() {
+    // get init data using selected applicationType
+    console.group();
+    console.log('init data, selected type');
+    console.log(this.state.applicationType);
+    console.groupEnd();
+    const val = Number(this.state.applicationType.value);
+    this.setState({
+      homeType: '',
+      homeTypeArr: HOME_TYPE_ARRAY[val],
+    });
+  }
+
+  getAdsTypeInitData(index) {
+    this.setState({ checkItems: FILTER_CHECKS[index] });
   }
 
   handlePriceLabel = (value) => {
@@ -255,6 +296,25 @@ class SearchFilter extends PureComponent {
     return label;
   }
 
+  promiseOptions = (inputValue, callback) => (
+    new Promise((resolve) => {
+      resolve(this.searchRegion(inputValue, callback));
+    }));
+
+  searchRegion(name, callback) {
+    console.log(this.state.region);
+    setTimeout(() => {
+      callback(zones);
+    }, 1000);
+
+    //   searchGoods(name, this.props.businessId)
+    //     .then((response) => {
+    //       this.setState({ totalGoods: response.totalScopes });
+    //       callback(response.totalScopes);
+    //     })
+    //     .catch(() => (null));
+  }
+
   handleRangeChange(name, value, isComplete) {
     let min;
     let minLabel;
@@ -314,16 +374,20 @@ class SearchFilter extends PureComponent {
     });
   }
 
-  handleTypeSelect(index, name) {
-    this.setState({ [name]: index }, () => {
+  handleSelect(value, name) {
+    this.setState({ [name]: value }, () => {
       this.handleSearch(false);
     });
-  }
-
-  handleApplicationSelect(type) {
-    this.setState({ applicationType: type }, () => {
-      this.handleSearch(false);
-    });
+    if (name === 'applicationType') {
+      // get initial data from server based ads selected type
+      // like : applicationType, homeType, ...
+      this.getInitialData();
+    }
+    if (name === 'type') {
+      // get initial data from server based ads selected type
+      // like : applicationType, homeType, ...
+      this.getAdsTypeInitData(Number(value.value));
+    }
   }
 
   handleSearch(clickEvent) {
@@ -344,6 +408,7 @@ class SearchFilter extends PureComponent {
 
   clearFilter() {
     this.setState({
+      city: '',
       beds: {
         0: {
           label: '0',
@@ -402,8 +467,17 @@ class SearchFilter extends PureComponent {
         max: 28,
         maxLabel: '5 میلیون تومان',
       },
+      type:
+        {
+          value: '0',
+          label: 'فروش',
+        },
       applicationType: '',
-      type: 0,
+      homeType: '',
+      haveVam: false,
+      isConvertable: false,
+      checkItems: FILTER_CHECKS[0],
+      toggleProperties: false,
     }, () => {
       const { handleSearch } = this.props;
       handleSearch(this.state);
@@ -427,15 +501,47 @@ class SearchFilter extends PureComponent {
     });
   }
 
-  handleToggle(name) {
+  handleToggle(num) {
+    this.setState(prevState => (
+      {
+        ...prevState,
+        checkItems: {
+          ...prevState.checkItems,
+          checks: {
+            ...prevState.checkItems.checks,
+            [num]: {
+              ...prevState.checkItems.checks[num],
+              value: !prevState.checkItems.checks[num].value,
+            },
+          },
+        },
+      }
+    ), () => {
+      this.handleSearch(false);
+      console.group('checks');
+      console.log(this.state.checkItems);
+      console.groupEnd();
+    });
+  }
+
+  toggle(e, name) {
+    e.preventDefault();
     this.setState((prevState) => {
       const { [name]: prevVal } = prevState;
       return {
         [name]: !prevVal,
       };
-    }, () => {
-      this.handleSearch(false);
     });
+  }
+
+  handleSearchSelect(city) {
+    console.group('select city');
+    console.log(city);
+    console.groupEnd();
+    this.setState({ city },
+      () => {
+        this.handleSearch(false);
+      });
   }
 
   render() {
@@ -448,6 +554,23 @@ class SearchFilter extends PureComponent {
         {(item === 4) ? `+${item}` : item}
       </div>
     ));
+
+    let checks;
+
+    if (this.state.checkItems !== undefined) {
+      checks = this.state.checkItems.ids.map(num => (
+        <Col lg={6} md={6} sm={6} xs={6} className="filter-checkbox">
+          <CheckBoxField
+            name={this.state.checkItems.checks[num].label}
+            label={this.state.checkItems.checks[num].label}
+            value={this.state.checkItems.checks[num].value}
+            defaultChecked={this.state.checkItems.checks[num].value}
+            onChange={() => { this.handleToggle(num); }}
+          />
+        </Col>
+      ));
+    }
+
 
     return (
       <div>
@@ -470,9 +593,26 @@ class SearchFilter extends PureComponent {
           <Row form className="search-input">
             <Col lg={12} md={12} sm={12} xs={12}>
               <FormGroup>
+                <AsyncSelect
+                  isMulti
+                  cacheOptions
+                  defaultOptions
+                  placeholder="نام شهر، منطقه و .. خود را وارد کنید"
+                  loadOptions={(input, callback) => { this.promiseOptions(input, callback); }}
+                  onChange={(e) => { this.handleSearchSelect(e); }}
+                  value={this.state.city}
+                  loadingMessage={() => ('درحال بارگزاری...')}
+                  theme={theme => selectTheme(theme)}
+                  noOptionsMessage={() => ('نتیجه ای یافت نشد')}
+                  styles={customStyles}
+                />
+              </FormGroup>
+            </Col>
+            <Col lg={12} md={12} sm={12} xs={12}>
+              <FormGroup>
                 {renderSelectField({
                   input: {
-                    onChange: (e) => { this.handleTypeSelect(e, 'type'); },
+                    onChange: (e) => { this.handleSelect(e, 'type'); },
                     isMulti: false,
                     name: 'type',
                     value: this.state.type,
@@ -489,18 +629,33 @@ class SearchFilter extends PureComponent {
               <FormGroup>
                 {renderSelectField({
                   input: {
-                    onChange: (e) => { this.handleApplicationSelect(e); },
+                    onChange: (e) => { this.handleSelect(e, 'applicationType'); },
                     isMulti: false,
                     name: 'applicationType',
                     value: this.state.applicationType,
                   },
-                  placeholder: 'نوع کاربری',
+                  placeholder: 'کاربری ملک',
                   options: applicationType,
                   type: 'text',
                 })}
               </FormGroup>
             </Col>
-            {(this.state.type !== 1 && this.state.type !== 2)
+            <Col lg={12} md={12} sm={12} xs={12}>
+              <FormGroup>
+                {renderSelectField({
+                  input: {
+                    onChange: (e) => { this.handleSelect(e, 'homeType'); },
+                    isMulti: false,
+                    name: 'homeType',
+                    value: this.state.homeType,
+                  },
+                  placeholder: 'نوع ملک',
+                  options: this.state.homeTypeArr,
+                  type: 'text',
+                })}
+              </FormGroup>
+            </Col>
+            {(this.state.type.value !== '1' && this.state.type.value !== '2')
             && (
               <Col lg={12} md={12} sm={12} xs={12} className="range-price">
                 <FormGroup>
@@ -528,7 +683,7 @@ class SearchFilter extends PureComponent {
                 </FormGroup>
               </Col>
             )}
-            {this.state.type === 1
+            {this.state.type.value === '1'
             && (
               <>
                 <Col lg={12} md={12} sm={12} xs={12} className="range-price">
@@ -583,7 +738,7 @@ class SearchFilter extends PureComponent {
                 </Col>
               </>
             )}
-            {this.state.type === 2
+            {this.state.type.value === '2'
             && (
               <>
                 <Col lg={12} md={12} sm={12} xs={12} className="range-price">
@@ -671,52 +826,29 @@ class SearchFilter extends PureComponent {
                 </Col>
               </FormGroup>
             </Col>
-            {this.props.isModal
-            && (
-              <Row style={{ width: '100%' }}>
-                <Col lg={6} md={6} sm={6} xs={6} className="filter-checkbox">
-                  <CheckBox
-                    name="haveVam"
-                    value={this.state.havVam}
-                    onChange={() => { this.handleToggle('havVam'); }}
-                  >
-                    وام
-                  </CheckBox>
-                </Col>
-                <Col lg={6} md={6} sm={6} xs={6} className="filter-checkbox">
-                  <CheckBox
-                    name="isConvertable"
-                    value={this.state.isConvertable}
-                    onChange={() => { this.handleToggle('isConvertable'); }}
-                  >
-                    تبدیل
-                  </CheckBox>
-                </Col>
-              </Row>
-            )}
-            {!this.props.isModal
-            && (
-              <Row style={{ width: '100%' }}>
-                <Col lg={6} md={6} sm={6} xs={6} className="filter-checkbox">
-                  <CheckBox
-                    name="haveVam"
-                    value={this.state.havVam}
-                    onChange={() => { this.handleToggle('havVam'); }}
-                  >
-                    دارای وام
-                  </CheckBox>
-                </Col>
-                <Col lg={6} md={6} sm={6} xs={6} className="filter-checkbox">
-                  <CheckBox
-                    name="isConvertable"
-                    value={this.state.isConvertable}
-                    onChange={() => { this.handleToggle('isConvertable'); }}
-                  >
-                    قابلیت تبدیل
-                  </CheckBox>
-                </Col>
-              </Row>
-            )}
+            <div className="filter-properties">
+              <Button
+                outline
+                color="link"
+                onClick={(e) => { this.toggle(e, 'toggleProperties'); }}
+                className="full-width text-right"
+              >
+                سایر ویژگی ها
+                {this.state.toggleProperties
+                && (
+                  <FaAngleUp className="ads-detail-angle" />
+                )}
+                {!this.state.toggleProperties
+                && (
+                  <FaAngleDown className="ads-detail-angle" />
+                )}
+              </Button>
+              <Collapse className="collapse-container" isOpen={this.state.toggleProperties}>
+                <Row style={{ width: '100%', direction: 'ltr' }}>
+                  {checks}
+                </Row>
+              </Collapse>
+            </div>
           </Row>
           <Row className="filter-modal-btn">
             <Col />

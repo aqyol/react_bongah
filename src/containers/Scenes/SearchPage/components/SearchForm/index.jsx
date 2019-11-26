@@ -26,11 +26,11 @@ import {
   Pagination,
 } from 'reactstrap';
 import classnames from 'classnames';
-import AsyncSelect from 'react-select/async';
 import StickyBox from 'react-sticky-box';
 import SingleHouse from '../../../../../shared/components/SingleHouse';
 import SearchMap from '../SearchMap';
 import SearchFilter from '../../../../../shared/components/SearchFilter/index';
+import { HOME_TYPE_ARRAY, FILTER_CHECKS } from '../../../../constants';
 
 
 const houseData = [
@@ -109,79 +109,6 @@ const houseData = [
   },
 ];
 
-const zones = [
-  {
-    value: 0,
-    label: 'تهران',
-  },
-  {
-    value: 1,
-    label: 'شیراز',
-  },
-  {
-    value: 2,
-    label: 'مشهد',
-  },
-  {
-    value: 3,
-    label: 'تبریز',
-  },
-  {
-    value: 4,
-    label: 'اصفهان',
-  },
-  {
-    value: 5,
-    label: 'بندرعباس',
-  },
-  {
-    value: 6,
-    label: 'قم',
-  },
-  {
-    value: 7,
-    label: 'کرج',
-  },
-  {
-    value: 8,
-    label: 'یزد',
-  },
-  {
-    value: 9,
-    label: 'گنبد',
-  },
-  {
-    value: 10,
-    label: 'بندرترکمن',
-  },
-];
-
-const customStyles = {
-  option: provided => ({
-    ...provided,
-  }),
-  container: () => ({
-    width: '100%',
-  }),
-  menu: provided => ({
-    ...provided,
-    zIndex: 5,
-  }),
-  menuList: () => ({
-    width: '100%',
-  }),
-};
-
-const selectTheme = theme => ({
-  ...theme,
-  colors: {
-    ...theme.colors,
-    primary25: '#98EAD3',
-    primary: '#54E1B9',
-    primary50: '#B4EEDD',
-  },
-});
-
 class SearchForm extends PureComponent {
   static propTypes = {
     history: PropTypes.objectOf(PropTypes.object).isRequired,
@@ -194,12 +121,88 @@ class SearchForm extends PureComponent {
       resultTab: 'list',
       resultSize: 23,
       searchSelect: [],
-      filterModal: false,
+      filterModal: true,
       requestModal: false,
       requestModalLoading: false,
       searchLoading: false,
       requestTitle: '',
-      filterData: {},
+      filterData: {
+        city: '',
+        beds: {
+          0: {
+            label: '0',
+            value: false,
+          },
+          1: {
+            label: '1',
+            value: false,
+          },
+          2: {
+            label: '2',
+            value: false,
+          },
+          3: {
+            label: '3',
+            value: false,
+          },
+          4: {
+            label: '+4',
+            value: false,
+          },
+        },
+        area: {
+          min: 0,
+          max: 85,
+          minLabel: '',
+          maxLabel: 12000,
+        },
+        age: {
+          min: 0,
+          max: 30,
+          minLabel: 'نوساز',
+          maxLabel: '30 سال و بیشتر',
+        },
+        price: {
+          min: 0,
+          minLabel: '',
+          max: 38,
+          maxLabel: '200 میلیارد تومان',
+        },
+        deposit: {
+          min: 0,
+          minLabel: '',
+          max: 38,
+          maxLabel: '200 میلیارد تومان',
+        },
+        rent: {
+          min: 0,
+          minLabel: '',
+          max: 28,
+          maxLabel: '500 میلیون تومان',
+        },
+        dailyRent: {
+          min: 0,
+          minLabel: '',
+          max: 28,
+          maxLabel: '5 میلیون تومان',
+        },
+        type:
+          {
+            value: '0',
+            label: 'فروش',
+          },
+        applicationType:
+          {
+            value: '0',
+            label: 'مسکونی',
+          },
+        homeType: '',
+        homeTypeArr: HOME_TYPE_ARRAY[0],
+        haveVam: false,
+        isConvertable: false,
+        checkItems: FILTER_CHECKS[0],
+        toggleProperties: false,
+      },
       result: {
         list: [],
         size: 22,
@@ -215,9 +218,7 @@ class SearchForm extends PureComponent {
     this.handleCreateRequest = this.handleCreateRequest.bind(this);
     this.handleDismissModal = this.handleDismissModal.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
-    this.searchRegion = this.searchRegion.bind(this);
     this.toggleSort = this.toggleSort.bind(this);
-    this.handleSearchSelect = this.handleSearchSelect.bind(this);
     this.handleFilter = this.handleFilter.bind(this);
     this.changePagination = this.changePagination.bind(this);
     this.isItemValid = this.isItemValid.bind(this);
@@ -256,11 +257,6 @@ class SearchForm extends PureComponent {
     </div>
   );
 
-  promiseOptions = (inputValue, callback) => (
-    new Promise((resolve) => {
-      resolve(this.searchRegion(inputValue, callback));
-    }));
-
   createPagination = () => {
     const pagination = [];
     for (let i = 0; i < this.state.result.pages; i += 1) {
@@ -288,20 +284,6 @@ class SearchForm extends PureComponent {
     }, () => {
       this.handleSearch();
     });
-  }
-
-  searchRegion(name, callback) {
-    console.log(this.state.region);
-    setTimeout(() => {
-      callback(zones);
-    }, 1000);
-
-    //   searchGoods(name, this.props.businessId)
-    //     .then((response) => {
-    //       this.setState({ totalGoods: response.totalScopes });
-    //       callback(response.totalScopes);
-    //     })
-    //     .catch(() => (null));
   }
 
   handleTypeSelect(index, name) {
@@ -381,10 +363,6 @@ class SearchForm extends PureComponent {
     }
   }
 
-  handleSearchSelect(searchSelect) {
-    this.setState({ searchSelect });
-  }
-
   isItemValid(name) {
     const { [name]: val } = this.state;
     return val.trim().length > 0;
@@ -399,6 +377,8 @@ class SearchForm extends PureComponent {
   }
 
   render() {
+    const width = window.innerWidth;
+
     return (
       <div>
         <div>
@@ -451,78 +431,62 @@ class SearchForm extends PureComponent {
               </>
             )}
           </Modal>
-          <Modal
-            fade={false}
-            isOpen={this.state.filterModal}
-            toggle={() => { this.handleDismissModal('filterModal'); }}
-          >
-            <ModalHeader className="modal-title">فیلتر جستجو</ModalHeader>
-            <SearchFilter
-              filterData={this.state.filterData}
-              handleDissmiss={() => { this.handleDismissModal('filterModal'); }}
-              isModal
-              handleSearch={(data) => { this.handleDismissModal('filterModal'); this.handleFilter(data); }}
-            />
-          </Modal>
-        </div>
-        <div className="search-container">
-          <div className="search-filter">
-            <StickyBox>
+          {width <= 1080
+          && (
+            <Modal
+              fade={false}
+              isOpen={this.state.filterModal}
+              toggle={() => { this.handleDismissModal('filterModal'); }}
+            >
+              <ModalHeader className="modal-title">فیلتر جستجو</ModalHeader>
               <SearchFilter
                 filterData={this.state.filterData}
-                handleSave={this.handleToggleModal}
-                handleDissmiss={this.handleToggleModal}
-                isModal={false}
-                handleSearch={(data) => { this.handleFilter(data); }}
+                handleDissmiss={() => { this.handleDismissModal('filterModal'); }}
+                isModal
+                handleSearch={(data) => { this.handleDismissModal('filterModal'); this.handleFilter(data); }}
               />
-            </StickyBox>
-          </div>
+            </Modal>
+          )}
+        </div>
+        <div className="search-container">
+          {width > 1080
+          && (
+            <div className="search-filter">
+              <StickyBox>
+                <SearchFilter
+                  filterData={this.state.filterData}
+                  handleSave={this.handleToggleModal}
+                  handleDissmiss={this.handleToggleModal}
+                  isModal={false}
+                  handleSearch={(data) => { this.handleFilter(data); }}
+                />
+              </StickyBox>
+            </div>
+          )}
           <div className="searchForm">
             <div>
               <StickyBox bottom={false} offsetTop={0} offsetBottom={10} className="search-form-top">
                 <Form>
                   <Row form className="search-input">
-                    <Col lg={8} md={8} sm={8} xs={12}>
-                      <FormGroup>
-                        <AsyncSelect
-                          isMulti
-                          cacheOptions
-                          defaultOptions
-                          placeholder="نام شهر، منطقه و .. خود را وارد کنید"
-                          loadOptions={(input, callback) => { this.promiseOptions(input, callback); }}
-                          onChange={(e) => { this.handleSearchSelect(e); }}
-                          value={this.state.city}
-                          loadingMessage={() => ('درحال بارگزاری...')}
-                          theme={theme => selectTheme(theme)}
-                          noOptionsMessage={() => ('نتیجه ای یافت نشد')}
-                          styles={customStyles}
-                        />
-                      </FormGroup>
-                    </Col>
-                    <Col lg={2} md={2} sm={2} xs={6}>
-                      <Button
-                        style={{ margin: '0px 2px 5px 2px' }}
-                        onClick={() => { this.handleFilter(); }}
-                        className="btn-success volume"
-                      >تغییر جستجو
-                      </Button>
-                    </Col>
-                    <Col lg={2} md={2} sm={2} xs={6}>
+                    <Col lg={2} md={2} sm={3} xs={12}>
                       <Button
                         style={{ margin: '0px 2px 5px 2px' }}
                         color="success"
                         onClick={() => { this.saveAsRequest(); }}
                         className="volume"
                       >
-                        درخواست
+                        ذخیره جستجو
                       </Button>
                     </Col>
                   </Row>
                 </Form>
               </StickyBox>
-              <div className="fab">
-                <FaFilter className="fab-icon" onClick={this.handleToggleModal} />
-              </div>
+              {width <= 1080
+              && (
+                <div className="fab">
+                  <FaFilter className="fab-icon" onClick={this.handleToggleModal} />
+                </div>
+              )}
               <div className="sort-panel">
                 <span className="sort-title">مرتب سازی:</span>
                 <Nav tabs className="sort-tabs">
