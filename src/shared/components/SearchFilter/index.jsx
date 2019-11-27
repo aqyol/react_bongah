@@ -467,11 +467,7 @@ class SearchFilter extends PureComponent {
         max: 28,
         maxLabel: '5 میلیون تومان',
       },
-      type:
-        {
-          value: '0',
-          label: 'فروش',
-        },
+      type: '',
       applicationType: '',
       homeType: '',
       haveVam: false,
