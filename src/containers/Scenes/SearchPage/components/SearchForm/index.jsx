@@ -186,16 +186,8 @@ class SearchForm extends PureComponent {
           max: 28,
           maxLabel: '5 میلیون تومان',
         },
-        type:
-          {
-            value: '0',
-            label: 'فروش',
-          },
-        applicationType:
-          {
-            value: '0',
-            label: 'مسکونی',
-          },
+        type: '',
+        applicationType: '',
         homeType: '',
         homeTypeArr: HOME_TYPE_ARRAY[0],
         haveVam: false,
