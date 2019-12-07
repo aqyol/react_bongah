@@ -2,378 +2,223 @@ import React, { PureComponent } from 'react';
 import {
   FaMap,
   FaThList,
+  FaFilter,
 } from 'react-icons/fa';
-import InputRange from 'react-input-range';
 import 'react-input-range/lib/css/index.css';
+import PropTypes from 'prop-types';
 import {
   Row,
   Col,
   Form,
   FormGroup,
-  // Label,
-  // Input,
+  Label,
+  Input,
   Button,
-  // Collapse,
-  // CustomInput,
+  Modal,
+  ModalBody,
+  ModalFooter,
+  ModalHeader,
+  Nav,
+  NavItem,
+  NavLink,
+  PaginationLink,
+  PaginationItem,
+  Pagination,
 } from 'reactstrap';
+import classnames from 'classnames';
+import StickyBox from 'react-sticky-box';
 import SingleHouse from '../../../../../shared/components/SingleHouse';
 import SearchMap from '../SearchMap';
-import renderSelectField from '../../../../../shared/components/form/Select';
+import SearchFilter from '../../../../../shared/components/SearchFilter/index';
+import { HOME_TYPE_ARRAY, FILTER_CHECKS } from '../../../../constants';
 
 
 const houseData = [
   {
-    name: 'خانه ویلایی',
-    address: ' تهران، آزادی',
-    beds: 3,
-    toilets: 2,
-    square: 120,
+    id: 1,
+    type: 2,
+    price: 100000000,
+    deposit: 30000000,
+    rent: 1500000,
+    name: 'خانه آپارتمانی در نارمک',
+    address: 'خیابان آزادی، کوچه ۳۹، پلاک ۲۳۱، واحد ۵',
+    beds: 2,
+    toilets: 1,
+    square: 20,
     img: 'http://mariusn.com/themes/reales/images/prop/1-1.png',
-  },
-  {
-    name: 'خانه آپارتمانی ',
-    address: 'تهران، ونک',
+  }, {
+    id: 2,
+    type: 1,
+    price: 100000000,
+    deposit: 30000000,
+    rent: 1500000,
+    name: 'خانه آپارتمانی در نارمک',
+    address: 'خیابان آزادی، کوچه ۳۹، پلاک ۲۳۱، واحد ۵',
     beds: 3,
     toilets: 2,
-    square: 120,
+    square: 20,
     img: 'http://mariusn.com/themes/reales/images/prop/2-1.png',
-  },
-  {
-    name: 'آپارتمان مسکونی',
-    address: ' شیراز، شریعتی',
+  }, {
+    id: 3,
+    type: 1,
+    price: 100000000,
+    deposit: 30000000,
+    rent: 1500000,
+    name: 'خانه آپارتمانی در نارمک',
+    address: 'خیابان آزادی، کوچه ۳۹، پلاک ۲۳۱، واحد ۵',
     beds: 3,
     toilets: 2,
-    square: 200,
+    square: 20,
     img: 'http://mariusn.com/themes/reales/images/prop/1-1.png',
-  },
-  {
-    name: 'آپارتمان اداری',
-    address: 'تبریز، آبرسان',
+  }, {
+    id: 4,
+    type: 2,
+    price: 100000000,
+    deposit: 30000000,
+    rent: 1500000,
+    name: 'خانه آپارتمانی در نارمک',
+    address: 'خیابان آزادی، کوچه ۳۹، پلاک ۲۳۱، واحد ۵',
     beds: 3,
     toilets: 2,
-    square: 220,
+    square: 20,
     img: 'http://mariusn.com/themes/reales/images/prop/2-1.png',
-  },
-  {
-    name: 'خانه ویلایی',
-    address: ' تهران، آزادی',
+  }, {
+    id: 5,
+    type: 1,
+    price: 100000000,
+    deposit: 30000000,
+    rent: 1500000,
+    name: 'خانه آپارتمانی در نارمک',
+    address: 'خیابان آزادی، کوچه ۳۹، پلاک ۲۳۱، واحد ۵',
     beds: 3,
     toilets: 2,
-    square: 120,
+    square: 20,
     img: 'http://mariusn.com/themes/reales/images/prop/1-1.png',
-  },
-  {
-    name: 'خانه آپارتمانی ',
-    address: 'تهران، ونک',
+  }, {
+    id: 6,
+    type: 1,
+    price: 100000000,
+    deposit: 30000000,
+    rent: 1500000,
+    name: 'خانه آپارتمانی در نارمک',
+    address: 'خیابان آزادی، کوچه ۳۹، پلاک ۲۳۱، واحد ۵',
     beds: 3,
     toilets: 2,
-    square: 120,
+    square: 20,
     img: 'http://mariusn.com/themes/reales/images/prop/2-1.png',
-  },
-  {
-    name: 'آپارتمان مسکونی',
-    address: ' شیراز، شریعتی',
-    beds: 3,
-    toilets: 2,
-    square: 200,
-    img: 'http://mariusn.com/themes/reales/images/prop/1-1.png',
-  },
-  {
-    name: 'آپارتمان اداری',
-    address: 'تبریز، آبرسان',
-    beds: 3,
-    toilets: 2,
-    square: 220,
-    img: 'http://mariusn.com/themes/reales/images/prop/2-1.png',
-  },
-  {
-    name: 'خانه ویلایی',
-    address: ' تهران، آزادی',
-    beds: 3,
-    toilets: 2,
-    square: 120,
-    img: 'http://mariusn.com/themes/reales/images/prop/1-1.png',
-  },
-  {
-    name: 'خانه آپارتمانی ',
-    address: 'تهران، ونک',
-    beds: 3,
-    toilets: 2,
-    square: 120,
-    img: 'http://mariusn.com/themes/reales/images/prop/2-1.png',
-  },
-  {
-    name: 'آپارتمان مسکونی',
-    address: ' شیراز، شریعتی',
-    beds: 3,
-    toilets: 2,
-    square: 200,
-    img: 'http://mariusn.com/themes/reales/images/prop/1-1.png',
-  },
-  {
-    name: 'آپارتمان اداری',
-    address: 'تبریز، آبرسان',
-    beds: 3,
-    toilets: 2,
-    square: 220,
-    img: 'http://mariusn.com/themes/reales/images/prop/2-1.png',
-  },
-];
-
-const types = [
-  {
-    value: '0',
-    label: 'فروش',
-  }, {
-    value: '1',
-    label: 'رهن و اجاره',
-  }, {
-    value: '2',
-    label: 'پیش فروش',
-  }, {
-    value: '3',
-    label: 'مشارکت',
-  },
-];
-
-const nums = [
-  {
-    value: '0',
-    label: '0',
-  },
-  {
-    value: '1',
-    label: '1',
-  }, {
-    value: '2',
-    label: '2',
-  },
-  {
-    value: '3',
-    label: '3',
-  },
-  {
-    value: '4',
-    label: '4',
-  },
-  {
-    value: '5',
-    label: '5',
-  },
-  {
-    value: '6',
-    label: '6',
-  },
-  {
-    value: '7',
-    label: '7',
-  },
-];
-
-const area = [
-  {
-    value: '0',
-    label: '30',
-  },
-  {
-    value: '1',
-    label: '50',
-  }, {
-    value: '2',
-    label: '70',
-  },
-  {
-    value: '3',
-    label: '90',
-  },
-  {
-    value: '4',
-    label: '120',
-  },
-  {
-    value: '5',
-    label: '150',
-  },
-  {
-    value: '6',
-    label: '180',
-  },
-  {
-    value: '7',
-    label: '200',
-  },
-  {
-    value: '8',
-    label: '220',
-  },
-  {
-    value: '9',
-    label: '250',
-  },
-  {
-    value: '10',
-    label: '300',
-  },
-  {
-    value: '11',
-    label: '400',
-  },
-  {
-    value: '12',
-    label: '500',
-  },
-  {
-    value: '13',
-    label: '600',
-  },
-  {
-    value: '14',
-    label: '700',
-  },
-  {
-    value: '15',
-    label: '800',
-  },
-  {
-    value: '16',
-    label: '900',
-  },
-  {
-    value: '17',
-    label: '1000',
-  },
-  {
-    value: '18',
-    label: '1500',
-  },
-  {
-    value: '19',
-    label: '2000',
-  },
-  {
-    value: '20',
-    label: '2500',
-  },
-  {
-    value: '21',
-    label: '5000',
-  },
-];
-
-const age = [
-  {
-    value: '0',
-    label: 'نوساز',
-  },
-  {
-    value: '1',
-    label: '۳ سال',
-  }, {
-    value: '2',
-    label: '۵ سال',
-  },
-  {
-    value: '3',
-    label: '۱۰ سال',
-  },
-  {
-    value: '4',
-    label: '۱۵ سال',
-  },
-  {
-    value: '5',
-    label: '۲۰ سال',
-  },
-  {
-    value: '6',
-    label: '۳۰ سال',
-  },
-  {
-    value: '7',
-    label: '۴۰ سال',
-  },
-  {
-    value: '8',
-    label: '۵۰ سال',
-  },
-];
-
-const zones = [
-  {
-    value: 0,
-    label: 'تهران',
-  },
-  {
-    value: 1,
-    label: 'شیراز',
-  },
-  {
-    value: 2,
-    label: 'مشهد',
-  },
-  {
-    value: 3,
-    label: 'تبریز',
-  },
-  {
-    value: 4,
-    label: 'اصفهان',
-  },
-  {
-    value: 5,
-    label: 'بندرعباس',
-  },
-  {
-    value: 6,
-    label: 'قم',
-  },
-  {
-    value: 7,
-    label: 'کرج',
-  },
-  {
-    value: 8,
-    label: 'یزد',
-  },
-  {
-    value: 9,
-    label: 'گنبد',
-  },
-  {
-    value: 10,
-    label: 'بندرترکمن',
   },
 ];
 
 class SearchForm extends PureComponent {
+  static propTypes = {
+    history: PropTypes.objectOf(PropTypes.object).isRequired,
+  };
+
   constructor() {
     super();
     this.state = {
+      sortBy: 1,
       resultTab: 'list',
-      rooms: '',
-      area_from: '',
-      area_to: '',
-      age_from: '',
-      age_to: '',
+      resultSize: 23,
       searchSelect: [],
-      price: {
-        min: 0,
-        max: 38,
+      filterModal: true,
+      requestModal: false,
+      requestModalLoading: false,
+      searchLoading: false,
+      requestTitle: '',
+      filterData: {
+        city: '',
+        beds: {
+          0: {
+            label: '0',
+            value: false,
+          },
+          1: {
+            label: '1',
+            value: false,
+          },
+          2: {
+            label: '2',
+            value: false,
+          },
+          3: {
+            label: '3',
+            value: false,
+          },
+          4: {
+            label: '+4',
+            value: false,
+          },
+        },
+        area: {
+          min: 0,
+          max: 85,
+          minLabel: '',
+          maxLabel: 12000,
+        },
+        age: {
+          min: 0,
+          max: 30,
+          minLabel: 'نوساز',
+          maxLabel: '30 سال و بیشتر',
+        },
+        price: {
+          min: 0,
+          minLabel: '',
+          max: 38,
+          maxLabel: '200 میلیارد تومان',
+        },
+        deposit: {
+          min: 0,
+          minLabel: '',
+          max: 38,
+          maxLabel: '200 میلیارد تومان',
+        },
+        rent: {
+          min: 0,
+          minLabel: '',
+          max: 28,
+          maxLabel: '500 میلیون تومان',
+        },
+        dailyRent: {
+          min: 0,
+          minLabel: '',
+          max: 28,
+          maxLabel: '5 میلیون تومان',
+        },
+        type: '',
+        applicationType: '',
+        homeType: '',
+        homeTypeArr: HOME_TYPE_ARRAY[0],
+        haveVam: false,
+        isConvertable: false,
+        checkItems: FILTER_CHECKS[0],
+        toggleProperties: false,
       },
-      deposit: {
-        min: 0,
-        max: 38,
+      result: {
+        list: [],
+        size: 22,
+        pages: 3,
+        currPagination: 0,
+        pagination: 1,
       },
-      rent: {
-        min: 0,
-        max: 28,
-      },
-      type: 0,
     };
-    this.handleRangeChange = this.handleRangeChange.bind(this);
-    this.handlePriceLabel = this.handlePriceLabel.bind(this);
     this.handleTypeSelect = this.handleTypeSelect.bind(this);
-    this.handleRentLabel = this.handleRentLabel.bind(this);
+    this.handleToggleModal = this.handleToggleModal.bind(this);
+    this.handleSearch = this.handleSearch.bind(this);
+    this.saveAsRequest = this.saveAsRequest.bind(this);
+    this.handleCreateRequest = this.handleCreateRequest.bind(this);
+    this.handleDismissModal = this.handleDismissModal.bind(this);
+    this.handleInputChange = this.handleInputChange.bind(this);
+    this.toggleSort = this.toggleSort.bind(this);
+    this.handleFilter = this.handleFilter.bind(this);
+    this.changePagination = this.changePagination.bind(this);
+    this.isItemValid = this.isItemValid.bind(this);
+    this.adsClick = this.adsClick.bind(this);
+  }
+
+  componentDidMount() {
+    // search data from server using searchParams
   }
 
   changeResultTab = (tab) => {
@@ -390,8 +235,8 @@ class SearchForm extends PureComponent {
     <div className="resultsList">
       <Row>
         {houseData.map((data, index) => (
-          <Col xs={12} sm={6} md={4} lg={4} key={index.toString()}>
-            <SingleHouse data={data} />
+          <Col xs={12} sm={6} md={6} lg={6} xl={4} key={index.toString()}>
+            <SingleHouse onClick={(id) => { this.adsClick(id); }} data={data} />
           </Col>
         ))}
       </Row>
@@ -404,314 +249,330 @@ class SearchForm extends PureComponent {
     </div>
   );
 
-  handleRangeChange(name, value) {
-    this.setState({ [name]: { min: value.min, max: value.max } });
+  createPagination = () => {
+    const pagination = [];
+    for (let i = 0; i < this.state.result.pages; i += 1) {
+      pagination.push(
+        <PaginationItem>
+          <PaginationLink
+            className={`text-dark ${(this.state.result.currPagination === i) ? 'bg-success' : ''}`}
+            onClick={() => { this.changePagination(i); }}
+          >
+            {i + 1}
+          </PaginationLink>
+        </PaginationItem>,
+      );
+    }
+    return pagination;
   }
 
-  handlePriceLabel(value, type) {
-    // type have => min, value, value, max
-    if (type === 'min' || type === 'max') {
-      return '';
-    }
-    if (value > 0 && value <= 9) {
-      return (`میلیون${value * 100}`);
-    }
-    if (value >= 10 && value <= 22) {
-      return (`میلیارد${1 + (value - 10) * 0.25}`);
-    }
-    if (value >= 23 && value <= 30) {
-      return (`میلیارد${4 + (value - 22) * 0.5}`);
-    }
-    if (value >= 31 && value <= 32) {
-      return (`میلیارد${8 + (value - 30)}`);
-    }
-    if (value >= 33 && value <= 34) {
-      return (`میلیارد${10 + (value - 32) * 5}`);
-    }
-    if (value >= 35 && value <= 38) {
-      return (`میلیارد${(value - 34) * 50}`);
-    }
-
-    console.log(this.state.price);
-    return value;
-  }
-
-  handleRentLabel(value, type) {
-    // type have => min, value, value, max
-    if (type === 'min' || type === 'max') {
-      return '';
-    }
-    if (value > 0 && value <= 1) {
-      return (`هزار${value * 100}`);
-    }
-    if (value === 2) {
-      return (`هزار${500}`);
-    }
-    if (value >= 3 && value <= 13) {
-      return (`میلیون${1 + (value - 3) * 0.5}`);
-    }
-    if (value >= 14 && value <= 17) {
-      return (`میلیون${6 + (value - 13)}`);
-    }
-    if (value >= 18 && value <= 19) {
-      return (`میلیون${10 + (value - 17) * 2.5}`);
-    }
-    if (value >= 20 && value <= 23) {
-      return (`میلیون${(value - 18) * 10}`);
-    }
-    if (value >= 24 && value <= 28) {
-      return (`میلیون${(value - 23) * 100}`);
-    }
-
-    console.log(this.state.price);
-    return value;
+  changePagination(page) {
+    this.setState((prevState) => {
+      const { pagination: pageVal, ...other } = prevState.result;
+      const newResult = { pagination: page, ...other };
+      return {
+        result: newResult,
+      };
+    }, () => {
+      this.handleSearch();
+    });
   }
 
   handleTypeSelect(index, name) {
     this.setState({ [name]: index });
-    console.log(index);
-    console.log(name);
   }
 
-  handleSearchSelect(searchSelect) {
-    if (searchSelect === null) {
-      this.setState({ searchSelect: [] });
+  handleToggleModal() {
+    this.setState(prevState => ({ filterModal: !prevState.filterModal }));
+  }
+
+  handleSearch() {
+    // search from server using filterData, selectedSearch, pagination and sortBy
+    console.group('handle search in search form (Search page)');
+    console.log(
+      this.state.filterData,
+      this.state.searchSelect,
+      this.state.result.pagination,
+      this.state.sortBy,
+    );
+    console.groupEnd();
+    this.setState({ searchLoading: true });
+    setTimeout(() => {
+      this.setState({ searchLoading: false });
+    }, 1000);
+  }
+
+  handleFilter(data) {
+    this.setState((prevState) => {
+      const { pagination: pageVal, ...other } = prevState.result;
+      const newResult = { pagination: 1, ...other };
+      return {
+        result: newResult,
+        filterData: data,
+      };
+    }, () => {
+      this.handleSearch();
+    });
+  }
+
+  saveAsRequest() {
+    this.setState({ requestModal: true });
+  }
+
+  handleCreateRequest() {
+    if (this.state.requestTitle.trim().length <= 0) {
       return;
     }
-    this.setState({ searchSelect });
+    this.setState({ requestModalLoading: true });
+    setTimeout(() => {
+      this.setState({
+        requestModalLoading: false,
+        requestModal: false,
+        requestTitle: '',
+      });
+    }, 1000);
+  }
+
+  handleDismissModal(name) {
+    this.setState({
+      [name]: false,
+    });
+  }
+
+  handleInputChange(e) {
+    const { name, value } = e.target;
+    this.setState({ [name]: value });
+  }
+
+  toggleSort(tab) {
+    const { sortBy } = this.state;
+    if (sortBy !== tab) {
+      this.setState({
+        sortBy: tab,
+      }, () => {
+        this.handleSearch();
+      });
+    }
+  }
+
+  isItemValid(name) {
+    const { [name]: val } = this.state;
+    return val.trim().length > 0;
+  }
+
+  adsClick(id) {
+    console.group('ads click');
+    console.log(id);
+    console.log(this.state);
+    console.groupEnd();
+    this.props.history.push(`/ads/detail/${id}`);
   }
 
   render() {
+    const width = window.innerWidth;
+
     return (
-      <div className="searchForm">
-        <Form>
-          <Row form className="search-input">
-            <Col lg={10} md={10} sm={9} xs={8}>
-              <FormGroup>
-                {renderSelectField({
-                  input: {
-                    onChange: (items) => { this.handleSearchSelect(items); },
-                    isMulti: true,
-                    name: 'searchSelect',
-                    value: zones[this.state.searchSelect],
-                  },
-                  placeholder: 'نام شهر، منطقه و .. خود را وارد کنید',
-                  options: zones,
-                  name: 'select',
-                  type: 'text',
-                })}
-              </FormGroup>
-            </Col>
-            <Col lg={2} md={2} sm={3} xs={4}>
-              <Button className="btn-success btn-search">تغییر جستجو</Button>
-            </Col>
-          </Row>
-          <Row form className="search-input">
-            <Col lg={2} md={3} sm={4} xs={6}>
-              <FormGroup>
-                {renderSelectField({
-                  input: {
-                    onChange: (e) => { this.handleTypeSelect(Number(e.value), 'type'); },
-                    isMulti: false,
-                    name: 'type',
-                    value: types[this.state.type],
-                  },
-                  placeholder: 'نوع',
-                  options: types,
-                  name: 'select',
-                  type: 'text',
-                })}
-              </FormGroup>
-            </Col>
-            {this.state.type !== 1
+      <div>
+        <div>
+          <Modal
+            fade={false}
+            isOpen={this.state.requestModal}
+            toggle={() => { this.handleDismissModal('requestModal'); }}
+          >
+            <ModalHeader toggle={this.handleDismissRequestModal}>درخواست جدید</ModalHeader>
+            {this.state.requestModalLoading
             && (
-              <Col lg={3} md={4} sm={6} xs={6} style={{ direction: 'ltr' }}>
-                <FormGroup>
-                  <Col md={2} lg={2} sm={2} xs={2}>قیمت</Col>
-                  <Col md={10} lg={10} sm={10} xs={10}>
-                    <InputRange
-                      name="price"
-                      maxValue={38}
-                      minValue={0}
-                      step={1}
-                      value={this.state.price}
-                      formatLabel={(value, type) => this.handlePriceLabel(value, type)}
-                      onChange={(value) => { this.handleRangeChange('price', value); }}
-                    />
-                  </Col>
-                </FormGroup>
-              </Col>
-            )}
-            {this.state.type === 1
+              <div className={`request-modal load${this.state.isLoading ? '' : ' loaded'}`}>
+                <div className="load__icon-wrap">
+                  <svg className="load__icon">
+                    <path fill="#4ce1b6" d="M12,4V2A10,10 0 0,0 2,12H4A8,8 0 0,1 12,4Z" />
+                  </svg>
+                </div>
+              </div>
+            )
+            }
+            {!this.state.requestModalLoading
             && (
               <>
-                <Col lg={3} md={4} sm={6} xs={6} style={{ direction: 'ltr' }}>
-                  <FormGroup>
-                    <Col md={2} lg={2} sm={2} xs={2}>رهن</Col>
-                    <Col md={10} lg={10} sm={10} xs={10}>
-                      <InputRange
-                        name="deposit"
-                        maxValue={38}
-                        minValue={0}
-                        step={1}
-                        value={this.state.deposit}
-                        formatLabel={(value, type) => this.handlePriceLabel(value, type)}
-                        onChange={(value) => { this.handleRangeChange('deposit', value); }}
-                      />
+                <ModalBody>
+                  <Row className="search-input">
+                    <Col lg={12} md={12} sm={12} xs={12}>
+                      <FormGroup>
+                        <Label>عنوان درخواست</Label>
+                        <Input
+                          name="requestTitle"
+                          type="text"
+                          value={this.state.requestTitle}
+                          onChange={this.handleInputChange}
+                          className={`text-right ${this.isItemValid('requestTitle') ? '' : 'border-danger'}`}
+                        />
+                      </FormGroup>
                     </Col>
-                  </FormGroup>
-                </Col>
-                <Col lg={3} md={4} sm={6} xs={6} style={{ direction: 'ltr' }}>
-                  <FormGroup>
-                    <Col md={2} lg={2} sm={2} xs={2}>اجاره</Col>
-                    <Col md={10} lg={10} sm={10} xs={10}>
-                      <InputRange
-                        name="rent"
-                        maxValue={28}
-                        minValue={0}
-                        step={1}
-                        value={this.state.rent}
-                        formatLabel={(value, type) => this.handleRentLabel(value, type)}
-                        onChange={(value) => { this.handleRangeChange('rent', value); }}
-                      />
-                    </Col>
-                  </FormGroup>
-                </Col>
+                    {!this.isItemValid('requestTitle')
+                    && (
+                      <Col lg={12} md={12} sm={12} xs={12} className="text-danger">
+                        <p>وارد کردن عنوان درخواست الزامی است</p>
+                      </Col>
+                    )}
+                  </Row>
+                </ModalBody>
+                <ModalFooter>
+                  <Button color="primary" onClick={this.handleCreateRequest}>ذخیره درخواست</Button>{' '}
+                  <Button color="secondary" onClick={() => { this.handleDismissModal('requestModal'); }}>بازگشت</Button>
+                </ModalFooter>
               </>
             )}
-            <Col md={2} sm={3} xs={6}>
-              <FormGroup>
-                {renderSelectField({
-                  input: {
-                    onChange: (e) => { this.handleTypeSelect(Number(e.value), 'rooms'); },
-                    isMulti: false,
-                    name: 'rooms',
-                    value: nums[() => {
-                      const { rooms: value } = this.state;
-                      return {
-                        value,
-                      };
-                    }],
-                  },
-                  placeholder: 'تعداد اتاق',
-                  options: nums,
-                  name: 'select',
-                  type: 'text',
-                })}
-              </FormGroup>
-            </Col>
-            <Col md={4} xs={12} sm={6}>
-              <Row>
-                <Col>
-                  <FormGroup>
-                    {renderSelectField({
-                      input: {
-                        onChange: (e) => { this.handleTypeSelect(Number(e.value), 'area_from'); },
-                        isMulti: false,
-                        name: 'area_from',
-                        value: area[() => {
-                          const { area_from: value } = this.state;
-                          return {
-                            value,
-                          };
-                        }],
-                      },
-                      placeholder: 'متراژ از',
-                      options: area,
-                      name: 'select',
-                      type: 'text',
-                    })}
-                  </FormGroup>
-                </Col>
-                <Col>
-                  <FormGroup>
-                    {renderSelectField({
-                      input: {
-                        onChange: (e) => { this.handleTypeSelect(Number(e.value), 'area_to'); },
-                        isMulti: false,
-                        name: 'area_to',
-                        value: area[() => {
-                          const { area_to: value } = this.state;
-                          return {
-                            value,
-                          };
-                        }],
-                      },
-                      placeholder: 'متراژ تا',
-                      options: area,
-                      name: 'select',
-                      type: 'text',
-                    })}
-                  </FormGroup>
-                </Col>
-              </Row>
-            </Col>
-            <Col md={4} xs={12} sm={6}>
-              <Row>
-                <Col>
-                  <FormGroup>
-                    {renderSelectField({
-                      input: {
-                        onChange: (e) => { this.handleTypeSelect(Number(e.value), 'age_from'); },
-                        isMulti: false,
-                        name: 'age_from',
-                        value: age[() => {
-                          const { age_from: value } = this.state;
-                          return {
-                            value,
-                          };
-                        }],
-                      },
-                      placeholder: 'سن از',
-                      options: age,
-                      name: 'select',
-                      type: 'text',
-                    })}
-                  </FormGroup>
-                </Col>
-                <Col>
-                  <FormGroup>
-                    {renderSelectField({
-                      input: {
-                        onChange: (e) => { this.handleTypeSelect(Number(e.value), 'age_to'); },
-                        isMulti: false,
-                        name: 'age_to',
-                        value: age[() => {
-                          const { age_to: value } = this.state;
-                          return {
-                            value,
-                          };
-                        }],
-                      },
-                      placeholder: 'تا',
-                      options: age,
-                      name: 'select',
-                      type: 'text',
-                    })}
-                  </FormGroup>
-                </Col>
-              </Row>
-            </Col>
-          </Row>
-        </Form>
-        <div>
-          <div className="resultTable">
-            <div className="resultTab">
-              <ul>
-                <li
-                  className={this.state.resultTab === 'list' ? 'active' : ''}
-                >
-                  <a href="#1" onClick={() => { this.changeResultTab('list'); }}><FaThList /> نمایش لیست </a>
-                </li>
-                <li
-                  className={this.state.resultTab === 'map' ? 'active' : ''}
-                >
-                  <a href="#1" onClick={() => { this.changeResultTab('map'); }}><FaMap /> نمایش روی نقشه </a>
-                </li>
-              </ul>
+          </Modal>
+          {width <= 1080
+          && (
+            <Modal
+              fade={false}
+              isOpen={this.state.filterModal}
+              toggle={() => { this.handleDismissModal('filterModal'); }}
+            >
+              <ModalHeader className="modal-title">فیلتر جستجو</ModalHeader>
+              <SearchFilter
+                filterData={this.state.filterData}
+                handleDissmiss={() => { this.handleDismissModal('filterModal'); }}
+                isModal
+                handleSearch={(data) => { this.handleDismissModal('filterModal'); this.handleFilter(data); }}
+              />
+            </Modal>
+          )}
+        </div>
+        <div className="search-container">
+          {width > 1080
+          && (
+            <div className="search-filter">
+              <StickyBox>
+                <SearchFilter
+                  filterData={this.state.filterData}
+                  handleSave={this.handleToggleModal}
+                  handleDissmiss={this.handleToggleModal}
+                  isModal={false}
+                  handleSearch={(data) => { this.handleFilter(data); }}
+                />
+              </StickyBox>
             </div>
-            <div className="resultBody">
-              {this.state.resultTab === 'list' ? this.resultList() : this.resultMap()}
+          )}
+          <div className="searchForm">
+            <div>
+              <StickyBox bottom={false} offsetTop={0} offsetBottom={10} className="search-form-top">
+                <Form>
+                  <Row form className="search-input">
+                    <Col lg={2} md={2} sm={3} xs={12}>
+                      <Button
+                        style={{ margin: '0px 2px 5px 2px' }}
+                        color="success"
+                        onClick={() => { this.saveAsRequest(); }}
+                        className="volume"
+                      >
+                        ذخیره جستجو
+                      </Button>
+                    </Col>
+                  </Row>
+                </Form>
+              </StickyBox>
+              {width <= 1080
+              && (
+                <div className="fab">
+                  <FaFilter className="fab-icon" onClick={this.handleToggleModal} />
+                </div>
+              )}
+              <div className="sort-panel">
+                <span className="sort-title">مرتب سازی:</span>
+                <Nav tabs className="sort-tabs">
+                  <NavItem>
+                    <NavLink
+                      className={classnames({ active: this.state.sortBy === 1 })}
+                      onClick={() => {
+                        this.toggleSort(1);
+                      }}
+                    >
+                      جدیدترین
+                    </NavLink>
+                  </NavItem>
+                  <NavItem>
+                    <NavLink
+                      className={classnames({ active: this.state.sortBy === 2 })}
+                      onClick={() => {
+                        this.toggleSort(2);
+                      }}
+                    >
+                      گران ترین
+                    </NavLink>
+                  </NavItem>
+                  <NavItem>
+                    <NavLink
+                      className={classnames({ active: this.state.sortBy === 3 })}
+                      onClick={() => {
+                        this.toggleSort(3);
+                      }}
+                    >
+                      ارزان ترین
+                    </NavLink>
+                  </NavItem>
+                </Nav>
+                <span className="pull-left span-result-size">
+                  <span className="red-text bold-text">{this.state.resultSize}</span>
+                  مورد یافت شد
+                </span>
+              </div>
+              <div>
+                {this.state.searchLoading
+                && (
+                  <div className={`relative-load${this.state.searchLoading ? '' : ' loaded'}`}>
+                    <div className="load__icon-wrap">
+                      <svg className="load__icon">
+                        <path fill="#4ce1b6" d="M12,4V2A10,10 0 0,0 2,12H4A8,8 0 0,1 12,4Z" />
+                      </svg>
+                    </div>
+                  </div>
+                )
+                }
+                {!this.state.searchLoading
+                && (
+                  <div>
+                    <div className="result-table">
+                      <div className="resultTab">
+                        <ul>
+                          <li
+                            className={this.state.resultTab === 'list' ? 'active' : ''}
+                          >
+                            <a href="#1" onClick={() => { this.changeResultTab('list'); }}><FaThList /> نمایش لیست </a>
+                          </li>
+                          <li
+                            className={this.state.resultTab === 'map' ? 'active' : ''}
+                          >
+                            <a href="#1" onClick={() => { this.changeResultTab('map'); }}><FaMap /> نمایش روی نقشه </a>
+                          </li>
+                        </ul>
+                      </div>
+                      <div className="resultBody">
+                        {this.state.resultTab === 'list' ? this.resultList() : this.resultMap()}
+                      </div>
+                    </div>
+                    <Row>
+                      <Pagination aria-label="Page navigation example">
+                        <PaginationItem>
+                          <PaginationLink
+                            previous
+                            onClick={() => { this.changePagination(this.state.result.currPagination - 1); }}
+                          />
+                        </PaginationItem>
+                        {this.createPagination()}
+                        <PaginationItem>
+                          <PaginationLink
+                            next
+                            onClick={() => { this.changePagination(this.state.result.currPagination + 1); }}
+                          />
+                        </PaginationItem>
+                      </Pagination>
+                    </Row>
+                  </div>
+                )
+                }
+              </div>
             </div>
           </div>
         </div>

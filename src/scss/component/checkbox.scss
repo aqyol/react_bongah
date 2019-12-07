@@ -4,6 +4,8 @@
   min-height: 20px;
   margin-top: 5px;
   margin-bottom: 10px;
+  float: left;
+  margin-left: 40%;
 }
 
 .checkbox.custom-checkbox label {
@@ -40,5 +42,11 @@
   }
   .form-inline .checkbox input[type="checkbox"] {
     margin-left: 0;
+  }
+}
+
+@media screen and (min-width: 1080px){
+  .checkbox {
+    margin-left: 0 !important;
   }
 }

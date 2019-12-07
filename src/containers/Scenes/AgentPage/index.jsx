@@ -23,7 +23,7 @@ class AgentPage extends PureComponent {
     switch (section) {
       case 'myagents':
         return this.AgentPageAction.myAgent;
-      case 'search':
+      case 'list':
         return this.AgentPageAction.findAgent;
       default:
         return this.AgentPageAction.notFound;

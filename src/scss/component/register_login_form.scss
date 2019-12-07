@@ -3,6 +3,19 @@
   visibility: hidden;
 }
 
+.modal-head {
+  width: 100%;
+  text-align: center;
+
+  svg {
+    float: right;
+  }
+}
+
+.modal-title {
+  width: 100%;
+}
+
 .RLForm.modal-open {
   visibility: visible;
 }

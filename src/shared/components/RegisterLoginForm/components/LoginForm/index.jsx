@@ -1,11 +1,21 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import { FaFacebookF, FaGoogle, FaCheck } from 'react-icons/fa';
+import {
+  Container,
+  ModalHeader,
+  ModalBody,
+  Modal,
+} from 'reactstrap';
+import {
+  FaCheck,
+  FaRegWindowClose,
+} from 'react-icons/fa';
 import { login } from '../../../../../containers/util/APIUtils';
 
 class LoginForm extends PureComponent {
   static propTypes = {
     openRegisterForm: PropTypes.func.isRequired,
+    handleClose: PropTypes.func.isRequired,
     active: PropTypes.bool.isRequired,
   };
 
@@ -13,15 +23,20 @@ class LoginForm extends PureComponent {
     super();
     this.state = {
       remember: false,
-      email: '',
+      phone: '',
       password: '',
     };
+    this.signIn = this.signIn.bind(this);
+    this.toggleRemember = this.toggleRemember.bind(this);
+    this.updatePhone = this.updatePhone.bind(this);
+    this.updatePassword = this.updatePassword.bind(this);
+    this.handleClose = this.handleClose.bind(this);
   }
 
-  signIn = (e) => {
+  signIn(e) {
     e.preventDefault();
     const loginData = {
-      userName: this.state.email,
+      userName: this.state.phone,
       password: this.state.password,
     };
 
@@ -31,116 +46,105 @@ class LoginForm extends PureComponent {
     });
   }
 
-  toggleRemember = (e) => {
+  toggleRemember(e) {
     this.setState({
       remember: e.currentTarget.checked,
     });
   }
 
-  updateEmail = (e) => {
+  updatePhone(e) {
     this.setState({
-      email: e.currentTarget.value,
+      phone: e.currentTarget.value,
     });
   }
 
-  updatePassword = (e) => {
+  updatePassword(e) {
     this.setState({
       password: e.currentTarget.value,
     });
   }
 
+  handleClose() {
+    this.props.handleClose();
+  }
+
   render() {
     return (
-      <div
-        className={`loginForm modal slimScroll fade${(this.props.active ? ' in' : '')}`}
-      >
-        <div className="modal-dialog modal-sm">
-          <div className="modal-content">
-            <div className="modal-header">
-              <h4 className="modal-title">Sign In</h4>
+      <Container>
+        <Modal
+          fade={false}
+          isOpen={this.props.active}
+        >
+          <ModalHeader className="rtl-direction modal-head">
+            <div className="modal-head">
+              <span>ورود</span>
+              <FaRegWindowClose onClick={this.handleClose} />
             </div>
-            <div className="modal-body">
-              <form onSubmit={this.signIn}>
-                <div className="form-group">
-                  <div className="btn-group-justified">
-                    <div className="btn btn-lg btn-facebook">
-                      <span className="pull-left"><FaFacebookF /></span>
-                      <span>Sign In with Facebook</span>
+          </ModalHeader>
+          <ModalBody className="rtl-direction">
+            <form onSubmit={this.signIn}>
+              <div className="form-group">
+                <input
+                  type="number"
+                  placeholder="شماره موبایل"
+                  className="form-control"
+                  onChange={this.updatePhone}
+                />
+              </div>
+              <div className="form-group">
+                <input
+                  type="password"
+                  placeholder="رمز عبور"
+                  className="form-control"
+                  onChange={this.updatePassword}
+                />
+              </div>
+              <div className="form-group">
+                <div className="row">
+                  <div className="col-xs-6">
+                    <div className="checkbox custom-checkbox">
+                      <label htmlFor="remember">
+                        <input
+                          id="remember"
+                          type="checkbox"
+                          checked={this.state.remember}
+                          onChange={this.toggleRemember}
+                        />
+                        <span><FaCheck /></span>
+                        من را بخاطر بسپار
+                      </label>
                     </div>
                   </div>
-                </div>
-                <div className="form-group">
-                  <div className="btn-group-justified">
-                    <div className="btn btn-lg btn-google">
-                      <span className="pull-left"><FaGoogle /></span>
-                      <span>Sign In with Google</span>
-                    </div>
+                  <div className="col-xs-6 align-right">
+                    <p className="help-block">
+                      <a href="#1" className="text-green isThemeText text-red">
+                        فراموشی رمز عبور
+                      </a>
+                    </p>
                   </div>
                 </div>
-                <div className="signOr">OR</div>
-                <div className="form-group">
-                  <input
-                    type="text"
-                    placeholder="Email Address"
-                    className="form-control"
-                    onChange={this.updateEmail}
-                  />
+              </div>
+              <div className="form-group">
+                <div className="btn-group-justified">
+                  <button type="submit" className="btn btn-lg btn-green isThemeBtn btn-red">
+                    ورود
+                  </button>
                 </div>
-                <div className="form-group">
-                  <input
-                    type="password"
-                    placeholder="Password"
-                    className="form-control"
-                    onChange={this.updatePassword}
-                  />
-                </div>
-                <div className="form-group">
-                  <div className="row">
-                    <div className="col-xs-6">
-                      <div className="checkbox custom-checkbox">
-                        <label htmlFor="remember">
-                          <input
-                            id="remember"
-                            type="checkbox"
-                            checked={this.state.remember}
-                            onChange={this.toggleRemember}
-                          />
-                          <span><FaCheck /></span>
-                          Remember me
-                        </label>
-                      </div>
-                    </div>
-                    <div className="col-xs-6 align-right">
-                      <p className="help-block">
-                        <a href="#1" className="text-green isThemeText text-red">
-                          Forgot password?
-                        </a>
-                      </p>
-                    </div>
-                  </div>
-                </div>
-                <div className="form-group">
-                  <div className="btn-group-justified">
-                    <button type="submit" className="btn btn-lg btn-green isThemeBtn btn-red">
-                      Sign In
-                    </button>
-                  </div>
-                </div>
-                <p className="help-block">
-                  <span>Do not have an account? </span>
-                  <a
-                    href="#1"
-                    className="modal-su text-green isThemeText text-red"
-                    onClick={this.props.openRegisterForm}
-                  >
-                    Sign Up
-                  </a>
-                </p>
-              </form>
-            </div>
-          </div>
-        </div>
-      </div>
+              </div>
+              <p className="help-block text-right">
+                <span>تاکنون عضو نشده اید؟</span>
+                <a
+                  href="#1"
+                  className="modal-su text-green isThemeText text-red"
+                  onClick={this.props.openRegisterForm}
+                >
+                  ثبت نام
+                </a>
+              </p>
+            </form>
+          </ModalBody>
+        </Modal>
+      </Container>
     );
   }
 }

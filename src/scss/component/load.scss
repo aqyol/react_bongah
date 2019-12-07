@@ -17,6 +17,26 @@
   }
 }
 
+.relative-load {
+  margin-top: 100px;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  position: relative;
+  background: #ffffff;
+  z-index: 1000;
+
+  & + div {
+    height: 100vh;
+    overflow: hidden;
+  }
+
+  &.loaded {
+    animation: ease loaded 0.5s;
+  }
+}
+
 .load__icon {
   animation: linear load 2s infinite;
   margin: auto;

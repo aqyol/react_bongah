@@ -84,33 +84,14 @@ class MenuBar extends PureComponent {
         >
           <FaList />
         </a>
-        <div className={`homeNav${(this.state.isHandlerActive ? ' active' : '')}`}>
+        <div className={`rtl-direction homeNav${(this.state.isHandlerActive ? ' active' : '')}`}>
           <ul>
-            <li className="moreOption">
-              <Link to="/commission">کمیسیون</Link>
-            </li>
+            {this.loginField()}
             <li className="moreOption">
               <Link to="/promise">قول نامه</Link>
             </li>
             <li className="moreOption">
-              <Link to="/search?type=partnership">مشارکت</Link>
-            </li>
-            <li className="moreOption">
-              <Link to="/search?type=preSell">پیش فروش</Link>
-            </li>
-            <li className="moreOption">
-              <Link to="/search?type=rent">رهن و اجاره</Link>
-            </li>
-            <li className="moreOption">
-              <Link to="/search?type=sell">خرید</Link>
-            </li>
-            {this.loginField()}
-            <li>
-              <Link to="/newproperty/sell">
-                <div className="btn btn-success">
-                  افزودن آگهی جدید
-                </div>
-              </Link>
+              <Link to="/commission">کمیسیون</Link>
             </li>
           </ul>
         </div>

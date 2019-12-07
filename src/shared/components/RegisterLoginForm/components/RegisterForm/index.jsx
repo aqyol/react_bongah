@@ -1,6 +1,14 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import { FaFacebookF, FaGoogle } from 'react-icons/fa';
+import {
+  FaRegWindowClose,
+} from 'react-icons/fa';
+import {
+  Container,
+  Modal,
+  ModalBody,
+  ModalHeader,
+} from 'reactstrap';
 import { register, active } from '../../../../../containers/util/APIUtils';
 
 
@@ -8,6 +16,7 @@ class RegisterForm extends PureComponent {
   static propTypes = {
     active: PropTypes.bool.isRequired,
     openLoginForm: PropTypes.func.isRequired,
+    handleClose: PropTypes.func.isRequired,
   };
 
   constructor() {
@@ -16,7 +25,7 @@ class RegisterForm extends PureComponent {
       verifyCode: '',
       name: '',
       lastName: '',
-      email: '',
+      phone: '',
       password: '',
       confirmPassword: '',
       username: '',
@@ -24,9 +33,13 @@ class RegisterForm extends PureComponent {
       isLoading: false,
     };
     console.log(this.state.isLoading);
+    this.submitRegister = this.submitRegister.bind(this);
+    this.submitActive = this.submitActive.bind(this);
+    this.changeFormData = this.changeFormData.bind(this);
+    this.handleClose = this.handleClose.bind(this);
   }
 
-  submitRegister = (e) => {
+  submitRegister(e) {
     e.preventDefault();
     const registerData = {
       name: {
@@ -42,8 +55,8 @@ class RegisterForm extends PureComponent {
         country: 'Viet Nam',
         countryCode: '+84',
       }],
-      emails: [{
-        value: this.state.email,
+      phones: [{
+        value: this.state.phone,
         active: true,
       }],
       groups: [{
@@ -60,9 +73,9 @@ class RegisterForm extends PureComponent {
     });
   }
 
-  submitActive = () => {
+  submitActive() {
     const activeData = {
-      email: this.state.email,
+      phone: this.state.phone,
       verifycode: this.state.verifyCode,
     };
     active(activeData).then((resolveData) => {
@@ -72,36 +85,23 @@ class RegisterForm extends PureComponent {
     });
   }
 
-  changeFormData = (key, value) => {
+  changeFormData(key, value) {
     const changeObject = {};
     changeObject[key] = value;
     this.setState(changeObject);
+  }
+
+  handleClose() {
+    this.props.handleClose();
   }
 
   registerForm() {
     return (
       <form onSubmit={this.submitRegister}>
         <div className="form-group">
-          <div className="btn-group-justified">
-            <a href="explore.html" className="btn btn-lg btn-facebook">
-              <span className="pull-left"><FaFacebookF /></span>
-              <span>Sign In with Facebook</span>
-            </a>
-          </div>
-        </div>
-        <div className="form-group">
-          <div className="btn-group-justified">
-            <a href="explore.html" className="btn btn-lg btn-google">
-              <span className="pull-left"><FaGoogle /></span>
-              <span>Sign In with Google</span>
-            </a>
-          </div>
-        </div>
-        <div className="signOr">OR</div>
-        <div className="form-group">
           <input
             type="text"
-            placeholder="First Name"
+            placeholder="نام"
             className="form-control"
             value={this.state.name}
             onChange={(e) => { this.changeFormData('name', e.currentTarget.value); }}
@@ -110,7 +110,7 @@ class RegisterForm extends PureComponent {
         <div className="form-group">
           <input
             type="text"
-            placeholder="Last Name"
+            placeholder="نام خانوادگی"
             className="form-control"
             value={this.state.lastName}
             onChange={(e) => { this.changeFormData('lastName', e.currentTarget.value); }}
@@ -118,17 +118,17 @@ class RegisterForm extends PureComponent {
         </div>
         <div className="form-group">
           <input
-            type="email"
-            placeholder="Email Address"
+            type="number"
+            placeholder="شماره موبایل"
             className="form-control"
-            value={this.state.email}
-            onChange={(e) => { this.changeFormData('email', e.currentTarget.value); }}
+            value={this.state.phone}
+            onChange={(e) => { this.changeFormData('phone', e.currentTarget.value); }}
           />
         </div>
         <div className="form-group">
           <input
             type="text"
-            placeholder="User Name"
+            placeholder="نام کاربری"
             className="form-control"
             value={this.state.username}
             onChange={(e) => { this.changeFormData('username', e.currentTarget.value); }}
@@ -137,7 +137,7 @@ class RegisterForm extends PureComponent {
         <div className="form-group">
           <input
             type="password"
-            placeholder="Password"
+            placeholder="رمز عبور"
             className="form-control"
             value={this.state.password}
             onChange={(e) => { this.changeFormData('password', e.currentTarget.value); }}
@@ -146,7 +146,7 @@ class RegisterForm extends PureComponent {
         <div className="form-group">
           <input
             type="password"
-            placeholder="Confirm Password"
+            placeholder="تکرار رمز عبور"
             className="form-control"
             value={this.state.confirmPassword}
             onChange={(e) => { this.changeFormData('confirmPassword', e.currentTarget.value); }}
@@ -154,17 +154,17 @@ class RegisterForm extends PureComponent {
         </div>
         <div className="form-group">
           <div className="btn-group-justified">
-            <button type="submit" className="btn btn-lg btn-green isThemeBtn">Sign Up</button>
+            <button type="submit" className="btn btn-lg btn-green isThemeBtn">ثبت نام</button>
           </div>
         </div>
         <p className="help-block">
-          <span>Already a Reales member? </span>
+          <span>قبلا ثبت نام کرده اید؟</span>
           <a
             href="#1"
             className="modal-su text-green isThemeText text-red"
             onClick={this.props.openLoginForm}
           >
-            Sign In
+            ورود
           </a>
         </p>
       </form>
@@ -177,7 +177,7 @@ class RegisterForm extends PureComponent {
         <div className="form-group">
           <input
             type="text"
-            placeholder="Verify Code"
+            placeholder="کد فعال سازی"
             className="form-control"
             value={this.state.verifyCode}
             onChange={(e) => { this.changeFormData('verifyCode', e.currentTarget.value); }}
@@ -185,7 +185,7 @@ class RegisterForm extends PureComponent {
         </div>
         <div className="form-group">
           <div className="btn-group-justified">
-            <button type="submit" className="btn btn-lg btn-green isThemeBtn">Verify</button>
+            <button type="submit" className="btn btn-lg btn-green isThemeBtn">تایید</button>
           </div>
         </div>
       </form>
@@ -194,22 +194,22 @@ class RegisterForm extends PureComponent {
 
   render() {
     return (
-      <div
-        className={`registerForm slimScroll modal fade${(this.props.active ? ' in' : '')}`}
-      >
-        <div className="modal-dialog modal-sm">
-          <div className="modal-content">
-            <div className="modal-header">
-              <h4 className="modal-title">
-                {this.state.isActiveForm ? 'Verify your account' : 'Sign up'}
-              </h4>
+      <Container>
+        <Modal
+          isOpen={this.props.active}
+          fade={false}
+        >
+          <ModalHeader className="rtl-direction modal-head">
+            <div className="modal-head">
+              <span>ثبت نام</span>
+              <FaRegWindowClose onClick={this.handleClose} />
             </div>
-            <div className="modal-body">
-              {this.state.isActiveForm ? this.activeForm() : this.registerForm()}
-            </div>
-          </div>
-        </div>
-      </div>
+          </ModalHeader>
+          <ModalBody className="rtl-direction text-right">
+            {this.state.isActiveForm ? this.activeForm() : this.registerForm()}
+          </ModalBody>
+        </Modal>
+      </Container>
     );
   }
 }

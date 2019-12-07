@@ -12,6 +12,7 @@ import {
 } from 'reactstrap';
 import CedarMaps from '@cedarstudios/react-cedarmaps';
 import ImageUploader from 'react-images-upload';
+import { DecimalInput } from 'react-hichestan-numberinput';
 import renderSelectField from '../../../../../shared/components/form/Select';
 
 
@@ -19,35 +20,62 @@ const applicationTypes = [
   {
     value: '0',
     label: 'مسکونی',
-  }, {
+  },
+  {
     value: '1',
     label: 'اداری',
-  }, {
+  },
+  {
     value: '2',
     label: 'موقعیت اداری',
-  }, {
-    value: '3',
-    label: 'اقامتی،تفریحی',
   },
   {
     value: '3',
     label: 'انبار کالا',
   },
   {
-    value: '3',
+    value: '4',
     label: 'تفریحی',
   },
   {
-    value: '3',
+    value: '5',
     label: 'ورزشی',
   },
   {
-    value: '3',
+    value: '6',
     label: 'مطب',
   },
   {
-    value: '3',
+    value: '7',
     label: 'آموزشی',
+  },
+  {
+    value: '8',
+    label: 'سوئیت',
+  },
+  {
+    value: '9',
+    label: 'آپارتمان',
+  },
+  {
+    value: '10',
+    label: 'هتل آپارتمان',
+  },
+  {
+    value: '11',
+    label: 'سوئیت (اتاق) بوم گردی',
+  },
+  {
+    value: '12',
+    label: 'هتل',
+  },
+  {
+    value: '13',
+    label: 'ویلا',
+  },
+  {
+    value: '14',
+    label: 'باغ',
   },
 ];
 
@@ -62,7 +90,7 @@ const types = [
   },
   {
     value: '2',
-    label: 'سوئیت',
+    label: 'اقامتی، تفریحی',
   },
   {
     value: '3',
@@ -1047,6 +1075,7 @@ class AddNewPropertyForm extends PureComponent {
     this.handleMapClick = this.handleMapClick.bind(this);
     this.handleSave = this.handleSave.bind(this);
     this.onDrop = this.onDrop.bind(this);
+    this.handleNumberInputChange = this.handleNumberInputChange.bind(this);
   }
 
   onDrop(images, imagesData) {
@@ -1061,7 +1090,6 @@ class AddNewPropertyForm extends PureComponent {
   }
 
   handleInputChange(e) {
-    e.preventDefault();
     const { name, value } = e.target;
     if ((name === 'area') && (value > 0)) {
       const { price } = this.state;
@@ -1082,7 +1110,13 @@ class AddNewPropertyForm extends PureComponent {
     this.setState({
       [name]: value,
     });
-    console.log(e.target.value);
+  }
+
+  handleNumberInputChange(e) {
+    console.group('num input');
+    console.log(e);
+    console.log(this.state);
+    console.groupEnd();
   }
 
   toggleCollapse(e, name) {
@@ -1273,7 +1307,7 @@ class AddNewPropertyForm extends PureComponent {
         }
         <Form>
           <Row form>
-            <Col md={4} sm={6} xs={12}>
+            <Col md={6} sm={6} xs={12}>
               <FormGroup>
                 {renderSelectField({
                   input: {
@@ -1289,7 +1323,7 @@ class AddNewPropertyForm extends PureComponent {
                 })}
               </FormGroup>
             </Col>
-            <Col md={4} sm={6} xs={12}>
+            <Col md={6} sm={6} xs={12}>
               <FormGroup>
                 {renderSelectField({
                   input: {
@@ -1329,13 +1363,14 @@ class AddNewPropertyForm extends PureComponent {
               <Col md={4} sm={6} xs={12}>
                 <FormGroup>
                   <Label for="price">قیمت کل(تومان)</Label>
-                  <Input
+                  <DecimalInput
                     type="number"
                     name="price"
                     id="price"
                     placeholder="قیمت"
                     value={this.state.price}
                     onChange={(e) => { this.handleInputChange(e); }}
+                    className="form-control"
                   />
                 </FormGroup>
               </Col>
@@ -1346,26 +1381,28 @@ class AddNewPropertyForm extends PureComponent {
                 <Col md={4} sm={6} xs={12}>
                   <FormGroup>
                     <Label for="deposit">ودیعه(تومان)</Label>
-                    <Input
+                    <DecimalInput
                       type="number"
                       name="deposit"
                       id="deposit"
                       placeholder="ودیعه"
                       value={this.state.deposit}
                       onChange={(e) => { this.handleInputChange(e); }}
+                      className="form-control"
                     />
                   </FormGroup>
                 </Col>
                 <Col md={4} sm={6} xs={12}>
                   <FormGroup>
                     <Label for="rent">اجاره(تومان)</Label>
-                    <Input
+                    <DecimalInput
                       type="number"
                       name="rent"
                       id="rent"
                       placeholder="اجاره"
                       value={this.state.rent}
                       onChange={(e) => { this.handleInputChange(e); }}
+                      className="form-control"
                     />
                   </FormGroup>
                 </Col>
@@ -1377,13 +1414,14 @@ class AddNewPropertyForm extends PureComponent {
                 <Col md={4} sm={6} xs={12}>
                   <FormGroup>
                     <Label for="deposit">اجاره روزانه(تومان)</Label>
-                    <Input
+                    <DecimalInput
                       type="number"
                       name="dailyRent"
                       id="dailyRent"
                       placeholder="اجاره روزانه"
                       value={this.state.dailyRent}
                       onChange={(e) => { this.handleInputChange(e); }}
+                      className="form-control"
                     />
                   </FormGroup>
                 </Col>
@@ -1392,13 +1430,14 @@ class AddNewPropertyForm extends PureComponent {
             <Col md={4} sm={6} xs={12}>
               <FormGroup>
                 <Label for="area">متراژ</Label>
-                <Input
+                <DecimalInput
                   type="number"
                   name="area"
                   id="area"
                   placeholder="متراژ"
                   value={this.state.area}
                   onChange={(e) => { this.handleInputChange(e); }}
+                  className="form-control"
                 />
               </FormGroup>
             </Col>
@@ -1407,7 +1446,7 @@ class AddNewPropertyForm extends PureComponent {
               <Col md={4} sm={6} xs={12}>
                 <FormGroup>
                   <Label for="unitPrice">قیمت هر مترمربع</Label>
-                  <Input
+                  <DecimalInput
                     type="number"
                     name="unitPrice"
                     id="unitPrice"
@@ -1415,6 +1454,7 @@ class AddNewPropertyForm extends PureComponent {
                     disabled
                     value={this.state.unitPrice}
                     onChange={(e) => { this.handleInputChange(e); }}
+                    className="form-control"
                   />
                 </FormGroup>
               </Col>

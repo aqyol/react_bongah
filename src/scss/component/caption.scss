@@ -19,7 +19,7 @@
   padding: 30px;
   width: 100%;
   text-align: center;
-  top: calc(50vh - 150px);
+  top: calc(50vh - 200px);
   left: 0;
 }
 
@@ -36,7 +36,8 @@
     line-height: 30px;
   }
   .homeCaption {
-    top: calc(50vh - 100px);
+    //top: calc(50vh - 200px);
+    display: none;
   }
 }
 

@@ -1,11 +1,15 @@
 .ads-detail-container {
   direction: rtl;
-  float: right;
-  margin: 2%;
+  width: 80%;
+  margin: 20px auto;
 }
 
 .ads-detail-height {
   height: 100%  ;
+}
+
+.collapse-container {
+  padding: 2%;
 }
 
 .span-info {
@@ -19,12 +23,44 @@
 }
 
 .ads-price-card {
-  background-color: #d38b24;
   border-radius: 5px;
+  margin-top: 2%;
+  margin-bottom: 5%;
+}
+
+.ads-detail-angle {
+  float: left;
+  width: 25px;
+  height: 25px;
+}
+
+.chart-icon {
+  margin-right: 2%;
+  height: 25px;
+  width: 25px;
+  color: red;
+}
+
+.ads-commission-card {
+  margin-top: 5%;
+  margin-bottom: 5%;
+}
+
+.ads-main-info {
+  background-color: lightgray;
+  border-radius: 5px;
+  width: 100%;
+  margin: auto !important;
 }
 
 .btn-ads {
-  width: 100%;
+  width: 100% !important;
+  margin: 1%;
+}
+
+.ads-col-btn{
+  padding-right: 1px !important;
+  padding-left: 1px !important;
 }
 
 .ads-map {
@@ -33,4 +69,15 @@
 canvas {
   position: unset !important;
   height: 50%;
+}
+
+.similar-card-title {
+  font-size: 1.5rem;
+  padding: 1%;
+}
+
+@media screen and (max-width: 700px) {
+  .ads-detail-container {
+    width: 90%;
+  }
 }

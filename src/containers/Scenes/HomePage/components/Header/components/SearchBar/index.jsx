@@ -1,120 +1,38 @@
-import React, { PureComponent } from 'react';
-import PropTypes from 'prop-types';
+import React from 'react';
+import { Link } from 'react-router-dom';
 import {
   Col,
   Row,
   Form,
-  Button,
-  FormGroup,
-  Input,
-  Nav,
-  NavItem,
-  NavLink,
 } from 'reactstrap';
-import classnames from 'classnames';
+import { ReactComponent as AddHome } from '../../../../../../../shared/img/addHome.svg';
+import { ReactComponent as SearchHome } from '../../../../../../../shared/img/searchHome.svg';
 
-
-class SearchBar extends PureComponent {
-  static propTypes = {
-    isPersist: PropTypes.bool,
-  };
-
-  static defaultProps = {
-    isPersist: true,
-  };
-
-  constructor(props) {
-    super(props);
-    this.state = {
-      isAdvance: false,
-      activeTab: '1',
-      searchItem: '',
-    };
-    this.toggle = this.toggle.bind(this);
-    this.handleInputChange = this.handleInputChange.bind(this);
-    this.handleSearch = this.handleSearch.bind(this);
-  }
-
-  toggleAdvSearch = () => {
-    this.setState(prevState => ({
-      isAdvance: !prevState.isAdvance,
-    }));
-  }
-
-  toggle(tab) {
-    if (this.state.activeTab !== tab) {
-      this.setState({
-        activeTab: tab,
-      });
-    }
-  }
-
-  handleInputChange(e) {
-    e.preventDefault();
-    const { name, value } = e.target;
-    this.setState({
-      [name]: value,
-    });
-    console.log(e.target.value);
-  }
-
-  handleSearch(e) {
-    e.preventDefault();
-    console.group('search click');
-    console.log(this.state.searchItem);
-    console.groupEnd();
-  }
-
-  render() {
-    if (!this.props.isPersist) {
-      return (null);
-    }
-    return (
-      <div className="search-panel">
-        <Form>
-          <Nav tabs style={{ border: 'none' }}>
-            <NavItem>
-              <NavLink
-                className={classnames({ active: this.state.activeTab === '1' })}
-                onClick={() => { this.toggle('1'); }}
-              >
-                خرید
-              </NavLink>
-            </NavItem>
-            <NavItem>
-              <NavLink
-                className={classnames({ active: this.state.activeTab === '2' })}
-                onClick={() => { this.toggle('2'); }}
-              >
-                اجاره
-              </NavLink>
-            </NavItem>
-          </Nav>
-          <Row form>
-            <Col md={6} sm={8} xs={12}>
-              <FormGroup>
-                <Input
-                  type="text"
-                  name="searchItem"
-                  id="searchItem"
-                  placeholder="شهر مورد نظر را وارد کنید"
-                  value={this.state.searchItem}
-                  onChange={(e) => { this.handleInputChange(e); }}
-                />
-              </FormGroup>
-            </Col>
-            <Col md={4} sm={4} xs={12}>
-              <FormGroup style={{ width: '80%', margin: 'auto' }}>
-                <Button style={{ width: '100%' }} onClick={(e) => { this.handleSearch(e); }} color="success">
-                  جستجو
-                </Button>
-              </FormGroup>
-            </Col>
-          </Row>
-        </Form>
-      </div>
-    );
-  }
-}
+const SearchBar = () => (
+  <div className="search-panel">
+    <Form style={{ width: '80%', margin: 'auto' }}>
+      <Row style={{ textAlign: 'center' }}>
+        <Col md={2} sm={2} xs={0} />
+        <Col md={4} sm={4} xs={6}>
+          <Link
+            to="/newproperty"
+          >
+            <AddHome style={{ width: '50px', height: '50px' }} />
+            <p className="text-white">افزودن آگهی</p>
+          </Link>
+        </Col>
+        <Col md={4} sm={4} xs={6}>
+          <Link
+            to="/search"
+          >
+            <SearchHome style={{ width: '50px', height: '50px' }} />
+            <p className="text-white">جستجو و درخواست</p>
+          </Link>
+        </Col>
+        <Col md={2} sm={2} xs={0} />
+      </Row>
+    </Form>
+  </div>
+);
 
 export default SearchBar;

@@ -208,6 +208,8 @@ a.card h2, div.card h2 {
 
 a.card:hover, div.card:hover {
   text-decoration: none;
+  -webkit-box-shadow: 0 2px 2px 1px rgba(10, 10, 10, 0.5) !important;
+  box-shadow: 0 2px 2px 1px rgba(10, 10, 10, 0.5) !important;
 }
 
 a.card:hover h2, div.card:hover h2 {
@@ -260,6 +262,21 @@ a.card ul.cardFeat li span, div.card ul.cardFeat li span {
 .singleHouse:hover .buttonBuy {
   visibility: visible;
   opacity: 1;
+}
+
+.chart-icon-list {
+  margin-right: 2%;
+  height: 20px;
+  width: 20px;
+  color: red;
+}
+
+.ads-main-info-list {
+  background-color: lightgray;
+  border-radius: 5px;
+  width: 100%;
+  margin: auto !important;
+  font-size: 11px;
 }
 
 
